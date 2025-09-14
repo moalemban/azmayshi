@@ -22,7 +22,7 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
     >
       {isPositive ? <ArrowUp className="h-3 w-3 mr-1" /> : <ArrowDown className="h-3 w-3 mr-1" />}
       {isPositive && '+'}
-      {(change * 100).toFixed(2)}%
+      {(change * 100).toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}٪
     </span>
   );
 };
@@ -36,7 +36,7 @@ const PriceList = ({ prices }: { prices: LivePrice[] }) => (
           <p className="text-xs text-muted-foreground">{item.symbol}</p>
         </div>
         <div className="text-right">
-          <p className="font-semibold">{item.price}</p>
+          <p className="font-semibold">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</p>
           <PriceChangeIndicator change={item.change} />
         </div>
       </li>
@@ -49,17 +49,17 @@ export default function LivePrices() {
     <Card className="transition-transform transform hover:scale-[1.02] duration-300 ease-in-out">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <CandlestickChart className="h-6 w-6" />
-          Live Prices
+          <CandlestickChart className="h-6 w-6 ml-2" />
+          قیمت‌های لحظه‌ای
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="gold">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
-            <TabsTrigger value="gold">Gold</TabsTrigger>
-            <TabsTrigger value="currencies">Currencies</TabsTrigger>
-            <TabsTrigger value="stocks">Stocks</TabsTrigger>
-            <TabsTrigger value="crypto">Crypto</TabsTrigger>
+            <TabsTrigger value="gold">طلا</TabsTrigger>
+            <TabsTrigger value="currencies">ارزها</TabsTrigger>
+            <TabsTrigger value="stocks">بورس</TabsTrigger>
+            <TabsTrigger value="crypto">کریپتو</TabsTrigger>
           </TabsList>
           <TabsContent value="gold" className="mt-4">
             <PriceList prices={livePrices.gold} />

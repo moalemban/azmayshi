@@ -48,7 +48,7 @@ export default function CurrencyConverter() {
     const amount = typeof fromAmount === 'string' ? parseFloat(fromAmount) : fromAmount;
     if (!isNaN(amount)) {
       const converted = calculateConversion(amount, fromCurrency, toCurrency, 'from');
-      setToAmount(converted.toLocaleString('en-US', { maximumFractionDigits: 2 }));
+      setToAmount(converted.toLocaleString('fa-IR', { maximumFractionDigits: 2 }));
     } else {
       setToAmount('');
     }
@@ -60,12 +60,12 @@ export default function CurrencyConverter() {
   };
   
   const handleToAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/,/g, '');
+    const value = e.target.value.replace(/٬/g, '');
     setToAmount(value);
     const amount = parseFloat(value);
      if (!isNaN(amount)) {
       const converted = calculateConversion(amount, toCurrency, fromCurrency, 'to');
-      setFromAmount(converted.toLocaleString('en-US', { maximumFractionDigits: 2 }));
+      setFromAmount(converted.toLocaleString('fa-IR', { maximumFractionDigits: 2 }));
     } else {
       setFromAmount('');
     }
@@ -81,18 +81,18 @@ export default function CurrencyConverter() {
     <Card className="transition-transform transform hover:scale-[1.02] duration-300 ease-in-out">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <ArrowRightLeft className="h-6 w-6" />
-          Currency Converter
+          <ArrowRightLeft className="h-6 w-6 ml-2" />
+          تبدیل ارز
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="w-full space-y-2">
-            <label className="text-sm font-medium">From</label>
-            <Input type="text" value={fromAmount} onChange={handleFromAmountChange} placeholder="Enter amount"/>
+            <label className="text-sm font-medium">از</label>
+            <Input type="text" value={fromAmount} onChange={handleFromAmountChange} placeholder="مبلغ را وارد کنید"/>
             <Select value={fromCurrency} onValueChange={setFromCurrency}>
               <SelectTrigger>
-                <SelectValue placeholder="Select currency" />
+                <SelectValue placeholder="انتخاب ارز" />
               </SelectTrigger>
               <SelectContent>
                 {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code} - {c.name}</SelectItem>)}
@@ -103,11 +103,11 @@ export default function CurrencyConverter() {
             <ArrowRightLeft className="h-4 w-4" />
           </Button>
           <div className="w-full space-y-2">
-            <label className="text-sm font-medium">To</label>
-            <Input type="text" value={toAmount} onChange={handleToAmountChange} placeholder="Converted amount" />
+            <label className="text-sm font-medium">به</label>
+            <Input type="text" value={toAmount} onChange={handleToAmountChange} placeholder="مبلغ تبدیل شده" />
             <Select value={toCurrency} onValueChange={setToCurrency}>
               <SelectTrigger>
-                <SelectValue placeholder="Select currency" />
+                <SelectValue placeholder="انتخاب ارز" />
               </SelectTrigger>
               <SelectContent>
                 {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code} - {c.name}</SelectItem>)}

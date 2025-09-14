@@ -1,15 +1,15 @@
 import type { Currency, LivePrice } from '@/lib/types';
 
 export const currencies: Currency[] = [
-  { code: 'USD', name: 'US Dollar' },
-  { code: 'EUR', name: 'Euro' },
-  { code: 'JPY', name: 'Japanese Yen' },
-  { code: 'GBP', name: 'British Pound' },
-  { code: 'AUD', name: 'Australian Dollar' },
-  { code: 'CAD', name: 'Canadian Dollar' },
-  { code: 'CHF', name: 'Swiss Franc' },
-  { code: 'CNY', name: 'Chinese Yuan' },
-  { code: 'IRR', name: 'Iranian Rial' },
+  { code: 'USD', name: 'دلار آمریکا' },
+  { code: 'EUR', name: 'یورو' },
+  { code: 'JPY', name: 'ین ژاپن' },
+  { code: 'GBP', name: 'پوند بریتانیا' },
+  { code: 'AUD', name: 'دلار استرالیا' },
+  { code: 'CAD', name: 'دلار کانادا' },
+  { code: 'CHF', name: 'فرانک سوئیس' },
+  { code: 'CNY', name: 'یوان چین' },
+  { code: 'IRR', name: 'ریال ایران' },
 ];
 
 export const mockExchangeRates: { [key: string]: number } = {
@@ -33,27 +33,27 @@ export const mockExchangeRates: { [key: string]: number } = {
 
 export const livePrices: { [key: string]: LivePrice[] } = {
   gold: [
-    { name: 'Gold Ounce', price: '2,320.55', change: 0.005, symbol: 'USD' },
-    { name: 'Seke Bahar Azadi', price: '41,500,000', change: -0.012, symbol: 'IRR' },
+    { name: 'انس طلا', price: '2,320.55', change: 0.005, symbol: 'USD' },
+    { name: 'سکه بهار آزادی', price: '41,500,000', change: -0.012, symbol: 'IRR' },
   ],
   currencies: [
-    { name: 'USD/IRR', price: '585,000', change: 0.008, symbol: 'IRR' },
-    { name: 'EUR/IRR', price: '635,000', change: 0.011, symbol: 'IRR' },
+    { name: 'دلار/ریال', price: '585,000', change: 0.008, symbol: 'IRR' },
+    { name: 'یورو/ریال', price: '635,000', change: 0.011, symbol: 'IRR' },
   ],
   stocks: [
-    { name: 'Total Index', price: '2,075,630', change: -0.0025, symbol: 'TSE' },
+    { name: 'شاخص کل', price: '2,075,630', change: -0.0025, symbol: 'TSE' },
   ],
   crypto: [
-    { name: 'Bitcoin', price: '67,500', change: 0.02, symbol: 'USD' },
-    { name: 'Ethereum', price: '3,780', change: 0.035, symbol: 'USD' },
+    { name: 'بیت‌کوین', price: '67,500', change: 0.02, symbol: 'USD' },
+    { name: 'اتریوم', price: '3,780', change: 0.035, symbol: 'USD' },
   ],
 };
 
 export const unitCategories: { [key: string]: string[] } = {
-  Length: ['meter', 'kilometer', 'centimeter', 'millimeter', 'mile', 'yard', 'foot', 'inch'],
-  Mass: ['kilogram', 'gram', 'milligram', 'pound', 'ounce'],
-  Temperature: ['celsius', 'fahrenheit', 'kelvin'],
-  Volume: ['liter', 'milliliter', 'cubic meter', 'gallon', 'quart', 'pint', 'cup'],
+  'طول': ['meter', 'kilometer', 'centimeter', 'millimeter', 'mile', 'yard', 'foot', 'inch'],
+  'جرم': ['kilogram', 'gram', 'milligram', 'pound', 'ounce'],
+  'دما': ['celsius', 'fahrenheit', 'kelvin'],
+  'حجم': ['liter', 'milliliter', 'cubic meter', 'gallon', 'quart', 'pint', 'cup'],
 };
 
 export const allUnits = Object.values(unitCategories).flat();

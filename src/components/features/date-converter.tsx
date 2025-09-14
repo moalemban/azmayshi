@@ -17,7 +17,7 @@ export default function DateConverter() {
 
   // Dummy conversion logic
   const convertDate = (d: Date, type: 'gts' | 'stg') => {
-    if (!d) return 'Select a date';
+    if (!d) return 'یک تاریخ انتخاب کنید';
     if (type === 'gts') {
       // Dummy Gregorian to Solar Hijri
       const year = d.getFullYear() - 621;
@@ -29,7 +29,7 @@ export default function DateConverter() {
       const year = d.getFullYear() + 621;
       const month = (d.getMonth() + 3) % 12 + 1;
       const day = (d.getDate() + 20) % 30 + 1;
-      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} (Gregorian)`;
+      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} (میلادی)`;
     }
   };
 
@@ -37,27 +37,27 @@ export default function DateConverter() {
     <Card className="transition-transform transform hover:scale-[1.02] duration-300 ease-in-out">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <CalendarDays className="h-6 w-6" />
-          Date Converter
+          <CalendarDays className="h-6 w-6 ml-2" />
+          تبدیل تاریخ
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <Label className="mb-2 block">Conversion Type</Label>
+          <Label className="mb-2 block">نوع تبدیل</Label>
           <RadioGroup defaultValue="gts" onValueChange={(v) => setConversionType(v as 'gts' | 'stg')} className="flex gap-4">
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="gts" id="gts" />
-              <Label htmlFor="gts">Gregorian to Solar</Label>
+              <Label htmlFor="gts">میلادی به شمسی</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="stg" id="stg" />
-              <Label htmlFor="stg">Solar to Gregorian</Label>
+              <Label htmlFor="stg">شمسی به میلادی</Label>
             </div>
           </RadioGroup>
         </div>
         <div>
           <Label className="mb-2 block">
-            {conversionType === 'gts' ? 'Select Gregorian Date' : 'Select Solar Date (example)'}
+            {conversionType === 'gts' ? 'تاریخ میلادی را انتخاب کنید' : 'تاریخ شمسی را انتخاب کنید (مثال)'}
           </Label>
           <Popover>
             <PopoverTrigger asChild>
@@ -65,8 +65,8 @@ export default function DateConverter() {
                 variant={'outline'}
                 className={cn('w-full justify-start text-left font-normal', !date && 'text-muted-foreground')}
               >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                <CalendarIcon className="ml-2 h-4 w-4" />
+                {date ? format(date, 'PPP') : <span>یک تاریخ انتخاب کنید</span>}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
@@ -76,7 +76,7 @@ export default function DateConverter() {
         </div>
 
         <div className="text-center bg-muted p-4 rounded-md">
-          <p className="text-sm text-muted-foreground">Converted Date</p>
+          <p className="text-sm text-muted-foreground">تاریخ تبدیل شده</p>
           <p className="text-lg font-semibold">{convertDate(date!, conversionType)}</p>
         </div>
       </CardContent>

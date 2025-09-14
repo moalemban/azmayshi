@@ -85,19 +85,19 @@ export default function QuickCalculator() {
     { label: 'C', handler: clearAll, className: 'col-span-2' },
     { label: '÷', handler: () => handleOperator('/'), variant: 'secondary' },
     { label: '×', handler: () => handleOperator('*'), variant: 'secondary' },
-    { label: '7', handler: () => inputDigit('7') },
-    { label: '8', handler: () => inputDigit('8') },
-    { label: '9', handler: () => inputDigit('9') },
+    { label: '۷', handler: () => inputDigit('7') },
+    { label: '۸', handler: () => inputDigit('8') },
+    { label: '۹', handler: () => inputDigit('9') },
     { label: '-', handler: () => handleOperator('-'), variant: 'secondary' },
-    { label: '4', handler: () => inputDigit('4') },
-    { label: '5', handler: () => inputDigit('5') },
-    { label: '6', handler: () => inputDigit('6') },
+    { label: '۴', handler: () => inputDigit('4') },
+    { label: '۵', handler: () => inputDigit('5') },
+    { label: '۶', handler: () => inputDigit('6') },
     { label: '+', handler: () => handleOperator('+'), variant: 'secondary' },
-    { label: '1', handler: () => inputDigit('1') },
-    { label: '2', handler: () => inputDigit('2') },
-    { label: '3', handler: () => inputDigit('3') },
+    { label: '۱', handler: () => inputDigit('1') },
+    { label: '۲', handler: () => inputDigit('2') },
+    { label: '۳', handler: () => inputDigit('3') },
     { label: '=', handler: handleEquals, className: 'row-span-2', variant: 'primary' },
-    { label: '0', handler: () => inputDigit('0'), className: 'col-span-2' },
+    { label: '۰', handler: () => inputDigit('0'), className: 'col-span-2' },
     { label: '.', handler: inputDecimal },
   ];
 
@@ -105,13 +105,13 @@ export default function QuickCalculator() {
     <Card className="h-full flex flex-col transition-transform transform hover:scale-[1.02] duration-300 ease-in-out">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <CalculatorIcon className="h-6 w-6" />
-          Quick Calculator
+          <CalculatorIcon className="h-6 w-6 ml-2" />
+          ماشین حساب
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
-        <div className="bg-muted rounded-md p-4 w-full text-right mb-4">
-          <p className="text-3xl font-mono break-all">{displayValue}</p>
+        <div className="bg-muted rounded-md p-4 w-full text-left mb-4">
+          <p className="text-3xl font-mono break-all">{displayValue.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d, 10)] )}</p>
         </div>
         <div className="grid grid-cols-4 grid-rows-5 gap-2 flex-grow">
           {buttons.map(({ label, handler, className, variant }) => (

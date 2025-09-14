@@ -19,8 +19,8 @@ import type { ConversionSuggestion } from '@/lib/types';
 import { Separator } from '../ui/separator';
 
 const formSchema = z.object({
-  value: z.coerce.number().min(0, "Value must be a positive number."),
-  unit: z.string().min(1, "Please select a unit."),
+  value: z.coerce.number().min(0, "مقدار باید یک عدد مثبت باشد."),
+  unit: z.string().min(1, "لطفا یک واحد انتخاب کنید."),
 });
 
 export default function UnitConverter() {
@@ -50,7 +50,7 @@ export default function UnitConverter() {
     } else {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "خطا",
         description: result.error,
       });
     }
@@ -60,12 +60,12 @@ export default function UnitConverter() {
     <Card className="h-full transition-transform transform hover:scale-[1.02] duration-300 ease-in-out">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Scale className="h-6 w-6" />
-          AI Unit Converter
+          <Scale className="h-6 w-6 ml-2" />
+          تبدیل واحد هوشمند
         </CardTitle>
         <CardDescription className="flex items-center gap-1.5">
-          <Sparkles className="h-4 w-4 text-primary" />
-          Powered by GenAI to suggest relevant conversions.
+          <Sparkles className="h-4 w-4 text-primary ml-1.5" />
+          ارائه پیشنهادات هوشمند با استفاده از هوش مصنوعی
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -77,9 +77,9 @@ export default function UnitConverter() {
                 name="value"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Value</FormLabel>
+                    <FormLabel>مقدار</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="Enter a value" {...field} />
+                      <Input type="number" placeholder="مقدار را وارد کنید" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -90,11 +90,11 @@ export default function UnitConverter() {
                 name="unit"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Unit</FormLabel>
+                    <FormLabel>واحد</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a unit" />
+                          <SelectValue placeholder="یک واحد انتخاب کنید" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -117,10 +117,10 @@ export default function UnitConverter() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Suggesting...
+                  در حال پیشنهاد...
                 </>
               ) : (
-                'Suggest Conversions'
+                'پیشنهاد تبدیل'
               )}
             </Button>
           </form>
@@ -128,7 +128,7 @@ export default function UnitConverter() {
         {(isLoading || suggestions.length > 0) && (
             <div className="mt-6">
                 <Separator />
-                <h3 className="text-lg font-medium mt-4 mb-2">Suggestions</h3>
+                <h3 className="text-lg font-medium mt-4 mb-2">پیشنهادها</h3>
                 {isLoading ? (
                     <div className="space-y-2">
                         <div className="h-8 w-full animate-pulse rounded-md bg-muted"></div>
@@ -140,7 +140,7 @@ export default function UnitConverter() {
                         {suggestions.map((s, i) => (
                             <div key={i} className="p-4 border rounded-lg bg-accent/50 text-center">
                                 <div className="text-2xl font-bold" style={{color: '#6750A4'}}>
-                                    {s.convertedValue.toLocaleString(undefined, { maximumFractionDigits: 4 })}
+                                    {s.convertedValue.toLocaleString('fa-IR', { maximumFractionDigits: 4 })}
                                 </div>
                                 <div className="text-sm text-muted-foreground">{s.targetUnit}</div>
                             </div>
