@@ -15,34 +15,45 @@ export default function DateConverter() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [conversionType, setConversionType] = useState<'gts' | 'stg'>('gts');
   const [popoverOpen, setPopoverOpen] = useState(false);
+  
+  const [shamsiInput, setShamsiInput] = useState('');
 
-  // Dummy conversion logic
-  const convertDate = (d: Date, type: 'gts' | 'stg') => {
+  // Gregorian to Shamsi is well-supported
+  const convertGTS = (d: Date) => {
     if (!d) return 'یک تاریخ انتخاب کنید';
-    
     try {
-      if (type === 'gts') {
-        return new Intl.DateTimeFormat('fa-IR-u-nu-latn', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          weekday: 'long'
-        }).format(d);
-      } else {
-        // This is just a simulation, not an actual conversion
-        const year = d.getFullYear() + 621;
-        const month = (d.getMonth() + 3) % 12 + 1;
-        const day = (d.getDate() + 20) % 30 + 1;
-        return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} (میلادی)`;
-      }
+      return new Intl.DateTimeFormat('fa-IR-u-nu-latn', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+      }).format(d);
     } catch (error) {
-        return 'تاریخ نامعتبر';
+      return 'تاریخ نامعتبر';
     }
   };
 
+  // Shamsi to Gregorian is complex and not supported natively. This is a placeholder.
+  const convertSTG = (d: Date) => {
+    if (!d) return 'یک تاریخ انتخاب کنید';
+     try {
+        // This is not a real conversion, just for display
+        return new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            weekday: 'long'
+        }).format(d);
+     } catch (error) {
+        return 'تاریخ نامعتبر';
+     }
+  };
+  
+  const convertedDate = conversionType === 'gts' ? convertGTS(date!) : convertSTG(date!);
+
   return (
-    <Card className="h-full group/card">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent group-hover:from-primary/20 transition-all duration-500 -z-10"></div>
+    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CalendarDays className="h-6 w-6 text-primary" />
@@ -59,8 +70,8 @@ export default function DateConverter() {
                 <Label htmlFor="gts">میلادی به شمسی</Label>
               </div>
               <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="stg" id="stg" />
-                <Label htmlFor="stg">شمسی به میلادی</Label>
+                <RadioGroupItem value="stg" id="stg" disabled/>
+                <Label htmlFor="stg" className="text-muted-foreground">شمسی به میلادی (بزودی)</Label>
               </div>
             </RadioGroup>
           </div>
@@ -69,6 +80,7 @@ export default function DateConverter() {
               <PopoverTrigger asChild>
                 <Button
                   variant={'outline'}
+                  disabled={conversionType === 'stg'}
                   className={cn('w-full justify-start text-left font-normal h-12 text-base', !date && 'text-muted-foreground')}
                 >
                   <CalendarIcon className="ml-2 h-5 w-5" />
@@ -92,7 +104,7 @@ export default function DateConverter() {
 
         <div className="text-center bg-background/50 p-4 rounded-lg shadow-inner">
           <p className="text-sm text-muted-foreground">تاریخ تبدیل شده</p>
-          <p className="text-xl font-semibold text-primary">{convertDate(date!, conversionType)}</p>
+          <p className="text-xl font-semibold text-primary">{convertedDate}</p>
         </div>
       </CardContent>
     </Card>

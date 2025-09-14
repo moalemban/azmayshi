@@ -31,7 +31,7 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
 const PriceList = ({ prices }: { prices: LivePrice[] }) => (
   <ul className="space-y-4">
     {prices.map((item) => (
-      <li key={item.name} className="flex justify-between items-center bg-background/30 p-3 rounded-lg">
+      <li key={item.name} className="flex justify-between items-center bg-background/30 p-3 rounded-lg transition-colors hover:bg-background/60">
         <div>
           <p className="font-medium text-foreground">{item.name}</p>
           <p className="text-xs text-muted-foreground">{item.symbol}</p>
@@ -47,8 +47,8 @@ const PriceList = ({ prices }: { prices: LivePrice[] }) => (
 
 export default function LivePrices() {
   return (
-    <Card className="h-full group/card">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent group-hover:from-primary/20 transition-all duration-500 -z-10"></div>
+    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CandlestickChart className="h-6 w-6 text-primary" />

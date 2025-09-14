@@ -22,9 +22,40 @@ export default function QuickCalculator() {
   };
 
   const inputDecimal = () => {
+    if (waitingForSecondOperand) {
+        setDisplayValue('0.');
+        setWaitingForSecondOperand(false);
+        return;
+    }
     if (!displayValue.includes('.')) {
       setDisplayValue(displayValue + '.');
     }
+  };
+
+  const clearAll = () => {
+    setDisplayValue('0');
+    setOperator(null);
+    setFirstOperand(null);
+    setWaitingForSecondOperand(false);
+  };
+
+  const performCalculation = (): number => {
+    const inputValue = parseFloat(displayValue);
+    if (operator && firstOperand !== null) {
+      switch (operator) {
+        case '/':
+          return firstOperand / inputValue;
+        case '*':
+          return firstOperand * inputValue;
+        case '+':
+          return firstOperand + inputValue;
+        case '-':
+          return firstOperand - inputValue;
+        default:
+          return inputValue;
+      }
+    }
+    return inputValue;
   };
 
   const handleOperator = (nextOperator: string) => {
@@ -46,40 +77,16 @@ export default function QuickCalculator() {
     setWaitingForSecondOperand(true);
     setOperator(nextOperator);
   };
-
-  const performCalculation = () => {
-    if (operator && firstOperand !== null) {
-      const secondOperand = parseFloat(displayValue);
-      switch (operator) {
-        case '/':
-          return firstOperand / secondOperand;
-        case '*':
-          return firstOperand * secondOperand;
-        case '+':
-          return firstOperand + secondOperand;
-        case '-':
-          return firstOperand - secondOperand;
-        default:
-          return secondOperand;
-      }
-    }
-    return parseFloat(displayValue);
-  };
-
+  
   const handleEquals = () => {
+    if (!operator) return;
     const result = performCalculation();
     setDisplayValue(String(result));
-    setFirstOperand(null);
+    setFirstOperand(null); // Reset for new calculation
     setOperator(null);
     setWaitingForSecondOperand(false);
   };
 
-  const clearAll = () => {
-    setDisplayValue('0');
-    setOperator(null);
-    setFirstOperand(null);
-    setWaitingForSecondOperand(false);
-  };
 
   const buttons = [
     { label: 'C', handler: clearAll, className: 'col-span-2 bg-destructive/80 hover:bg-destructive text-destructive-foreground' },
@@ -102,8 +109,8 @@ export default function QuickCalculator() {
   ];
 
   return (
-    <Card className="h-full flex flex-col group/card">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent group-hover:from-primary/20 transition-all duration-500 -z-10"></div>
+    <Card className="h-full flex flex-col group/card transition-all duration-300 hover:border-primary/50">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CalculatorIcon className="h-6 w-6 text-primary" />
@@ -112,8 +119,8 @@ export default function QuickCalculator() {
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
         <div className="bg-background/50 rounded-lg p-4 w-full text-left mb-4 shadow-inner">
-          <p className="text-4xl font-mono break-all text-right text-foreground">
-            {displayValue.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d, 10)] )}
+          <p className="text-4xl font-mono break-all text-right text-foreground" dir="ltr">
+            {parseFloat(displayValue).toLocaleString('fa-IR', { maximumFractionDigits: 10 })}
           </p>
         </div>
         <div className="grid grid-cols-4 grid-rows-5 gap-2 flex-grow">

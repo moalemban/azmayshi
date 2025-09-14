@@ -6,8 +6,11 @@ export default function Header() {
     <header className="px-4 sm:px-6 lg:px-8 pt-8 pb-4 max-w-screen-2xl mx-auto">
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center gap-3">
-          <Zap className="h-10 w-10 text-primary animate-pulse" />
-          <h1 className="text-5xl md:text-6xl font-extrabold font-headline text-foreground bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500">
+          <div className="relative">
+            <Zap className="h-10 w-10 text-primary" />
+            <Zap className="h-10 w-10 text-primary/50 absolute top-0 left-0 animate-pulse" />
+          </div>
+          <h1 className="text-5xl md:text-6xl font-extrabold text-foreground bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 animate-text-gradient bg-300% bg-pos-0% hover:bg-pos-100% transition-all duration-500">
             تبدیلا
           </h1>
         </div>

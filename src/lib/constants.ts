@@ -3,16 +3,17 @@ import type { Currency, LivePrice } from '@/lib/types';
 export const currencies: Currency[] = [
   { code: 'USD', name: 'دلار آمریکا' },
   { code: 'EUR', name: 'یورو' },
-  { code: 'JPY', name: 'ین ژاپن' },
+  { code: 'IRR', name: 'ریال ایران' },
   { code: 'GBP', name: 'پوند بریتانیا' },
+  { code: 'JPY', name: 'ین ژاپن' },
   { code: 'AUD', name: 'دلار استرالیا' },
   { code: 'CAD', name: 'دلار کانادا' },
   { code: 'CHF', name: 'فرانک سوئیس' },
   { code: 'CNY', name: 'یوان چین' },
-  { code: 'IRR', name: 'ریال ایران' },
 ];
 
 export const mockExchangeRates: { [key: string]: number } = {
+  // Rates against USD
   'USD-EUR': 0.93,
   'USD-JPY': 157.7,
   'USD-GBP': 0.79,
@@ -20,32 +21,33 @@ export const mockExchangeRates: { [key: string]: number } = {
   'USD-CAD': 1.37,
   'USD-CHF': 0.9,
   'USD-CNY': 7.25,
-  'USD-IRR': 42000.0,
-  'EUR-USD': 1.07,
-  'JPY-USD': 0.0063,
-  'GBP-USD': 1.27,
-  'AUD-USD': 0.66,
-  'CAD-USD': 0.73,
-  'CHF-USD': 1.11,
-  'CNY-USD': 0.14,
-  'IRR-USD': 0.000024,
+  'USD-IRR': 590000, // Updated market rate
+
+  // Inverse rates can be calculated, but some common ones can be pre-defined
+  'EUR-USD': 1.075,
+  'GBP-USD': 1.265,
+  'IRR-USD': 1 / 590000,
 };
 
 export const livePrices: { [key: string]: LivePrice[] } = {
   gold: [
     { name: 'انس طلا', price: '2,320.55', change: 0.005, symbol: 'USD' },
-    { name: 'سکه بهار آزادی', price: '41,500,000', change: -0.012, symbol: 'IRR' },
+    { name: 'سکه امامی', price: '41,500,000', change: -0.012, symbol: 'IRR' },
+    { name: 'گرم طلا ۱۸ عیار', price: '3,745,000', change: 0.008, symbol: 'IRR' },
   ],
   currencies: [
-    { name: 'دلار/ریال', price: '585,000', change: 0.008, symbol: 'IRR' },
-    { name: 'یورو/ریال', price: '635,000', change: 0.011, symbol: 'IRR' },
+    { name: 'دلار بازار', price: '590,000', change: 0.008, symbol: 'IRR' },
+    { name: 'یورو بازار', price: '642,000', change: 0.011, symbol: 'IRR' },
+    { name: 'درهم امارات', price: '160,800', change: 0.005, symbol: 'IRR' },
   ],
   stocks: [
-    { name: 'شاخص کل', price: '2,075,630', change: -0.0025, symbol: 'TSE' },
+    { name: 'شاخص کل بورس', price: '2,075,630', change: -0.0025, symbol: 'واحد' },
+    { name: 'شاخص هم‌وزن', price: '675,120', change: 0.001, symbol: 'واحد' },
   ],
   crypto: [
-    { name: 'بیت‌کوین', price: '67,500', change: 0.02, symbol: 'USD' },
-    { name: 'اتریوم', price: '3,780', change: 0.035, symbol: 'USD' },
+    { name: 'بیت‌کوین', price: '67,500', change: 0.02, symbol: 'USDT' },
+    { name: 'اتریوم', price: '3,780', change: 0.035, symbol: 'USDT' },
+    { name: 'تتر', price: '59,100', change: 0.001, symbol: 'IRR' },
   ],
 };
 
