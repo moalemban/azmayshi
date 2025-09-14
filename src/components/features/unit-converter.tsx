@@ -61,7 +61,7 @@ export default function UnitConverter() {
 
   return (
     <Card className="h-full group/card">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 group-hover:from-primary/30 transition-all duration-500 -z-10"></div>
+      <div className="absolute inset-0 bg-gradient_to_br from-primary/20 to-primary/5 group-hover:from-primary/30 transition-all duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl">
           <Scale className="h-7 w-7 text-primary" />
