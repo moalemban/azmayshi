@@ -15,28 +15,29 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
 
   return (
     <span
+      dir="ltr"
       className={cn(
-        'flex items-center text-xs font-medium',
-        isPositive ? 'text-green-600' : 'text-red-500'
+        'flex items-center text-xs font-medium tabular-nums',
+        isPositive ? 'text-green-400' : 'text-red-400'
       )}
     >
       {isPositive ? <ArrowUp className="h-3 w-3 mr-1" /> : <ArrowDown className="h-3 w-3 mr-1" />}
       {isPositive && '+'}
-      {(change * 100).toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}٪
+      {(change * 100).toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
     </span>
   );
 };
 
 const PriceList = ({ prices }: { prices: LivePrice[] }) => (
-  <ul className="space-y-3">
+  <ul className="space-y-4">
     {prices.map((item) => (
-      <li key={item.name} className="flex justify-between items-center">
+      <li key={item.name} className="flex justify-between items-center bg-background/30 p-3 rounded-lg">
         <div>
-          <p className="font-medium">{item.name}</p>
+          <p className="font-medium text-foreground">{item.name}</p>
           <p className="text-xs text-muted-foreground">{item.symbol}</p>
         </div>
-        <div className="text-right">
-          <p className="font-semibold">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</p>
+        <div className="text-right font-mono">
+          <p className="font-semibold text-foreground">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</p>
           <PriceChangeIndicator change={item.change} />
         </div>
       </li>
@@ -46,20 +47,21 @@ const PriceList = ({ prices }: { prices: LivePrice[] }) => (
 
 export default function LivePrices() {
   return (
-    <Card className="transition-transform transform hover:scale-[1.02] duration-300 ease-in-out">
+    <Card className="h-full group/card">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent group-hover:from-primary/20 transition-all duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <CandlestickChart className="h-6 w-6 ml-2" />
+          <CandlestickChart className="h-6 w-6 text-primary" />
           قیمت‌های لحظه‌ای
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="gold">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
-            <TabsTrigger value="gold">طلا</TabsTrigger>
-            <TabsTrigger value="currencies">ارزها</TabsTrigger>
+            <TabsTrigger value="gold">طلا و سکه</TabsTrigger>
+            <TabsTrigger value="currencies">ارز</TabsTrigger>
             <TabsTrigger value="stocks">بورس</TabsTrigger>
-            <TabsTrigger value="crypto">کریپتو</TabsTrigger>
+            <TabsTrigger value="crypto">ارز دیجیتال</TabsTrigger>
           </TabsList>
           <TabsContent value="gold" className="mt-4">
             <PriceList prices={livePrices.gold} />

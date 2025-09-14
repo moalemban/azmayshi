@@ -10,18 +10,29 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground">
       <Header />
       <main className="p-4 sm:p-6 lg:p-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            <div className="xl:col-span-2">
+        <div className="mx-auto max-w-screen-2xl">
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12 lg:col-span-8 xl:col-span-6">
               <UnitConverter />
             </div>
-            <CurrencyConverter />
-            <DateConverter />
-            <QuickCalculator />
-            <LivePrices />
+            <div className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+              <CurrencyConverter />
+            </div>
+            <div className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+              <DateConverter />
+            </div>
+            <div className="col-span-12 lg:col-span-6">
+              <LivePrices />
+            </div>
+            <div className="col-span-12 lg:col-span-6">
+              <QuickCalculator />
+            </div>
           </div>
         </div>
       </main>
+      <footer className="text-center p-6 text-muted-foreground text-sm">
+        ساخته شده با ❤️ در استودیو فایربیس
+      </footer>
     </div>
   );
 }

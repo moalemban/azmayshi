@@ -24,7 +24,6 @@ export default function CurrencyConverter() {
       } else if (mockExchangeRates[`${to}-${from}`]) {
         rate = 1 / mockExchangeRates[`${to}-${from}`];
       } else {
-        // Fallback through USD
         const fromToUsd = from === 'USD' ? 1 : (1 / (mockExchangeRates[`${from}-USD`] || (1/mockExchangeRates[`USD-${from}`])));
         const usdToTo = to === 'USD' ? 1 : mockExchangeRates[`USD-${to}`];
         rate = fromToUsd * usdToTo;
@@ -45,7 +44,7 @@ export default function CurrencyConverter() {
   };
   
   useEffect(() => {
-    const amount = typeof fromAmount === 'string' ? parseFloat(fromAmount) : fromAmount;
+    const amount = typeof fromAmount === 'string' ? parseFloat(fromAmount.toString().replace(/,/g, '')) : fromAmount;
     if (!isNaN(amount)) {
       const converted = calculateConversion(amount, fromCurrency, toCurrency, 'from');
       setToAmount(converted.toLocaleString('fa-IR', { maximumFractionDigits: 2 }));
@@ -56,17 +55,25 @@ export default function CurrencyConverter() {
 
 
   const handleFromAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFromAmount(e.target.value);
+    const value = e.target.value.replace(/,/g, '');
+    const numValue = Number(value);
+    if (!isNaN(numValue)) {
+      setFromAmount(numValue.toLocaleString('fa-IR', {maximumFractionDigits: 20}).replace(/٬/g, ','));
+    } else if (value === '') {
+      setFromAmount('');
+    }
   };
   
   const handleToAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/٬/g, '');
-    setToAmount(value);
-    const amount = parseFloat(value);
-     if (!isNaN(amount)) {
-      const converted = calculateConversion(amount, toCurrency, fromCurrency, 'to');
+    const value = e.target.value.replace(/,/g, '');
+    const numValue = Number(value);
+
+    if (!isNaN(numValue)) {
+      setToAmount(numValue.toLocaleString('fa-IR', {maximumFractionDigits: 20}).replace(/٬/g, ','));
+      const converted = calculateConversion(numValue, toCurrency, fromCurrency, 'to');
       setFromAmount(converted.toLocaleString('fa-IR', { maximumFractionDigits: 2 }));
-    } else {
+    } else if (value === '') {
+      setToAmount('');
       setFromAmount('');
     }
   };
@@ -78,18 +85,19 @@ export default function CurrencyConverter() {
   };
 
   return (
-    <Card className="transition-transform transform hover:scale-[1.02] duration-300 ease-in-out">
+    <Card className="h-full group/card">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent group-hover:from-primary/20 transition-all duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <ArrowRightLeft className="h-6 w-6 ml-2" />
+          <ArrowRightLeft className="h-6 w-6 text-primary" />
           تبدیل ارز
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col sm:flex-row items-center gap-4">
+        <div className="flex flex-col items-center gap-4">
           <div className="w-full space-y-2">
-            <label className="text-sm font-medium">از</label>
-            <Input type="text" value={fromAmount} onChange={handleFromAmountChange} placeholder="مبلغ را وارد کنید"/>
+            <label className="text-sm font-medium text-muted-foreground">مبلغ</label>
+            <Input dir="ltr" type="text" value={fromAmount} onChange={handleFromAmountChange} placeholder="0"/>
             <Select value={fromCurrency} onValueChange={setFromCurrency}>
               <SelectTrigger>
                 <SelectValue placeholder="انتخاب ارز" />
@@ -99,12 +107,12 @@ export default function CurrencyConverter() {
               </SelectContent>
             </Select>
           </div>
-          <Button variant="ghost" size="icon" className="sm:mt-8 shrink-0" onClick={swapCurrencies}>
-            <ArrowRightLeft className="h-4 w-4" />
+          <Button variant="ghost" size="icon" className="shrink-0" onClick={swapCurrencies}>
+            <ArrowRightLeft className="h-5 w-5 text-muted-foreground transition-transform group-hover/card:rotate-180 duration-300" />
           </Button>
           <div className="w-full space-y-2">
-            <label className="text-sm font-medium">به</label>
-            <Input type="text" value={toAmount} onChange={handleToAmountChange} placeholder="مبلغ تبدیل شده" />
+            <label className="text-sm font-medium text-muted-foreground">مبلغ تبدیل شده</label>
+            <Input dir="ltr" type="text" value={toAmount} onChange={handleToAmountChange} placeholder="0" />
             <Select value={toCurrency} onValueChange={setToCurrency}>
               <SelectTrigger>
                 <SelectValue placeholder="انتخاب ارز" />

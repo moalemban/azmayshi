@@ -82,7 +82,7 @@ export default function QuickCalculator() {
   };
 
   const buttons = [
-    { label: 'C', handler: clearAll, className: 'col-span-2' },
+    { label: 'C', handler: clearAll, className: 'col-span-2 bg-destructive/80 hover:bg-destructive text-destructive-foreground' },
     { label: '÷', handler: () => handleOperator('/'), variant: 'secondary' },
     { label: '×', handler: () => handleOperator('*'), variant: 'secondary' },
     { label: '۷', handler: () => inputDigit('7') },
@@ -102,26 +102,29 @@ export default function QuickCalculator() {
   ];
 
   return (
-    <Card className="h-full flex flex-col transition-transform transform hover:scale-[1.02] duration-300 ease-in-out">
+    <Card className="h-full flex flex-col group/card">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent group-hover:from-primary/20 transition-all duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <CalculatorIcon className="h-6 w-6 ml-2" />
+          <CalculatorIcon className="h-6 w-6 text-primary" />
           ماشین حساب
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
-        <div className="bg-muted rounded-md p-4 w-full text-left mb-4">
-          <p className="text-3xl font-mono break-all">{displayValue.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d, 10)] )}</p>
+        <div className="bg-background/50 rounded-lg p-4 w-full text-left mb-4 shadow-inner">
+          <p className="text-4xl font-mono break-all text-right text-foreground">
+            {displayValue.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d, 10)] )}
+          </p>
         </div>
         <div className="grid grid-cols-4 grid-rows-5 gap-2 flex-grow">
           {buttons.map(({ label, handler, className, variant }) => (
             <Button
               key={label}
               onClick={handler}
-              className={cn('text-xl h-full w-full', className)}
+              className={cn('text-xl h-full w-full shadow-md hover:shadow-lg transition-shadow', className)}
               variant={variant as any || 'outline'}
             >
-              {label === '×' ? 'x' : label === '÷' ? '/' : label}
+              {label}
             </Button>
           ))}
         </div>
