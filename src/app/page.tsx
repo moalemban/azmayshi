@@ -8,6 +8,7 @@ import AgeCalculator from '@/components/features/age-calculator';
 import BmiCalculator from '@/components/features/bmi-calculator';
 import PercentageCalculator from '@/components/features/percentage-calculator';
 import LoanCalculator from '@/components/features/loan-calculator';
+import Stopwatch from '@/components/features/stopwatch';
 
 export default function Home() {
   return (
@@ -39,6 +40,10 @@ export default function Home() {
             <div className="col-span-12 md:col-span-7">
                <LoanCalculator />
             </div>
+             <div className="col-span-12 md:col-span-5">
+              <Stopwatch />
+            </div>
+
 
             {/* Row 4 - New Tools */}
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
