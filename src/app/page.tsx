@@ -10,6 +10,8 @@ import PercentageCalculator from '@/components/features/percentage-calculator';
 import LoanCalculator from '@/components/features/loan-calculator';
 import Stopwatch from '@/components/features/stopwatch';
 import DepositCalculator from '@/components/features/deposit-calculator';
+import NumberToWordsConverter from '@/components/features/number-to-words-converter';
+import NumberSystemConverter from '@/components/features/number-system-converter';
 
 export default function Home() {
   return (
@@ -45,8 +47,7 @@ export default function Home() {
               <DepositCalculator />
             </div>
 
-
-            {/* Row 4 - New Tools */}
+            {/* Row 4 - Health & Misc Tools */}
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
                <AgeCalculator />
             </div>
@@ -56,7 +57,16 @@ export default function Home() {
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
               <PercentageCalculator />
             </div>
-             <div className="col-span-12 sm:col-span-6 md:col-span-12">
+
+            {/* Row 5 - New Tools */}
+             <div className="col-span-12 md:col-span-6">
+              <NumberToWordsConverter />
+            </div>
+             <div className="col-span-12 md:col-span-6">
+              <NumberSystemConverter />
+            </div>
+            
+            <div className="col-span-12">
               <Stopwatch />
             </div>
 

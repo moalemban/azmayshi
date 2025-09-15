@@ -34,10 +34,6 @@ export default function QuickCalculator() {
       setDisplayValue(displayValue + '.');
     }
   };
-  
-  const clearEntry = () => {
-    setDisplayValue('0');
-  }
 
   const clearAll = () => {
     setDisplayValue('0');
@@ -53,18 +49,9 @@ export default function QuickCalculator() {
       case '*': return first * second;
       case '+': return first + second;
       case '-': return first - second;
-      case '^': return Math.pow(first, second);
       default: return second;
     }
   };
-  
-  const handleUnaryOperation = (operation: (n: number) => number, opSymbol: (s: string) => string) => {
-      const inputValue = parseFloat(displayValue);
-      const result = operation(inputValue);
-      const newHistoryEntry = `${opSymbol(displayValue)} = ${result}`;
-      setHistory([newHistoryEntry, ...history]);
-      setDisplayValue(String(result));
-  }
 
   const handleOperator = (nextOperator: string) => {
     const inputValue = parseFloat(displayValue);
@@ -106,33 +93,23 @@ export default function QuickCalculator() {
   };
 
   const buttons = [
-    { label: '%', handler: () => handleUnaryOperation(n => n / 100, s => `${s}%`), variant: 'secondary'},
-    { label: 'CE', handler: clearEntry, variant: 'secondary' },
-    { label: 'C', handler: clearAll, variant: 'destructive' },
-    { label: '⌫', handler: () => setDisplayValue(displayValue.slice(0, -1) || '0'), variant: 'secondary' },
-    
-    { label: '1/x', handler: () => handleUnaryOperation(n => 1 / n, s => `1/${s}`), variant: 'secondary' },
-    { label: 'x²', handler: () => handleUnaryOperation(n => n * n, s => `${s}²`), variant: 'secondary' },
-    { label: '√x', handler: () => handleUnaryOperation(n => Math.sqrt(n), s => `√${s}`), variant: 'secondary' },
+    { label: 'AC', handler: clearAll, variant: 'destructive' },
+    { label: '±', handler: () => setDisplayValue(String(parseFloat(displayValue) * -1)), variant: 'secondary' },
+    { label: '%', handler: () => { handleOperator('%'); handleEquals(); }, variant: 'secondary' },
     { label: '÷', handler: () => handleOperator('/'), variant: 'secondary' },
-    
     { label: '۷', handler: () => inputDigit('7') },
     { label: '۸', handler: () => inputDigit('8') },
     { label: '۹', handler: () => inputDigit('9') },
     { label: '×', handler: () => handleOperator('*'), variant: 'secondary' },
-
     { label: '۴', handler: () => inputDigit('4') },
     { label: '۵', handler: () => inputDigit('5') },
     { label: '۶', handler: () => inputDigit('6') },
     { label: '-', handler: () => handleOperator('-'), variant: 'secondary' },
-
     { label: '۱', handler: () => inputDigit('1') },
     { label: '۲', handler: () => inputDigit('2') },
     { label: '۳', handler: () => inputDigit('3') },
     { label: '+', handler: () => handleOperator('+'), variant: 'secondary' },
-
-    { label: '±', handler: () => setDisplayValue(String(parseFloat(displayValue) * -1)) },
-    { label: '۰', handler: () => inputDigit('0') },
+    { label: '۰', handler: () => inputDigit('0'), className: 'col-span-2' },
     { label: '.', handler: inputDecimal },
     { label: '=', handler: handleEquals, variant: 'primary' },
   ];
@@ -143,25 +120,25 @@ export default function QuickCalculator() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CalculatorIcon className="h-6 w-6 text-primary" />
-          ماشین حساب پیشرفته
+          ماشین حساب
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col md:flex-row gap-4">
         <div className="flex-grow flex flex-col">
           <div className="bg-background/50 rounded-lg p-4 w-full text-left mb-4 shadow-inner min-h-[90px] flex flex-col justify-end">
-            <p className="text-muted-foreground text-sm text-right h-6" dir="ltr">
+             <p className="text-muted-foreground text-sm text-right h-6" dir="ltr">
               {operationDisplay}
             </p>
             <p className="text-4xl font-mono break-all text-right text-foreground" dir="ltr">
               {parseFloat(displayValue).toLocaleString('fa-IR', { maximumFractionDigits: 10 })}
             </p>
           </div>
-          <div className="grid grid-cols-4 grid-rows-6 gap-2 flex-grow">
-            {buttons.map(({ label, handler, variant }) => (
+          <div className="grid grid-cols-4 gap-2 flex-grow">
+            {buttons.map(({ label, handler, variant, className }) => (
               <Button
                 key={label}
                 onClick={handler}
-                className={cn('text-xl h-full w-full shadow-sm hover:shadow-lg transition-shadow aspect-square')}
+                className={cn('text-xl h-full w-full shadow-sm hover:shadow-lg transition-shadow aspect-square', className)}
                 variant={variant as any || 'outline'}
               >
                 {label}
