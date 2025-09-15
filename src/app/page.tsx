@@ -14,7 +14,7 @@ import NumberSystemConverter from '@/components/features/number-system-converter
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
 import QrCodeGenerator from '@/components/features/qr-code-generator';
-import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, ArrowLeft, Heart, Globe } from 'lucide-react';
+import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, ArrowLeft, Heart, Globe, SpellCheck } from 'lucide-react';
 import BinaryConverter from '@/components/features/binary-converter';
 import { Button } from '@/components/ui/button';
 
@@ -62,22 +62,29 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Section: Text & Number Tools */}
+           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
+             <SectionTitle title="ابزارهای متنی و عددی" icon={<SpellCheck className="w-6 h-6 text-primary-foreground"/>} />
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+               <NumberToWordsConverter />
+               <NumberSystemConverter />
+               <BinaryConverter />
+               <PercentageCalculator />
+            </div>
+          </div>
+
           {/* Section: Utility Tools */}
           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
              <SectionTitle title="ابزارهای کاربردی" icon={<Calculator className="w-6 h-6 text-primary-foreground"/>} />
-             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
+             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                <AgeCalculator />
                <BmiCalculator />
-               <PercentageCalculator />
-               <NumberToWordsConverter />
-               <NumberSystemConverter />
                <RandomNumberGenerator />
-               <BinaryConverter />
                <Stopwatch />
             </div>
           </div>
           
-           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
+           <div className="glass-effect rounded-3xl p-4 md:p8 mb-10">
              <SectionTitle title="ابزارهای امنیتی و تولیدی" icon={<Zap className="w-6 h-6 text-primary-foreground"/>} />
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <PasswordGenerator />
