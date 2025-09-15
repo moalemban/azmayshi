@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Estedad', 'sans-serif'],
-        body: ['Shabnam', 'sans-serif'],
+        display: ['Vazirmatn', 'sans-serif'],
+        body: ['Vazirmatn', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
