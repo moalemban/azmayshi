@@ -11,6 +11,7 @@ import Stopwatch from '@/components/features/stopwatch';
 import DepositCalculator from '@/components/features/deposit-calculator';
 import NumberToWordsConverter from '@/components/features/number-to-words-converter';
 import NumberSystemConverter from '@/components/features/number-system-converter';
+import PasswordGenerator from '@/components/features/password-generator';
 import { Card, CardContent } from '@/components/ui/card';
 import { Info } from 'lucide-react';
 
@@ -68,6 +69,9 @@ export default function Home() {
             </div>
              <div className="col-span-12 md:col-span-6">
               <NumberSystemConverter />
+            </div>
+            <div className="col-span-12">
+               <PasswordGenerator />
             </div>
             
             {/* Section: Stopwatch */}
