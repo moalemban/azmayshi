@@ -76,7 +76,7 @@ export default function RandomNumberGenerator() {
   return (
     <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-white">
+        <CardTitle className="flex items-center gap-2 font-display text-foreground">
           <Dices className="h-6 w-6 text-orange-400" />
           تولید عدد تصادفی
         </CardTitle>
@@ -84,39 +84,39 @@ export default function RandomNumberGenerator() {
       <CardContent className="flex flex-col gap-4">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center">
           <div className="space-y-2">
-            <Label htmlFor="min-val" className="text-white/80">حداقل</Label>
-            <Input id="min-val" type="number" value={min} onChange={(e) => setMin(e.target.value)} className="h-12 text-lg text-center bg-black/20 text-white border-white/20" placeholder="1"/>
+            <Label htmlFor="min-val" className="text-muted-foreground">حداقل</Label>
+            <Input id="min-val" type="number" value={min} onChange={(e) => setMin(e.target.value)} className="h-12 text-lg text-center" placeholder="1"/>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="max-val" className="text-white/80">حداکثر</Label>
-            <Input id="max-val" type="number" value={max} onChange={(e) => setMax(e.target.value)} className="h-12 text-lg text-center bg-black/20 text-white border-white/20" placeholder="100"/>
+            <Label htmlFor="max-val" className="text-muted-foreground">حداکثر</Label>
+            <Input id="max-val" type="number" value={max} onChange={(e) => setMax(e.target.value)} className="h-12 text-lg text-center" placeholder="100"/>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="count" className="text-white/80">تعداد</Label>
-            <Input id="count" type="number" value={count} onChange={(e) => setCount(e.target.value)} className="h-12 text-lg text-center bg-black/20 text-white border-white/20" placeholder="5"/>
+            <Label htmlFor="count" className="text-muted-foreground">تعداد</Label>
+            <Input id="count" type="number" value={count} onChange={(e) => setCount(e.target.value)} className="h-12 text-lg text-center" placeholder="5"/>
           </div>
         </div>
         
         <div className="flex items-center space-x-2 space-x-reverse">
-            <Checkbox id="unique-numbers" checked={unique} onCheckedChange={(checked) => setUnique(Boolean(checked))} className="border-primary data-[state=checked]:bg-primary"/>
-            <Label htmlFor="unique-numbers" className="cursor-pointer text-white/80">
+            <Checkbox id="unique-numbers" checked={unique} onCheckedChange={(checked) => setUnique(Boolean(checked))} />
+            <Label htmlFor="unique-numbers" className="cursor-pointer text-muted-foreground">
                 اعداد منحصر به فرد باشند
             </Label>
         </div>
 
 
-        <Button onClick={generateNumbers} size="lg" className="bg-primary/80 hover:bg-primary/90 text-white">
+        <Button onClick={generateNumbers} size="lg">
             <RefreshCw className="ml-2 h-5 w-5"/>
             تولید عدد جدید
         </Button>
         
         <div className="relative">
             <div className="absolute top-2 left-2 z-10">
-                <Button variant="ghost" size="icon" onClick={copyResults} disabled={results.length === 0} title="کپی کردن اعداد" className="text-white/60 hover:text-white hover:bg-white/10">
+                <Button variant="ghost" size="icon" onClick={copyResults} disabled={results.length === 0} title="کپی کردن اعداد" className="text-muted-foreground hover:text-foreground">
                     <Clipboard className="h-5 w-5" />
                 </Button>
             </div>
-            <ScrollArea className="h-32 bg-black/20 rounded-lg shadow-inner">
+            <ScrollArea className="h-32 bg-muted/50 rounded-lg shadow-inner">
                 {results.length > 0 ? (
                     <div className="p-4 flex flex-wrap gap-x-4 gap-y-2 justify-center font-mono text-lg text-primary tracking-wider">
                     {results.map((num, index) => (
@@ -124,7 +124,7 @@ export default function RandomNumberGenerator() {
                     ))}
                     </div>
                 ) : (
-                    <div className="flex h-full items-center justify-center text-white/60">
+                    <div className="flex h-full items-center justify-center text-muted-foreground">
                         <p>برای تولید اعداد، دکمه را فشار دهید.</p>
                     </div>
                 )}

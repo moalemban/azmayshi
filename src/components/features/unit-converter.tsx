@@ -79,7 +79,7 @@ export default function UnitConverter() {
 
     const renderSelect = (value: string, onChange: (val:string)=>void, isDisabledCheck?: (key: string) => boolean) => (
          <Select onValueChange={onChange} value={value}>
-            <SelectTrigger className="h-12 text-base bg-black/20 text-white border-white/20">
+            <SelectTrigger className="h-12 text-base">
               <SelectValue placeholder="یک واحد انتخاب کنید" />
             </SelectTrigger>
           <SelectContent className="glass-effect">
@@ -98,7 +98,7 @@ export default function UnitConverter() {
   return (
     <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl font-display text-white">
+        <CardTitle className="flex items-center gap-2 text-2xl font-display text-foreground">
           <Scale className="h-7 w-7 text-blue-400" />
           تبدیل واحد
         </CardTitle>
@@ -107,18 +107,18 @@ export default function UnitConverter() {
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row items-center gap-2">
                 <div className='w-full space-y-2'>
-                    <Input type="number" value={fromValue} onChange={e => setFromValue(e.target.value)} placeholder="1" className="h-12 text-lg text-center bg-black/20 text-white border-white/20" />
+                    <Input type="number" value={fromValue} onChange={e => setFromValue(e.target.value)} placeholder="1" className="h-12 text-lg text-center" />
                     {renderSelect(fromUnit, handleFromUnitChange)}
                 </div>
 
                 <div className='my-2 sm:my-0'>
-                     <Button variant="ghost" size="icon" className="shrink-0 text-white/70 hover:bg-white/10" onClick={swapUnits}>
+                     <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground" onClick={swapUnits}>
                         <ArrowRightLeft className="h-6 w-6 transition-transform group-hover/card:rotate-180 duration-300"/>
                     </Button>
                 </div>
                
                 <div className='w-full space-y-2'>
-                    <Input readOnly value={toValue} className="h-12 text-lg text-center bg-black/30 border-white/10 text-primary" placeholder="نتیجه"/>
+                    <Input readOnly value={toValue} className="h-12 text-lg text-center bg-muted/50 text-primary" placeholder="نتیجه"/>
                      {renderSelect(toUnit, setToUnit, (unitKey) => currentCategoryKey !== getUnitCategoryKey(unitKey))}
                 </div>
             </div>

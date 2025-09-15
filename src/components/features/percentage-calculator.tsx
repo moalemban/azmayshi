@@ -30,7 +30,7 @@ export default function PercentageCalculator() {
   return (
     <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-white">
+        <CardTitle className="flex items-center gap-2 font-display text-foreground">
           <Percent className="h-6 w-6 text-teal-400" />
           محاسبه درصد
         </CardTitle>
@@ -38,37 +38,37 @@ export default function PercentageCalculator() {
       <CardContent className="flex flex-col gap-4">
         <div className="flex gap-4 items-end">
           <div className="space-y-2 flex-1">
-            <Label htmlFor="val1" className="text-white/80">مقدار اول</Label>
-            <Input id="val1" type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="h-12 text-lg text-center bg-black/20 text-white border-white/20" placeholder="20"/>
+            <Label htmlFor="val1" className="text-muted-foreground">مقدار اول</Label>
+            <Input id="val1" type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="h-12 text-lg text-center" placeholder="20"/>
           </div>
           <div className="space-y-2 flex-1">
-            <Label htmlFor="val2" className="text-white/80">مقدار دوم</Label>
-            <Input id="val2" type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="h-12 text-lg text-center bg-black/20 text-white border-white/20" placeholder="150"/>
+            <Label htmlFor="val2" className="text-muted-foreground">مقدار دوم</Label>
+            <Input id="val2" type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="h-12 text-lg text-center" placeholder="150"/>
           </div>
         </div>
 
-        <Separator className="my-2 bg-white/10" />
+        <Separator className="my-2 bg-border/50" />
 
         { hasValues ? (
             <div className="space-y-3">
-                <div className="p-3 bg-black/20 rounded-lg shadow-inner text-center">
-                     <p className='text-sm text-white/70'>
+                <div className="p-3 bg-muted/50 rounded-lg shadow-inner text-center">
+                     <p className='text-sm text-muted-foreground'>
                          <span className="font-mono text-primary">{val1 || '۰'}</span> درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> برابر است با:
                      </p>
-                     <p className="text-2xl font-bold text-white mt-1">{result1}</p>
+                     <p className="text-2xl font-bold text-foreground mt-1">{result1}</p>
                 </div>
-                 <div className="p-3 bg-black/20 rounded-lg shadow-inner text-center">
-                     <p className='text-sm text-white/70'>
+                 <div className="p-3 bg-muted/50 rounded-lg shadow-inner text-center">
+                     <p className='text-sm text-muted-foreground'>
                         <span className="font-mono text-primary">{val1 || '۰'}</span> چند درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> است؟
                      </p>
-                     <p className="text-2xl font-bold text-white mt-1">
+                     <p className="text-2xl font-bold text-foreground mt-1">
                         {result2}
                         <span className="text-lg font-normal">%</span>
                      </p>
                 </div>
             </div>
         ) : (
-             <div className="flex items-center justify-center text-white/60 h-36 bg-black/10 rounded-lg">
+             <div className="flex items-center justify-center text-muted-foreground h-36 bg-muted/30 rounded-lg">
                 <p>مقادیر را برای محاسبه وارد کنید.</p>
             </div>
         )}

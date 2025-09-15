@@ -14,13 +14,13 @@ import NumberSystemConverter from '@/components/features/number-system-converter
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
 import QrCodeGenerator from '@/components/features/qr-code-generator';
-import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, Gift, Percent, SpellCheck, Binary, KeyRound, Dices, QrCode as QrCodeIcon, ArrowLeft } from 'lucide-react';
+import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, ArrowLeft } from 'lucide-react';
 import BinaryConverter from '@/components/features/binary-converter';
 import { Button } from '@/components/ui/button';
 
 const SectionTitle = ({ title, icon }: { title: string, icon: React.ReactNode }) => (
-  <h2 className="col-span-12 text-2xl font-display font-bold text-white mb-8 flex items-center gap-3 text-glow">
-    <div className="w-10 h-10 bg-gradient-to-br from-primary/50 to-primary/80 rounded-xl flex items-center justify-center animate-pulse">
+  <h2 className="col-span-12 text-2xl font-display font-bold text-foreground mb-8 flex items-center gap-3 text-glow">
+    <div className="w-10 h-10 bg-gradient-to-br from-primary/80 to-accent/80 rounded-xl flex items-center justify-center animate-pulse">
         {icon}
     </div>
     {title}
@@ -39,7 +39,7 @@ export default function Home() {
 
           {/* Section: Main Tools */}
           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
-            <SectionTitle title="ابزارهای اصلی تبدیل" icon={<Scale className="w-6 h-6 text-white"/>} />
+            <SectionTitle title="ابزارهای اصلی تبدیل" icon={<Scale className="w-6 h-6 text-primary-foreground"/>} />
             <div className="grid grid-cols-12 gap-6">
               <div className="col-span-12 lg:col-span-6">
                 <UnitConverter />
@@ -55,7 +55,7 @@ export default function Home() {
 
           {/* Section: Financial Tools */}
           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
-            <SectionTitle title="ابزارهای مالی" icon={<Wallet className="w-6 h-6 text-white"/>} />
+            <SectionTitle title="ابزارهای مالی" icon={<Wallet className="w-6 h-6 text-primary-foreground"/>} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                <LoanCalculator />
                <DepositCalculator />
@@ -64,7 +64,7 @@ export default function Home() {
 
           {/* Section: Utility Tools */}
           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
-             <SectionTitle title="ابزارهای کاربردی" icon={<Calculator className="w-6 h-6 text-white"/>} />
+             <SectionTitle title="ابزارهای کاربردی" icon={<Calculator className="w-6 h-6 text-primary-foreground"/>} />
              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                <AgeCalculator />
                <BmiCalculator />
@@ -78,7 +78,7 @@ export default function Home() {
           </div>
           
            <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
-             <SectionTitle title="ابزارهای امنیتی و تولیدی" icon={<Zap className="w-6 h-6 text-white"/>} />
+             <SectionTitle title="ابزارهای امنیتی و تولیدی" icon={<Zap className="w-6 h-6 text-primary-foreground"/>} />
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <PasswordGenerator />
                 <QrCodeGenerator />
@@ -88,12 +88,12 @@ export default function Home() {
            {/* About Us Section */}
            <div className="mt-12 glass-effect rounded-3xl p-6 md:p-8">
              <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-right">
-                <div className="p-3 bg-gradient-to-br from-primary/50 to-primary/80 rounded-2xl inline-flex animate-pulse">
-                    <Info className="h-10 w-10 text-white"/>
+                <div className="p-3 bg-gradient-to-br from-primary/80 to-accent/80 rounded-2xl inline-flex animate-pulse">
+                    <Info className="h-10 w-10 text-primary-foreground"/>
                 </div>
                <div className='flex-grow'>
-                  <h3 className="text-xl font-semibold font-display text-white">درباره «تبدیلا»</h3>
-                  <p className="text-white/80 mt-2 leading-relaxed">
+                  <h3 className="text-xl font-semibold font-display text-foreground">درباره «تبدیلا»</h3>
+                  <p className="text-muted-foreground mt-2 leading-relaxed">
                     «تبدیلا» فقط یک ابزار نیست؛ یک دستیار هوشمند برای تمام لحظاتی است که به محاسبات و تبدیلات سریع، دقیق و زیبا نیاز دارید. ما با وسواس، مجموعه‌ای از بهترین ابزارهای روزمره را در یک پلتفرم مدرن و چشم‌نواز گرد هم آورده‌ایم تا کار شما را آسان‌تر کنیم.
                   </p>
                </div>
@@ -108,13 +108,13 @@ export default function Home() {
                         <HeartHandshake className="h-10 w-10 text-white"/>
                     </div>
                     <div>
-                        <h3 className="text-xl font-semibold font-display text-white">حمایت از توسعه «تبدیلا»</h3>
-                        <p className="text-white/80 mt-2">
+                        <h3 className="text-xl font-semibold font-display text-foreground">حمایت از توسعه «تبدیلا»</h3>
+                        <p className="text-muted-foreground mt-2">
                            اگر «تبدیلا» برایتان مفید بوده، با حمایت خود به رشد و پیشرفت آن کمک کنید. هر حمایتی، انرژی ما را برای ساخت ابزارهای بهتر دوچندان می‌کند.
                         </p>
                     </div>
                 </div>
-                 <Button className="bg-pink-500/80 hover:bg-pink-500/90 text-white font-bold h-12 px-8 text-base shrink-0">
+                 <Button className="bg-pink-500 hover:bg-pink-600 text-white font-bold h-12 px-8 text-base shrink-0">
                     حمایت می‌کنم
                     <ArrowLeft className="mr-2 h-5 w-5" />
                 </Button>
@@ -122,7 +122,7 @@ export default function Home() {
            </div>
         </div>
       </main>
-      <footer className="text-center p-6 text-white/60 text-sm font-body">
+      <footer className="text-center p-6 text-muted-foreground text-sm font-body">
         ❤️ توسعه داده شده توسط حسین طاهری
       </footer>
     </div>

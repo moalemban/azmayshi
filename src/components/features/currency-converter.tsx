@@ -68,10 +68,10 @@ export default function CurrencyConverter() {
   ) => (
     <div className="w-full space-y-2">
       <div className="relative">
-        <Input dir="ltr" type="text" value={formatValue(value)} onChange={onValueChange} placeholder="0" className="pl-24 text-lg h-12 bg-black/20 text-white border-white/20 text-right"/>
+        <Input dir="ltr" type="text" value={formatValue(value)} onChange={onValueChange} placeholder="0" className="pl-24 text-lg h-12 text-right"/>
         <div className="absolute inset-y-0 left-0 flex items-center">
             <Select value={currencyCode} onValueChange={onCurrencyChange}>
-              <SelectTrigger className="w-[100px] border-0 bg-transparent h-full rounded-l-md text-white">
+              <SelectTrigger className="w-[100px] border-0 bg-transparent h-full rounded-l-md text-foreground">
                 <SelectValue placeholder="ارز" />
               </SelectTrigger>
               <SelectContent className="glass-effect">
@@ -80,7 +80,7 @@ export default function CurrencyConverter() {
             </Select>
         </div>
       </div>
-       <p className="text-xs text-white/70 text-right pr-2 h-4">
+       <p className="text-xs text-muted-foreground text-right pr-2 h-4">
         {currencies.find(c => c.code === currencyCode)?.name}
       </p>
     </div>
@@ -90,7 +90,7 @@ export default function CurrencyConverter() {
   return (
     <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-white">
+        <CardTitle className="flex items-center gap-2 font-display text-foreground">
           <Landmark className="h-6 w-6 text-green-400" />
           تبدیل ارز
         </CardTitle>
@@ -99,7 +99,7 @@ export default function CurrencyConverter() {
         <div className="flex flex-col items-center gap-2">
            {renderInput(fromAmount, (e) => handleAmountChange(e, true), fromCurrency, setFromCurrency)}
 
-          <Button variant="ghost" size="icon" className="shrink-0 my-1 text-white/70 hover:bg-white/10" onClick={swapCurrencies}>
+          <Button variant="ghost" size="icon" className="shrink-0 my-1 text-muted-foreground" onClick={swapCurrencies}>
             <ArrowRightLeft className="h-5 w-5 transition-transform group-hover/card:rotate-180 duration-300" />
           </Button>
 

@@ -45,35 +45,35 @@ export default function BinaryConverter() {
   return (
     <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-white">
+        <CardTitle className="flex items-center gap-2 font-display text-foreground">
           <BinaryIcon className="h-6 w-6 text-cyan-400" />
           تبدیل متن و باینری
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="space-y-2">
-          <Label htmlFor="text-input" className="text-white/80">متن (فارسی/انگلیسی)</Label>
+          <Label htmlFor="text-input" className="text-muted-foreground">متن (فارسی/انگلیسی)</Label>
           <Textarea
             id="text-input"
             value={text}
             onChange={handleTextChange}
             placeholder="متن خود را اینجا وارد کنید..."
-            className="min-h-[100px] text-base bg-black/20 text-white border-white/20"
+            className="min-h-[100px] text-base"
           />
         </div>
 
         <div className="flex justify-center">
-            <ArrowRightLeft className="h-6 w-6 text-white/60 transition-transform group-hover/card:rotate-180 duration-300" />
+            <ArrowRightLeft className="h-6 w-6 text-muted-foreground transition-transform group-hover/card:rotate-180 duration-300" />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="binary-input" className="text-white/80">کد باینری (Binary)</Label>
+          <Label htmlFor="binary-input" className="text-muted-foreground">کد باینری (Binary)</Label>
           <Textarea
             id="binary-input"
             value={binary}
             onChange={handleBinaryChange}
             placeholder="01010011 01100001 01101100"
-            className="min-h-[100px] text-left font-mono bg-black/20 text-white border-white/20"
+            className="min-h-[100px] text-left font-mono"
             dir="ltr"
           />
         </div>

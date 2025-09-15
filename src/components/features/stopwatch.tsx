@@ -55,13 +55,13 @@ export default function Stopwatch() {
   return (
     <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-white">
+        <CardTitle className="flex items-center gap-2 font-display text-foreground">
           <Timer className="h-6 w-6 text-indigo-400" />
           کرونومتر
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="text-center bg-black/20 p-4 rounded-lg shadow-inner" dir="ltr">
+        <div className="text-center bg-muted/50 p-4 rounded-lg shadow-inner" dir="ltr">
             <p className="text-6xl font-mono text-primary tracking-wider text-glow">
               {minutes}:{seconds}
               <span className="text-3xl text-primary/70">.{milliseconds}</span>
@@ -69,24 +69,24 @@ export default function Stopwatch() {
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-            <Button onClick={handleStartPause} size="lg" className={`h-14 text-lg ${isRunning ? 'bg-yellow-500/80 hover:bg-yellow-500/90' : 'bg-green-500/80 hover:bg-green-500/90'} text-white`}>
+            <Button onClick={handleStartPause} size="lg" className={`h-14 text-lg ${isRunning ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600'} text-white`}>
               {isRunning ? <Pause className="ml-2" /> : <Play className="ml-2" />}
               {isRunning ? 'توقف' : 'شروع'}
             </Button>
-            <Button onClick={handleLap} size="lg" variant="secondary" className="h-14 text-lg bg-white/10 text-white/80 hover:bg-white/20" disabled={!isRunning}>
+            <Button onClick={handleLap} size="lg" variant="secondary" className="h-14 text-lg" disabled={!isRunning}>
               <History className="ml-2" />
               دور
             </Button>
-             <Button onClick={handleReset} variant="destructive" className="h-14 text-lg col-span-2 bg-red-500/80 hover:bg-red-500/90 text-white">
+             <Button onClick={handleReset} variant="destructive" className="h-14 text-lg col-span-2">
                 <Redo className="ml-2"/>
                 ریست
             </Button>
         </div>
         
-        <ScrollArea className="h-32 mt-2 bg-black/20 rounded-lg shadow-inner">
+        <ScrollArea className="h-32 mt-2 bg-muted/50 rounded-lg shadow-inner">
             <div className="p-2">
             {laps.length === 0 ? (
-                 <div className="flex items-center justify-center h-full text-white/60 py-12">
+                 <div className="flex items-center justify-center h-full text-muted-foreground py-12">
                     <p>دوری ثبت نشده است.</p>
                 </div>
             ) : (
@@ -94,8 +94,8 @@ export default function Stopwatch() {
                     {laps.map((lapTime, index) => {
                         const { minutes, seconds, milliseconds } = formatTime(lapTime);
                         return (
-                            <li key={index} className="flex justify-between items-center text-sm p-2 rounded-md bg-black/20 font-mono text-white/80" dir="ltr">
-                               <span className='text-white/60'>
+                            <li key={index} className="flex justify-between items-center text-sm p-2 rounded-md bg-background/50 font-mono text-muted-foreground" dir="ltr">
+                               <span className='text-foreground/80'>
                                  دور {laps.length - index}
                                </span>
                                <span>{minutes}:{seconds}.{milliseconds}</span>

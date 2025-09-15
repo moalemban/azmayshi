@@ -117,7 +117,7 @@ export default function PasswordGenerator() {
   return (
     <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-white">
+        <CardTitle className="flex items-center gap-2 font-display text-foreground">
           <KeyRound className="h-6 w-6 text-violet-400" />
           تولیدکننده رمز عبور
         </CardTitle>
@@ -127,14 +127,14 @@ export default function PasswordGenerator() {
           <Input
             readOnly
             value={password}
-            className="h-14 text-lg text-center font-mono tracking-widest pr-24 pl-12 bg-black/20 text-white border-white/20"
+            className="h-14 text-lg text-center font-mono tracking-widest pr-24 pl-12"
             placeholder="رمز شما اینجا ظاهر می‌شود..."
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-             <Button variant="ghost" size="icon" onClick={generatePassword} className="text-white/70 hover:bg-white/10 hover:text-white">
+             <Button variant="ghost" size="icon" onClick={generatePassword} className="text-muted-foreground hover:text-foreground">
                 <RefreshCw className="h-5 w-5" />
              </Button>
-            <Button variant="ghost" size="icon" onClick={copyToClipboard} className="text-white/70 hover:bg-white/10 hover:text-white">
+            <Button variant="ghost" size="icon" onClick={copyToClipboard} className="text-muted-foreground hover:text-foreground">
               <Clipboard className="h-5 w-5" />
             </Button>
           </div>
@@ -142,7 +142,7 @@ export default function PasswordGenerator() {
 
         <div className="space-y-4">
             <div className='flex items-center justify-between'>
-                <Label className="text-white/80">طول رمز: <span className='font-mono text-primary text-lg'>{length}</span></Label>
+                <Label className="text-muted-foreground">طول رمز: <span className='font-mono text-primary text-lg'>{length}</span></Label>
                  <div className='w-48'>
                      <Slider
                         value={[length]}
@@ -155,7 +155,7 @@ export default function PasswordGenerator() {
             </div>
              <div className='space-y-2'>
                 <div className='flex items-center justify-between'>
-                    <Label className="text-white/80">قدرت رمز:</Label>
+                    <Label className="text-muted-foreground">قدرت رمز:</Label>
                     <span className='text-sm font-medium' style={{color: `hsl(var(${strength.color.replace('bg-', '--')}))`}}>{strength.label}</span>
                 </div>
                  <Progress value={strength.value} className={cn("h-2", strength.color)} />
@@ -169,9 +169,8 @@ export default function PasswordGenerator() {
                 id={key}
                 checked={options[key as keyof typeof options]}
                 onCheckedChange={() => handleOptionChange(key as keyof typeof options)}
-                className="border-primary data-[state=checked]:bg-primary"
               />
-              <Label htmlFor={key} className="text-base cursor-pointer text-white/80">
+              <Label htmlFor={key} className="text-base cursor-pointer text-muted-foreground">
                 {
                     {
                         'lowercase': 'حروف کوچک',
