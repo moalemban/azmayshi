@@ -1,63 +1,122 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Scale, Sparkles, Loader2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { getSuggestedConversions } from '@/app/actions/suggest-conversions';
+import { Scale, ArrowRightLeft } from 'lucide-react';
 import { unitCategories } from '@/lib/constants';
-import type { ConversionSuggestion } from '@/lib/types';
-import { Separator } from '../ui/separator';
 
-const formSchema = z.object({
-  value: z.coerce.number().min(0, "مقدار باید یک عدد مثبت باشد."),
-  unit: z.string().min(1, "لطفا یک واحد انتخاب کنید."),
-});
+// A simple conversion library (can be expanded)
+const conversionRates: { [key: string]: number } = {
+  // Length
+  meter: 1,
+  kilometer: 1000,
+  centimeter: 0.01,
+  millimeter: 0.001,
+  mile: 1609.34,
+  yard: 0.9144,
+  foot: 0.3048,
+  inch: 0.0254,
+  // Mass
+  kilogram: 1,
+  gram: 0.001,
+  milligram: 0.000001,
+  pound: 0.453592,
+  ounce: 0.0283495,
+  // Volume
+  liter: 1,
+  milliliter: 0.001,
+  'cubic meter': 1000,
+  gallon: 3.78541,
+  quart: 0.946353,
+  pint: 0.473176,
+  cup: 0.24,
+};
+
+const getUnitCategory = (unit: string) => {
+    for (const category in unitCategories) {
+        if (unitCategories[category].includes(unit)) {
+            return category;
+        }
+    }
+    return null;
+}
 
 export default function UnitConverter() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<ConversionSuggestion[]>([]);
-  const { toast } = useToast();
+    const [fromUnit, setFromUnit] = useState('meter');
+    const [toUnit, setToUnit] = useState('kilometer');
+    const [fromValue, setFromValue] = useState<string>('1');
+    const [toValue, setToValue] = useState<string>('');
+    const [currentCategory, setCurrentCategory] = useState('طول');
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      value: 1,
-      unit: "meter",
-    },
-  });
+    const convert = (value: number, from: string, to: string) => {
+        if (from === to) return value;
+        // Temperature is special case
+        if (from === 'celsius' && to === 'fahrenheit') return (value * 9/5) + 32;
+        if (from === 'fahrenheit' && to === 'celsius') return (value - 32) * 5/9;
+        if (from === 'celsius' && to === 'kelvin') return value + 273.15;
+        if (from === 'kelvin' && to === 'celsius') return value - 273.15;
+        if (from === 'fahrenheit' && to === 'kelvin') return ((value - 32) * 5/9) + 273.15;
+        if (from === 'kelvin' && to === 'fahrenheit') return ((value - 273.15) * 9/5) + 32;
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    setSuggestions([]);
-    const result = await getSuggestedConversions({
-      inputValue: values.value,
-      inputUnit: values.unit,
-    });
-    setIsLoading(false);
+        const fromRate = conversionRates[from];
+        const toRate = conversionRates[to];
 
-    if (result.success && result.data) {
-      setSuggestions(result.data.suggestedConversions);
-    } else {
-      toast({
-        variant: "destructive",
-        title: "خطا در ارتباط با هوش مصنوعی",
-        description: result.error,
-      });
+        if (fromRate && toRate) {
+            const valueInBase = value * fromRate;
+            return valueInBase / toRate;
+        }
+        return NaN; // Cannot convert
+    };
+
+    useEffect(() => {
+        const value = parseFloat(fromValue);
+        if (!isNaN(value)) {
+            const result = convert(value, fromUnit, toUnit);
+            if (!isNaN(result)) {
+                setToValue(result.toLocaleString('fa-IR', { maximumFractionDigits: 4 }));
+            } else {
+                setToValue('');
+            }
+        } else {
+            setToValue('');
+        }
+    }, [fromValue, fromUnit, toUnit]);
+    
+    const handleFromUnitChange = (unit: string) => {
+        const newCategory = getUnitCategory(unit);
+        setFromUnit(unit);
+        if(newCategory !== currentCategory) {
+            setCurrentCategory(newCategory!);
+            const newToUnit = unitCategories[newCategory!][0] === unit ? unitCategories[newCategory!][1] : unitCategories[newCategory!][0];
+            setToUnit(newToUnit);
+        }
     }
-  }
+    
+    const swapUnits = () => {
+        setFromUnit(toUnit);
+        setToUnit(fromUnit);
+        setFromValue(toValue.replace(/,/g, ''));
+    }
 
-  useEffect(() => {
-    form.handleSubmit(onSubmit)();
-  }, []);
+    const renderSelect = (value: string, onChange: (val:string)=>void) => (
+         <Select onValueChange={onChange} value={value}>
+            <SelectTrigger className="h-12 text-lg">
+              <SelectValue placeholder="یک واحد انتخاب کنید" />
+            </SelectTrigger>
+          <SelectContent>
+            {Object.entries(unitCategories).map(([category, units]) => (
+                <SelectGroup key={category}>
+                    <SelectLabel>{category}</SelectLabel>
+                    {units.map((unit) => (
+                        <SelectItem key={unit} value={unit} disabled={currentCategory && currentCategory !== category}>{unit}</SelectItem>
+                    ))}
+                </SelectGroup>
+            ))}
+          </SelectContent>
+        </Select>
+    );
 
   return (
     <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
@@ -65,97 +124,27 @@ export default function UnitConverter() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl">
           <Scale className="h-7 w-7 text-primary" />
-          تبدیل واحد هوشمند
+          تبدیل واحد
         </CardTitle>
-        <CardDescription className="flex items-center gap-1.5 pt-1">
-          <Sparkles className="h-4 w-4 text-primary/80" />
-          پیشنهادهای هوشمند با کمک هوش مصنوعی Gemini
-        </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <FormField
-                control={form.control}
-                name="value"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>مقدار</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="مقدار را وارد کنید" {...field} className="h-12 text-lg" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="unit"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>واحد</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="h-12 text-lg">
-                          <SelectValue placeholder="یک واحد انتخاب کنید" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(unitCategories).map(([category, units]) => (
-                            <SelectGroup key={category}>
-                                <SelectLabel>{category}</SelectLabel>
-                                {units.map((unit) => (
-                                    <SelectItem key={unit} value={unit}>{unit}</SelectItem>
-                                ))}
-                            </SelectGroup>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row items-center gap-2">
+                <div className='w-full space-y-2'>
+                    <Input type="number" value={fromValue} onChange={e => setFromValue(e.target.value)} className="h-12 text-lg" />
+                    {renderSelect(fromUnit, handleFromUnitChange)}
+                </div>
+
+                <div className='my-2 sm:my-0'>
+                     <ArrowRightLeft className="h-6 w-6 text-muted-foreground transition-transform group-hover/card:rotate-180 duration-300 cursor-pointer" onClick={swapUnits}/>
+                </div>
+               
+                <div className='w-full space-y-2'>
+                    <Input readOnly value={toValue} className="h-12 text-lg bg-background/50" />
+                     {renderSelect(toUnit, setToUnit)}
+                </div>
             </div>
-            <Button type="submit" disabled={isLoading} className="w-full h-12 text-lg font-bold">
-              {isLoading ? (
-                <>
-                  <Loader2 className="ml-2 h-5 w-5 animate-spin" />
-                  در حال دریافت پیشنهاد...
-                </>
-              ) : (
-                'دریافت پیشنهاد تبدیل'
-              )}
-            </Button>
-          </form>
-        </Form>
-        {(isLoading || suggestions.length > 0) && (
-            <div className="mt-8">
-                <Separator className="my-6 bg-border/50" />
-                <h3 className="text-xl font-semibold mb-4 text-center">✨ پیشنهادها ✨</h3>
-                {isLoading ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {[...Array(3)].map((_, i) => (
-                           <div key={i} className="p-4 border rounded-lg bg-background/50 text-center space-y-2">
-                               <div className="h-8 w-3/4 mx-auto animate-pulse rounded-md bg-muted"></div>
-                               <div className="h-4 w-1/2 mx-auto animate-pulse rounded-md bg-muted"></div>
-                           </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {suggestions.map((s, i) => (
-                            <div key={i} className="p-4 border border-dashed rounded-lg bg-background/30 text-center transition-all hover:border-solid hover:border-primary/50 hover:bg-background/80">
-                                <div className="text-3xl font-bold text-primary" dir="ltr">
-                                    {s.convertedValue.toLocaleString('fa-IR', { maximumFractionDigits: 4 })}
-                                </div>
-                                <div className="text-sm text-muted-foreground mt-1">{s.targetUnit}</div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-        )}
+          </div>
       </CardContent>
     </Card>
   );
