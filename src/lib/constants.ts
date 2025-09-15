@@ -28,24 +28,19 @@ export const mockExchangeRates: { [key: string]: number } = {
 
 export const livePrices: { [key: string]: LivePrice[] } = {
   gold: [
-    { name: 'انس طلا', price: '2,320.55', change: 0.005, symbol: 'USD' },
-    { name: 'سکه امامی', price: '41,500,000', change: -0.012, symbol: 'IRR' },
-    { name: 'گرم طلا ۱۸ عیار', price: '3,745,000', change: 0.008, symbol: 'IRR' },
+    { name: 'سکه امامی', price: '41,500,000', change: -0.012, symbol: 'IRR', id: 'sekkeh' },
+    { name: 'گرم طلا ۱۸ عیار', price: '3,745,000', change: 0.008, symbol: 'IRR', id: 'gold-18' },
   ],
   currencies: [
-    { name: 'دلار بازار', price: '59,000', change: 0.008, symbol: 'IRT' },
-    { name: 'یورو بازار', price: '64,200', change: 0.011, symbol: 'IRT' },
-    { name: 'درهم امارات', price: '16,080', change: 0.005, symbol: 'IRT' },
+    { name: 'دلار بازار', price: '59,000', change: 0.008, symbol: 'IRT', id: 'usd-market' },
+    { name: 'یورو بازار', price: '64,200', change: 0.011, symbol: 'IRT', id: 'eur-market' },
+    { name: 'درهم امارات', price: '16,080', change: 0.005, symbol: 'IRT', id: 'aed-market' },
   ],
   stocks: [
-    { name: 'شاخص کل بورس', price: '2,075,630', change: -0.0025, symbol: 'واحد' },
-    { name: 'شاخص هم‌وزن', price: '675,120', change: 0.001, symbol: 'واحد' },
+    { name: 'شاخص کل بورس', price: '2,075,630', change: -0.0025, symbol: 'واحد', id: 'bourse-total' },
+    { name: 'شاخص هم‌وزن', price: '675,120', change: 0.001, symbol: 'واحد', id: 'bourse-hamvazn' },
   ],
-  crypto: [
-    { name: 'بیت‌کوین', price: '67,500', change: 0.02, symbol: 'USDT' },
-    { name: 'اتریوم', price: '3,780', change: 0.035, symbol: 'USDT' },
-    { name: 'تتر', price: '59,100', change: 0.001, symbol: 'IRT' },
-  ],
+  crypto: [],
 };
 
 export const unitCategories: { [key: string]: string[] } = {
