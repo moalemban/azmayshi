@@ -14,7 +14,7 @@ import NumberSystemConverter from '@/components/features/number-system-converter
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
 import QrCodeGenerator from '@/components/features/qr-code-generator';
-import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, ArrowLeft } from 'lucide-react';
+import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, ArrowLeft, Heart } from 'lucide-react';
 import BinaryConverter from '@/components/features/binary-converter';
 import { Button } from '@/components/ui/button';
 
@@ -123,7 +123,10 @@ export default function Home() {
         </div>
       </main>
       <footer className="text-center p-6 text-muted-foreground text-sm font-body">
-        ❤️ توسعه داده شده توسط <a href="https://www.hosseintaheri.org/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">حسین طاهری</a>
+        <div className="flex items-center justify-center gap-2">
+            <Heart className="w-5 h-5 text-red-500 fill-current" />
+            توسعه داده شده توسط <a href="https://www.hosseintaheri.org/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">حسین طاهری</a>
+        </div>
       </footer>
     </div>
   );

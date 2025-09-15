@@ -53,6 +53,7 @@ const PriceCardSkeleton = () => (
 export default function LivePrices() {
   const [prices, setPrices] = useState<LivePrice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const fetchPrices = async () => {
     setLoading(true);
@@ -93,6 +94,7 @@ export default function LivePrices() {
       ];
       
       setPrices(newPrices);
+      setLastUpdated(new Date());
     } catch (error) {
       console.error("Failed to fetch prices:", error);
       // Fallback to static prices if API fails
@@ -123,19 +125,23 @@ export default function LivePrices() {
 
   return (
     <>
-      <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground mb-6 flex items-center text-glow">
-        <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center ml-3 animate-pulse">
-            <CandlestickChart className="w-6 h-6 text-white" />
-        </div>
-        قیمت‌های لحظه‌ای
-        <div className="mr-auto flex items-center space-x-2 space-x-reverse">
+      <div className="flex flex-wrap items-center justify-between gap-y-2 mb-6">
+        <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground flex items-center text-glow">
+          <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center ml-3 animate-pulse">
+              <CandlestickChart className="w-6 h-6 text-white" />
+          </div>
+          قیمت‌های لحظه‌ای
+        </h2>
+        <div className="flex items-center space-x-2 space-x-reverse">
              <Button variant="ghost" size="icon" onClick={fetchPrices} disabled={loading} className="text-muted-foreground">
                 <RefreshCw className={cn("h-5 w-5", loading && "animate-spin")} />
              </Button>
             <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
-            <span className="text-sm text-muted-foreground font-body">زنده</span>
+            <span className="text-sm text-muted-foreground font-body">
+              {loading ? 'در حال بروزرسانی...' : `زنده - آخرین بروزرسانی در ${lastUpdated?.toLocaleTimeString('fa-IR')}`}
+            </span>
         </div>
-      </h2>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
         {loading ? (
           <>
