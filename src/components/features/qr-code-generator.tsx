@@ -77,7 +77,7 @@ export default function QrCodeGenerator() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <QrCode className="h-6 w-6 text-primary" />
-          تولید کننده بارکد
+          تولید کننده QR Code
         </CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
