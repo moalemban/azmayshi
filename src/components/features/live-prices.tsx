@@ -31,10 +31,10 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
 
 const PriceList = ({ prices }: { prices: LivePrice[] }) => (
   <ul className="space-y-3">
-    {prices.map((item) => (
+    {prices.map((item, index) => (
       <li key={item.name} className="flex justify-between items-center bg-background/30 p-3 rounded-lg transition-all duration-200 hover:bg-background/60 hover:shadow-md hover:scale-[1.03]">
         <div className="flex items-center gap-3">
-          <div className="w-2 h-8 rounded-full" style={{backgroundColor: `hsl(var(--primary) / ${Math.random() * 0.6 + 0.2})`}}></div>
+          <div className="w-2 h-8 rounded-full" style={{backgroundColor: `hsl(var(--primary) / ${((index % 5) * 0.15) + 0.3})`}}></div>
           <div>
             <p className="font-medium text-foreground">{item.name}</p>
             <p className="text-xs text-muted-foreground">{item.symbol}</p>
