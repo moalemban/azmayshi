@@ -29,7 +29,7 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
 };
 
 const PriceCard = ({ item }: { item: LivePrice }) => (
-    <div className="flex-shrink-0 w-48 sm:w-52 glass-effect rounded-2xl p-3 card-hover">
+    <div className="glass-effect rounded-2xl p-3 card-hover w-full">
         <div className="flex items-center gap-3">
             <div className="text-3xl">{item.icon}</div>
             <div className="flex-grow text-right">
@@ -47,7 +47,7 @@ const PriceCard = ({ item }: { item: LivePrice }) => (
 );
 
 const PriceCardSkeleton = () => (
-  <div className="flex-shrink-0 w-48 sm:w-52 glass-effect rounded-2xl p-3">
+  <div className="glass-effect rounded-2xl p-3 w-full">
     <div className="flex items-center gap-3">
       <Skeleton className="w-8 h-8 rounded-full" />
       <div className="flex-grow space-y-2">
@@ -157,7 +157,7 @@ export default function LivePrices() {
             </span>
         </div>
       </div>
-      <div className="horizontal-scrollbar flex items-center gap-4 overflow-x-auto pb-4 -mb-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {loading ? (
           <>
             <PriceCardSkeleton />
