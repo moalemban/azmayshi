@@ -1,31 +1,17 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw } from 'lucide-react';
-import { livePrices as staticPrices } from '@/lib/constants';
+import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Briefcase, Droplet, Mountain, Coins, Banknote, CircleDollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { LivePrice } from '@/lib/types';
+import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { fetchPrices as fetchPricesFlow } from '@/ai/flows/fetch-prices-flow';
 
 const PriceChangeIndicator = ({ change }: { change: number }) => {
-  const isPositive = change > 0;
-  if (change === 0) return null;
-
-  return (
-    <span
-      dir="ltr"
-      className={cn(
-        'flex items-center text-xs font-medium tabular-nums rounded-full px-2 py-0.5',
-        isPositive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-      )}
-    >
-      {isPositive ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
-      <span className="ml-1">{isPositive && '+'}
-      {(change * 100).toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
-      </span>
-    </span>
-  );
+  // The new source does not provide change percentage easily, so we hide this for now.
+  // We can add it back later if we enhance the flow.
+  return null;
 };
 
 const PriceCard = ({ item }: { item: LivePrice }) => (
@@ -38,8 +24,8 @@ const PriceCard = ({ item }: { item: LivePrice }) => (
             </div>
         </div>
         <div className="mt-2 text-right">
-            <div className="text-xl text-foreground font-mono text-glow">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</div>
-            <div className="flex justify-end mt-1">
+            <div className="text-xl text-foreground font-mono text-glow">{item.price}</div>
+             <div className="flex justify-end mt-1 h-5">
                 <PriceChangeIndicator change={item.change} />
             </div>
         </div>
@@ -57,10 +43,21 @@ const PriceCardSkeleton = () => (
     </div>
     <div className="mt-2 space-y-2 text-right">
         <Skeleton className="h-6 w-1/2 ml-auto" />
-        <Skeleton className="h-4 w-1/4 ml-auto" />
+        <Skeleton className="h-5 w-1/4 ml-auto" />
     </div>
   </div>
 );
+
+const priceConfig: { [key in keyof PriceData]: Omit<LivePrice, 'price' | 'change'> } = {
+    Bourse: { id: 'Bourse', name: 'بورس', symbol: 'واحد', icon: '📊' },
+    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: '🥇' },
+    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: '⚖️' },
+    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: '⚖️' },
+    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: '🪙' },
+    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: '💵' },
+    BrentOil: { id: 'BrentOil', name: 'نفت برنت', symbol: 'USD', icon: '🛢️' },
+    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: '₮' },
+};
 
 
 export default function LivePrices() {
@@ -71,50 +68,27 @@ export default function LivePrices() {
   const fetchPrices = async () => {
     setLoading(true);
     try {
-      // Fetch prices from CoinGecko
-      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,gold&vs_currencies=usd,irr&include_24hr_change=true');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      
-      const newPrices: LivePrice[] = [
-        {
-          id: 'gold',
-          name: 'انس طلا',
-          price: data.gold.usd.toString(),
-          change: data.gold.usd_24h_change / 100,
-          symbol: 'USD',
-          icon: '🥇'
-        },
-        ...staticPrices.gold,
-        {
-          id: 'usd-market',
-          name: 'دلار (تتر)',
-          price: (data.tether.irr / 10).toString(),
-          change: data.tether.irr_24h_change / 100,
-          symbol: 'IRT',
-          icon: '💵'
-        },
-        {
-          id: 'bitcoin',
-          name: 'بیت‌کوین',
-          price: data.bitcoin.usd.toString(),
-          change: data.bitcoin.usd_24h_change / 100,
-          symbol: 'USD',
-          icon: '₿'
-        },
-      ];
-      
+      const data = await fetchPricesFlow();
+      if (!data) throw new Error("No data returned from flow");
+
+      const newPrices: LivePrice[] = Object.entries(data)
+        .map(([key, priceValue]) => {
+          const config = priceConfig[key as keyof PriceData];
+          if (!config || !priceValue) return null;
+          return {
+            ...config,
+            price: Number(priceValue).toLocaleString('fa-IR'),
+            change: 0, // Change is not available from the new source
+          };
+        })
+        .filter((p): p is LivePrice => p !== null);
+
       setPrices(newPrices);
       setLastUpdated(new Date());
     } catch (error) {
       console.error("Failed to fetch prices:", error);
-      // Fallback to static prices if API fails
-       const staticCrypto = staticPrices.crypto.find(c => c.id === 'bitcoin') || [];
-        const staticGoldOunce = {id: 'gold', name: 'انس طلا', price: '2300', change: 0, symbol: 'USD', icon: '🥇'};
-        const allStatic = [...staticPrices.gold, staticPrices.currencies[0], ...staticCrypto ? [staticCrypto] : [], staticGoldOunce];
-        setPrices(allStatic);
+      // In case of an error, we can show an empty state or a message
+      setPrices([]);
     } finally {
       setLoading(false);
     }
@@ -122,21 +96,11 @@ export default function LivePrices() {
 
   useEffect(() => {
     fetchPrices();
-    const interval = setInterval(fetchPrices, 300000); // Refresh every 5 minutes
-    return () => clearInterval(interval);
   }, []);
 
-  const findPrice = (id: string) => prices.find(p => p.id === id);
-
   const displayedPrices = loading 
-    ? Array(5).fill(null)
-    : [
-        findPrice('gold'),       
-        findPrice('sekkeh'),     
-        findPrice('gold-18'),    
-        findPrice('usd-market'), 
-        findPrice('bitcoin'),    
-      ];
+    ? Array(8).fill(null)
+    : prices;
 
   return (
     <>
@@ -153,21 +117,15 @@ export default function LivePrices() {
              </Button>
             <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
             <span className="text-sm text-muted-foreground font-body">
-              {loading ? 'در حال بروزرسانی...' : `زنده - ${lastUpdated?.toLocaleTimeString('fa-IR')}`}
+              {loading ? 'در حال بروزرسانی...' : (lastUpdated ? `زنده - ${lastUpdated.toLocaleTimeString('fa-IR')}`: 'خطا در بروزرسانی')}
             </span>
         </div>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
         {loading ? (
-          <>
-            <PriceCardSkeleton />
-            <PriceCardSkeleton />
-            <PriceCardSkeleton />
-            <PriceCardSkeleton />
-            <PriceCardSkeleton />
-          </>
+          Array.from({ length: 8 }).map((_, index) => <PriceCardSkeleton key={index} />)
         ) : (
-          displayedPrices.map((item, index) => item ? <PriceCard key={item.id} item={item} /> : <PriceCardSkeleton key={index}/>)
+          displayedPrices.map((item) => item ? <PriceCard key={item.id} item={item} /> : null)
         )}
       </div>
     </>
