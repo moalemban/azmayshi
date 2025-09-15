@@ -17,27 +17,31 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
     <span
       dir="ltr"
       className={cn(
-        'flex items-center text-xs font-medium tabular-nums',
-        isPositive ? 'text-green-400' : 'text-red-400'
+        'flex items-center text-xs font-medium tabular-nums rounded-full px-2 py-0.5',
+        isPositive ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
       )}
     >
-      {isPositive ? <ArrowUp className="h-3 w-3 mr-1" /> : <ArrowDown className="h-3 w-3 mr-1" />}
-      {isPositive && '+'}
+      {isPositive ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
+      <span className="mr-1">{isPositive && '+'}
       {(change * 100).toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
+      </span>
     </span>
   );
 };
 
 const PriceList = ({ prices }: { prices: LivePrice[] }) => (
-  <ul className="space-y-4">
+  <ul className="space-y-3">
     {prices.map((item) => (
-      <li key={item.name} className="flex justify-between items-center bg-background/30 p-3 rounded-lg transition-colors hover:bg-background/60">
-        <div>
-          <p className="font-medium text-foreground">{item.name}</p>
-          <p className="text-xs text-muted-foreground">{item.symbol}</p>
+      <li key={item.name} className="flex justify-between items-center bg-background/30 p-3 rounded-lg transition-all duration-200 hover:bg-background/60 hover:shadow-md hover:scale-[1.03]">
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-8 rounded-full" style={{backgroundColor: `hsl(var(--primary) / ${Math.random() * 0.6 + 0.2})`}}></div>
+          <div>
+            <p className="font-medium text-foreground">{item.name}</p>
+            <p className="text-xs text-muted-foreground">{item.symbol}</p>
+          </div>
         </div>
-        <div className="text-right font-mono">
-          <p className="font-semibold text-foreground">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</p>
+        <div className="flex items-center gap-4">
+          <p className="font-semibold text-foreground font-mono text-lg">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</p>
           <PriceChangeIndicator change={item.change} />
         </div>
       </li>

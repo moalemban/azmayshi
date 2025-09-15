@@ -21,17 +21,17 @@ export default function Home() {
             <div className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
               <DateConverter />
             </div>
-            <div className="col-span-12 lg:col-span-6">
+            <div className="col-span-12 lg:col-span-5">
               <LivePrices />
             </div>
-            <div className="col-span-12 lg:col-span-6">
+            <div className="col-span-12 lg:col-span-7">
               <QuickCalculator />
             </div>
           </div>
         </div>
       </main>
       <footer className="text-center p-6 text-muted-foreground text-sm">
-        ساخته شده با ❤️ در استودیو فایربیس
+        توسعه داده شده توسط حسین طاهری
       </footer>
     </div>
   );

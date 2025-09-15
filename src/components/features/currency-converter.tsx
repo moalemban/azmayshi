@@ -52,6 +52,33 @@ export default function CurrencyConverter() {
     return val.toLocaleString('fa-IR', { maximumFractionDigits: val < 1 ? 6 : 2 });
   }
 
+  const renderInput = (
+    value: number,
+    onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    currencyCode: string,
+    onCurrencyChange: (code: string) => void
+  ) => (
+    <div className="w-full space-y-2">
+      <div className="relative">
+        <Input dir="ltr" type="text" value={formatValue(value)} onChange={onValueChange} placeholder="0" className="pr-24 text-lg h-12"/>
+        <div className="absolute inset-y-0 right-0 flex items-center">
+            <Select value={currencyCode} onValueChange={onCurrencyChange}>
+              <SelectTrigger className="w-[100px] border-0 bg-transparent h-full rounded-r-md">
+                <SelectValue placeholder="ارز" />
+              </SelectTrigger>
+              <SelectContent>
+                {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code}</SelectItem>)}
+              </SelectContent>
+            </Select>
+        </div>
+      </div>
+       <p className="text-xs text-muted-foreground text-right pr-2 h-4">
+        {currencies.find(c => c.code === currencyCode)?.name}
+      </p>
+    </div>
+  );
+
+
   return (
     <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
@@ -62,34 +89,15 @@ export default function CurrencyConverter() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-full space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">مبلغ</label>
-            <Input dir="ltr" type="text" value={formatValue(fromAmount)} onChange={(e) => handleAmountChange(e, true)} placeholder="0"/>
-            <Select value={fromCurrency} onValueChange={setFromCurrency}>
-              <SelectTrigger>
-                <SelectValue placeholder="انتخاب ارز" />
-              </SelectTrigger>
-              <SelectContent>
-                {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code} - {c.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <Button variant="ghost" size="icon" className="shrink-0" onClick={swapCurrencies}>
+        <div className="flex flex-col items-center gap-2">
+           {renderInput(fromAmount, (e) => handleAmountChange(e, true), fromCurrency, setFromCurrency)}
+
+          <Button variant="ghost" size="icon" className="shrink-0 my-1" onClick={swapCurrencies}>
             <ArrowRightLeft className="h-5 w-5 text-muted-foreground transition-transform group-hover/card:rotate-180 duration-300" />
           </Button>
-          <div className="w-full space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">مبلغ تبدیل شده</label>
-            <Input dir="ltr" type="text" value={formatValue(toAmount)} onChange={(e) => handleAmountChange(e, false)} placeholder="0" />
-            <Select value={toCurrency} onValueChange={setToCurrency}>
-              <SelectTrigger>
-                <SelectValue placeholder="انتخاب ارز" />
-              </SelectTrigger>
-              <SelectContent>
-                {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code} - {c.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
+
+          {renderInput(toAmount, (e) => handleAmountChange(e, false), toCurrency, setToCurrency)}
+
         </div>
       </CardContent>
     </Card>

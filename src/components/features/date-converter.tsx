@@ -5,51 +5,89 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarIcon, CalendarDays } from 'lucide-react';
+import { Calendar as CalendarIcon, CalendarDays, ArrowRightLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { jalaliToGregorian, gregorianToJalali } from '@/lib/date-converter';
+
+type ConversionMode = 'gregorian-to-shamsi' | 'shamsi-to-gregorian';
 
 export default function DateConverter() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [conversionType, setConversionType] = useState<'gts' | 'stg'>('gts');
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [mode, setMode] = useState<ConversionMode>('gregorian-to-shamsi');
   
-  const [shamsiInput, setShamsiInput] = useState('');
+  // State for Gregorian to Shamsi
+  const [gregorianDate, setGregorianDate] = useState<Date | undefined>(new Date());
+  const [gregorianPopoverOpen, setGregorianPopoverOpen] = useState(false);
 
-  // Gregorian to Shamsi is well-supported
-  const convertGTS = (d: Date) => {
-    if (!d) return 'یک تاریخ انتخاب کنید';
+  // State for Shamsi to Gregorian
+  const [shamsiYear, setShamsiYear] = useState(gregorianToJalali(new Date()).jy);
+  const [shamsiMonth, setShamsiMonth] = useState(gregorianToJalali(new Date()).jm);
+  const [shamsiDay, setShamsiDay] = useState(gregorianToJalali(new Date()).jd);
+  
+  const [convertedDate, setConvertedDate] = useState('');
+  const [convertedWeekday, setConvertedWeekday] = useState('');
+
+  const performConversion = () => {
     try {
-      return new Intl.DateTimeFormat('fa-IR-u-nu-latn', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        weekday: 'long'
-      }).format(d);
-    } catch (error) {
-      return 'تاریخ نامعتبر';
+      if (mode === 'gregorian-to-shamsi' && gregorianDate) {
+        const { jy, jm, jd } = gregorianToJalali(gregorianDate);
+        const weekday = new Intl.DateTimeFormat('fa-IR', { weekday: 'long' }).format(gregorianDate);
+        setConvertedDate(`${jd} / ${jm} / ${jy}`);
+        setConvertedWeekday(weekday);
+      } else if (mode === 'shamsi-to-gregorian') {
+        if(shamsiYear && shamsiMonth && shamsiDay) {
+          const { gy, gm, gd } = jalaliToGregorian(shamsiYear, shamsiMonth, shamsiDay);
+          const converted = new Date(gy, gm - 1, gd);
+           const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(converted);
+          setConvertedDate(format(converted, 'PPP'));
+          setConvertedWeekday(weekday);
+        } else {
+            setConvertedDate('تاریخ شمسی را کامل وارد کنید');
+            setConvertedWeekday('');
+        }
+      }
+    } catch (e) {
+      setConvertedDate('تاریخ نامعتبر است');
+      setConvertedWeekday('');
     }
   };
 
-  // Shamsi to Gregorian is complex and not supported natively. This is a placeholder.
-  const convertSTG = (d: Date) => {
-    if (!d) return 'یک تاریخ انتخاب کنید';
-     try {
-        // This is not a real conversion, just for display
-        return new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'long'
-        }).format(d);
-     } catch (error) {
-        return 'تاریخ نامعتبر';
-     }
+  useState(() => {
+    performConversion();
+  });
+
+  const handleDateSelect = (d: Date | undefined) => {
+    if (!d) return;
+    setGregorianDate(d);
+    setGregorianPopoverOpen(false);
+    const { jy, jm, jd } = gregorianToJalali(d);
+    const weekday = new Intl.DateTimeFormat('fa-IR', { weekday: 'long' }).format(d);
+    setConvertedDate(`${jd} / ${jm} / ${jy}`);
+    setConvertedWeekday(weekday);
   };
   
-  const convertedDate = conversionType === 'gts' ? convertGTS(date!) : convertSTG(date!);
+  const handleShamsiInputChange = () => {
+     if(shamsiYear && shamsiMonth && shamsiDay) {
+        const { gy, gm, gd } = jalaliToGregorian(shamsiYear, shamsiMonth, shamsiDay);
+        const converted = new Date(gy, gm - 1, gd);
+        const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(converted);
+        setConvertedDate(format(converted, 'PPP'));
+        setConvertedWeekday(weekday);
+     }
+  }
+
+  const swapConversion = () => {
+    setMode(prev => prev === 'gregorian-to-shamsi' ? 'shamsi-to-gregorian' : 'gregorian-to-shamsi');
+    // We will trigger conversion in an effect
+  }
+
+  // Update conversion when mode changes
+  useState(() => {
+      performConversion();
+  });
+
 
   return (
     <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
@@ -60,51 +98,43 @@ export default function DateConverter() {
           تبدیل تاریخ
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6 flex flex-col justify-between h-full">
-        <div className="space-y-4">
-          <div>
-            <Label className="mb-3 block">نوع تبدیل</Label>
-            <RadioGroup defaultValue="gts" onValueChange={(v) => setConversionType(v as 'gts' | 'stg')} className="flex gap-4">
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="gts" id="gts" />
-                <Label htmlFor="gts">میلادی به شمسی</Label>
-              </div>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="stg" id="stg" disabled/>
-                <Label htmlFor="stg" className="text-muted-foreground">شمسی به میلادی (بزودی)</Label>
-              </div>
-            </RadioGroup>
-          </div>
-          <div>
-            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={'outline'}
-                  disabled={conversionType === 'stg'}
-                  className={cn('w-full justify-start text-left font-normal h-12 text-base', !date && 'text-muted-foreground')}
-                >
-                  <CalendarIcon className="ml-2 h-5 w-5" />
-                  {date ? format(date, 'PPP') : <span>یک تاریخ انتخاب کنید</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar 
-                  mode="single" 
-                  selected={date} 
-                  onSelect={(d) => {
-                    setDate(d);
-                    setPopoverOpen(false);
-                  }} 
-                  initialFocus 
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-        </div>
+      <CardContent className="space-y-4 flex flex-col justify-between h-[calc(100%-80px)]">
+        
+        <div className='flex flex-col items-center gap-2'>
+            {/* Input Section */}
+            <div>
+              <Label className='text-sm font-medium text-muted-foreground'>{mode === 'gregorian-to-shamsi' ? 'تاریخ میلادی' : 'تاریخ شمسی'}</Label>
+              {mode === 'gregorian-to-shamsi' ? (
+                  <Popover open={gregorianPopoverOpen} onOpenChange={setGregorianPopoverOpen}>
+                    <PopoverTrigger asChild>
+                      <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal h-12 text-base', !gregorianDate && 'text-muted-foreground')} >
+                        <CalendarIcon className="ml-2 h-5 w-5" />
+                        {gregorianDate ? format(gregorianDate, 'PPP') : <span>یک تاریخ انتخاب کنید</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar mode="single" selected={gregorianDate} onSelect={handleDateSelect} initialFocus />
+                    </PopoverContent>
+                  </Popover>
+              ) : (
+                <div className="flex gap-2" dir="ltr">
+                  <Input type="number" placeholder="روز" value={shamsiDay} onChange={e => { setShamsiDay(parseInt(e.target.value)); handleShamsiInputChange();}} className="h-12 text-center" max={31} min={1}/>
+                  <Input type="number" placeholder="ماه" value={shamsiMonth} onChange={e => { setShamsiMonth(parseInt(e.target.value)); handleShamsiInputChange();}} className="h-12 text-center" max={12} min={1}/>
+                  <Input type="number" placeholder="سال" value={shamsiYear} onChange={e => { setShamsiYear(parseInt(e.target.value)); handleShamsiInputChange();}} className="h-12 text-center" />
+                </div>
+              )}
+            </div>
 
-        <div className="text-center bg-background/50 p-4 rounded-lg shadow-inner">
-          <p className="text-sm text-muted-foreground">تاریخ تبدیل شده</p>
-          <p className="text-xl font-semibold text-primary">{convertedDate}</p>
+            <Button variant="ghost" size="icon" className="shrink-0" onClick={swapConversion}>
+                <ArrowRightLeft className="h-5 w-5 text-muted-foreground transition-transform group-hover/card:rotate-180 duration-300" />
+            </Button>
+            
+            {/* Output Section */}
+            <div className="w-full text-center bg-background/50 p-4 rounded-lg shadow-inner">
+                <p className="text-sm text-muted-foreground">{mode === 'gregorian-to-shamsi' ? 'معادل شمسی' : 'معادل میلادی'}</p>
+                <p className="text-xl font-semibold text-primary">{convertedWeekday}</p>
+                <p className="text-2xl font-bold text-primary" dir="ltr">{convertedDate}</p>
+            </div>
         </div>
       </CardContent>
     </Card>
