@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Scale, ArrowRightLeft } from 'lucide-react';
-import { unitCategories, unitNames, allUnits } from '@/lib/constants';
+import { unitCategories, unitNames } from '@/lib/constants';
+import { Button } from '@/components/ui/button';
 
 // A simple conversion library (can be expanded)
 const conversionRates: { [key: string]: number } = {
@@ -34,7 +35,7 @@ const conversionRates: { [key: string]: number } = {
   cup: 0.24,
 };
 
-const getUnitCategoryKey = (unit: string) => {
+const getUnitCategoryKey = (unit: string): string | null => {
     for (const categoryKey in unitCategories) {
         if (unitCategories[categoryKey].includes(unit)) {
             return categoryKey;
@@ -48,7 +49,8 @@ export default function UnitConverter() {
     const [toUnit, setToUnit] = useState('kilometer');
     const [fromValue, setFromValue] = useState<string>('1');
     const [toValue, setToValue] = useState<string>('');
-    const [currentCategoryKey, setCurrentCategoryKey] = useState('length');
+    
+    const currentCategoryKey = getUnitCategoryKey(fromUnit);
 
     const convert = (value: number, from: string, to: string) => {
         if (from === to) return value;
@@ -75,7 +77,7 @@ export default function UnitConverter() {
         if (!isNaN(value)) {
             const result = convert(value, fromUnit, toUnit);
             if (!isNaN(result)) {
-                setToValue(result.toLocaleString('fa-IR', { maximumFractionDigits: 4 }));
+                setToValue(result.toLocaleString('fa-IR', { maximumFractionDigits: 6, useGrouping: false }).replace(/\.?0+$/, ""));
             } else {
                 setToValue('');
             }
@@ -87,10 +89,12 @@ export default function UnitConverter() {
     const handleFromUnitChange = (unit: string) => {
         const newCategoryKey = getUnitCategoryKey(unit);
         setFromUnit(unit);
-        if(newCategoryKey !== currentCategoryKey) {
-            setCurrentCategoryKey(newCategoryKey!);
-            const newToUnit = unitCategories[newCategoryKey!][0] === unit ? unitCategories[newCategoryKey!][1] : unitCategories[newCategoryKey!][0];
-            setToUnit(newToUnit);
+
+        // If the category changes, update the 'to' unit to a default in the new category
+        if(newCategoryKey !== getUnitCategoryKey(toUnit)) {
+            const newCategoryUnits = unitCategories[newCategoryKey!];
+            const newToUnit = newCategoryUnits[0] === unit ? newCategoryUnits[1] : newCategoryUnits[0];
+            setToUnit(newToUnit || newCategoryUnits[0]);
         }
     }
     
@@ -102,7 +106,7 @@ export default function UnitConverter() {
 
     const renderSelect = (value: string, onChange: (val:string)=>void) => (
          <Select onValueChange={onChange} value={value}>
-            <SelectTrigger className="h-12 text-lg">
+            <SelectTrigger className="h-12 text-base">
               <SelectValue placeholder="یک واحد انتخاب کنید" />
             </SelectTrigger>
           <SelectContent>
@@ -110,7 +114,25 @@ export default function UnitConverter() {
                 <SelectGroup key={category}>
                     <SelectLabel>{category}</SelectLabel>
                     {Object.entries(units).map(([unitKey, unitName]) => (
-                        <SelectItem key={unitKey} value={unitKey} disabled={currentCategoryKey && currentCategoryKey !== getUnitCategoryKey(unitKey)}>{unitName}</SelectItem>
+                        <SelectItem key={unitKey} value={unitKey}>{unitName}</SelectItem>
+                    ))}
+                </SelectGroup>
+            ))}
+          </SelectContent>
+        </Select>
+    );
+    
+    const renderToSelect = (value: string, onChange: (val:string)=>void) => (
+         <Select onValueChange={onChange} value={value}>
+            <SelectTrigger className="h-12 text-base">
+              <SelectValue placeholder="یک واحد انتخاب کنید" />
+            </SelectTrigger>
+          <SelectContent>
+            {Object.entries(unitNames).map(([category, units]) => (
+                <SelectGroup key={category}>
+                    <SelectLabel>{category}</SelectLabel>
+                    {Object.entries(units).map(([unitKey, unitName]) => (
+                        <SelectItem key={unitKey} value={unitKey} disabled={currentCategoryKey !== getUnitCategoryKey(unitKey)}>{unitName}</SelectItem>
                     ))}
                 </SelectGroup>
             ))}
@@ -131,17 +153,19 @@ export default function UnitConverter() {
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row items-center gap-2">
                 <div className='w-full space-y-2'>
-                    <Input type="number" value={fromValue} onChange={e => setFromValue(e.target.value)} className="h-12 text-lg" />
+                    <Input type="number" value={fromValue} onChange={e => setFromValue(e.target.value)} className="h-12 text-lg text-center" />
                     {renderSelect(fromUnit, handleFromUnitChange)}
                 </div>
 
                 <div className='my-2 sm:my-0'>
-                     <ArrowRightLeft className="h-6 w-6 text-muted-foreground transition-transform group-hover/card:rotate-180 duration-300 cursor-pointer" onClick={swapUnits}/>
+                     <Button variant="ghost" size="icon" className="shrink-0" onClick={swapUnits}>
+                        <ArrowRightLeft className="h-6 w-6 text-muted-foreground transition-transform group-hover/card:rotate-180 duration-300"/>
+                    </Button>
                 </div>
                
                 <div className='w-full space-y-2'>
-                    <Input readOnly value={toValue} className="h-12 text-lg bg-background/50" />
-                     {renderSelect(toUnit, setToUnit)}
+                    <Input readOnly value={toValue} className="h-12 text-lg text-center bg-background/50" />
+                     {renderToSelect(toUnit, setToUnit)}
                 </div>
             </div>
           </div>

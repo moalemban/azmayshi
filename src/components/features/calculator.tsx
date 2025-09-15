@@ -157,11 +157,11 @@ export default function QuickCalculator() {
             </p>
           </div>
           <div className="grid grid-cols-4 grid-rows-6 gap-2 flex-grow">
-            {buttons.map(({ label, handler, className, variant }) => (
+            {buttons.map(({ label, handler, variant }) => (
               <Button
                 key={label}
                 onClick={handler}
-                className={cn('text-xl h-full w-full shadow-md hover:shadow-lg transition-shadow', className)}
+                className={cn('text-xl h-full w-full shadow-sm hover:shadow-lg transition-shadow aspect-square')}
                 variant={variant as any || 'outline'}
               >
                 {label}
@@ -169,7 +169,7 @@ export default function QuickCalculator() {
             ))}
           </div>
         </div>
-        <div className="w-full md:w-64 lg:w-80 flex-shrink-0">
+        <div className="w-full md:w-64 lg:w-72 flex-shrink-0">
           <div className="flex items-center gap-2 mb-2">
             <History className="h-5 w-5 text-muted-foreground" />
             <h4 className="font-semibold text-muted-foreground">تاریخچه</h4>
