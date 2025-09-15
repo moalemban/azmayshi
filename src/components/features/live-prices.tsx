@@ -94,8 +94,10 @@ export default function LivePrices() {
         setPrices(newPrices);
       } catch (error) {
         console.error("Failed to fetch prices:", error);
+        // Fallback to static prices if API fails
         const staticCrypto = staticPrices.crypto.find(c => c.id === 'bitcoin') || [];
-        setPrices([...staticPrices.gold, staticPrices.currencies[0], ...staticCrypto ? [staticCrypto] : [] ]);
+        const staticGold = staticPrices.gold.find(c => c.id === 'gold') || {id: 'gold', name: 'انس طلا', price: '2300', change: 0, symbol: 'USD', icon: '🥇'};
+        setPrices([...staticPrices.gold, staticPrices.currencies[0], ...staticCrypto ? [staticCrypto] : [], staticGold ]);
       } finally {
         setLoading(false);
       }
@@ -107,7 +109,7 @@ export default function LivePrices() {
   const findPrice = (id: string) => prices.find(p => p.id === id);
 
   const displayedPrices = loading 
-    ? [] 
+    ? Array(4).fill(null)
     : [
         findPrice('gold'),        // انس طلا
         findPrice('sekkeh'),      // سکه امامی (از داده ثابت)
@@ -136,7 +138,7 @@ export default function LivePrices() {
             <PriceCardSkeleton />
           </>
         ) : (
-          displayedPrices.map(item => item && <PriceCard key={item.id} item={item} />)
+          displayedPrices.map((item, index) => item ? <PriceCard key={item.id} item={item} /> : <PriceCardSkeleton key={index}/>)
         )}
       </div>
     </>
