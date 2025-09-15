@@ -16,6 +16,7 @@ import RandomNumberGenerator from '@/components/features/random-number-generator
 import QrCodeGenerator from '@/components/features/qr-code-generator';
 import { Card, CardContent } from '@/components/ui/card';
 import { Info, HeartHandshake } from 'lucide-react';
+import BinaryConverter from '@/components/features/binary-converter';
 
 const SectionTitle = ({ title }: { title: string }) => (
   <h2 className="col-span-12 text-2xl font-bold text-primary mb-4 mt-8">{title}</h2>
@@ -74,6 +75,9 @@ export default function Home() {
             </div>
              <div className="col-span-12 sm:col-span-6 md:col-span-4">
               <RandomNumberGenerator />
+            </div>
+             <div className="col-span-12 sm:col-span-6 md:col-span-4">
+              <BinaryConverter />
             </div>
             <div className="col-span-12">
                <PasswordGenerator />
