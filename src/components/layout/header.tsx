@@ -10,7 +10,7 @@ export default function Header() {
             <Zap className="w-8 h-8 text-primary/80 text-glow" />
           </div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-display gradient-text text-glow">تبدیلا</h1>
+            <h1 className="text-2xl md:text-3xl font-display font-bold gradient-text">تبدیلا</h1>
             <p className="text-muted-foreground text-sm font-body hidden sm:block">دستیار هوشمند شما ✨</p>
           </div>
         </div>
