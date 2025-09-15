@@ -13,6 +13,7 @@ import NumberToWordsConverter from '@/components/features/number-to-words-conver
 import NumberSystemConverter from '@/components/features/number-system-converter';
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
+import QrCodeGenerator from '@/components/features/qr-code-generator';
 import { Card, CardContent } from '@/components/ui/card';
 import { Info, HeartHandshake } from 'lucide-react';
 
@@ -81,6 +82,11 @@ export default function Home() {
             {/* Section: Stopwatch */}
              <div className="col-span-12">
               <Stopwatch />
+            </div>
+            
+             {/* Section: QR Code */}
+             <div className="col-span-12">
+              <QrCodeGenerator />
             </div>
 
           </div>
