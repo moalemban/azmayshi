@@ -13,7 +13,7 @@ import NumberToWordsConverter from '@/components/features/number-to-words-conver
 import NumberSystemConverter from '@/components/features/number-system-converter';
 import PasswordGenerator from '@/components/features/password-generator';
 import { Card, CardContent } from '@/components/ui/card';
-import { Info } from 'lucide-react';
+import { Info, HeartHandshake } from 'lucide-react';
 
 const SectionTitle = ({ title }: { title: string }) => (
   <h2 className="col-span-12 text-2xl font-bold text-primary mb-4 mt-8">{title}</h2>
@@ -91,6 +91,23 @@ export default function Home() {
                       <h3 className="text-xl font-semibold">درباره ما</h3>
                       <p className="text-muted-foreground mt-2">
                         «تبدیلا» یک دستیار هوشمند و مدرن برای انجام انواع محاسبات و تبدیل‌های روزمره شماست. هدف ما ارائه ابزارهای دقیق، سریع و با رابط کاربری زیبا و ساده است تا نیازهای شما را به بهترین شکل ممکن برطرف کنیم.
+                      </p>
+                   </div>
+                 </div>
+               </CardContent>
+             </Card>
+           </div>
+           
+           {/* Financial Support Section */}
+           <div className="mt-6">
+             <Card>
+               <CardContent className="p-6">
+                 <div className="flex items-center gap-4">
+                   <HeartHandshake className="h-8 w-8 text-pink-500"/>
+                   <div>
+                      <h3 className="text-xl font-semibold">حمایت از توسعه «تبدیلا»</h3>
+                      <p className="text-muted-foreground mt-2">
+                        اگر این مجموعه ابزار برای شما کاربردی بوده است، می‌توانید با حمایت مالی خود به ما در توسعه، بهبود و افزودن ابزارهای جدید کمک کنید. هر حمایتی، هرچند کوچک، برای ما ارزشمند است.
                       </p>
                    </div>
                  </div>
