@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -34,13 +34,13 @@ export default function DateConverter() {
       if (mode === 'gregorian-to-shamsi' && gregorianDate) {
         const { jy, jm, jd } = gregorianToJalali(gregorianDate);
         const weekday = new Intl.DateTimeFormat('fa-IR', { weekday: 'long' }).format(gregorianDate);
-        setConvertedDate(`${jd} / ${jm} / ${jy}`);
+        setConvertedDate(`${jy} / ${jm} / ${jd}`);
         setConvertedWeekday(weekday);
       } else if (mode === 'shamsi-to-gregorian') {
-        if(shamsiYear && shamsiMonth && shamsiDay) {
+        if(shamsiYear && shamsiMonth && shamsiDay && shamsiYear > 0 && shamsiMonth > 0 && shamsiDay > 0) {
           const { gy, gm, gd } = jalaliToGregorian(shamsiYear, shamsiMonth, shamsiDay);
           const converted = new Date(gy, gm - 1, gd);
-           const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(converted);
+          const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(converted);
           setConvertedDate(format(converted, 'PPP'));
           setConvertedWeekday(weekday);
         } else {
@@ -54,44 +54,25 @@ export default function DateConverter() {
     }
   };
 
-  useState(() => {
+  useEffect(() => {
     performConversion();
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, gregorianDate, shamsiYear, shamsiMonth, shamsiDay]);
+
 
   const handleDateSelect = (d: Date | undefined) => {
     if (!d) return;
     setGregorianDate(d);
     setGregorianPopoverOpen(false);
-    const { jy, jm, jd } = gregorianToJalali(d);
-    const weekday = new Intl.DateTimeFormat('fa-IR', { weekday: 'long' }).format(d);
-    setConvertedDate(`${jd} / ${jm} / ${jy}`);
-    setConvertedWeekday(weekday);
   };
   
-  const handleShamsiInputChange = () => {
-     if(shamsiYear && shamsiMonth && shamsiDay) {
-        const { gy, gm, gd } = jalaliToGregorian(shamsiYear, shamsiMonth, shamsiDay);
-        const converted = new Date(gy, gm - 1, gd);
-        const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(converted);
-        setConvertedDate(format(converted, 'PPP'));
-        setConvertedWeekday(weekday);
-     }
-  }
-
   const swapConversion = () => {
     setMode(prev => prev === 'gregorian-to-shamsi' ? 'shamsi-to-gregorian' : 'gregorian-to-shamsi');
-    // We will trigger conversion in an effect
   }
-
-  // Update conversion when mode changes
-  useState(() => {
-      performConversion();
-  });
-
 
   return (
     <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/opacity-100 transition-opacity duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CalendarDays className="h-6 w-6 text-primary" />
@@ -113,14 +94,21 @@ export default function DateConverter() {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" selected={gregorianDate} onSelect={handleDateSelect} initialFocus />
+                      <Calendar 
+                        mode="single" 
+                        selected={gregorianDate} 
+                        onSelect={handleDateSelect}
+                        captionLayout="dropdown-buttons"
+                        fromYear={1900}
+                        toYear={new Date().getFullYear() + 10}
+                        initialFocus />
                     </PopoverContent>
                   </Popover>
               ) : (
                 <div className="flex gap-2" dir="ltr">
-                  <Input type="number" placeholder="روز" value={shamsiDay} onChange={e => { setShamsiDay(parseInt(e.target.value)); handleShamsiInputChange();}} className="h-12 text-center" max={31} min={1}/>
-                  <Input type="number" placeholder="ماه" value={shamsiMonth} onChange={e => { setShamsiMonth(parseInt(e.target.value)); handleShamsiInputChange();}} className="h-12 text-center" max={12} min={1}/>
-                  <Input type="number" placeholder="سال" value={shamsiYear} onChange={e => { setShamsiYear(parseInt(e.target.value)); handleShamsiInputChange();}} className="h-12 text-center" />
+                  <Input type="number" placeholder="روز" value={shamsiDay} onChange={e => setShamsiDay(parseInt(e.target.value))} className="h-12 text-center" max={31} min={1}/>
+                  <Input type="number" placeholder="ماه" value={shamsiMonth} onChange={e => setShamsiMonth(parseInt(e.target.value))} className="h-12 text-center" max={12} min={1}/>
+                  <Input type="number" placeholder="سال" value={shamsiYear} onChange={e => setShamsiYear(parseInt(e.target.value))} className="h-12 text-center" />
                 </div>
               )}
             </div>
