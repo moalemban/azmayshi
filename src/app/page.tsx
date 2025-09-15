@@ -12,6 +12,7 @@ import DepositCalculator from '@/components/features/deposit-calculator';
 import NumberToWordsConverter from '@/components/features/number-to-words-converter';
 import NumberSystemConverter from '@/components/features/number-system-converter';
 import PasswordGenerator from '@/components/features/password-generator';
+import RandomNumberGenerator from '@/components/features/random-number-generator';
 import { Card, CardContent } from '@/components/ui/card';
 import { Info, HeartHandshake } from 'lucide-react';
 
@@ -64,11 +65,14 @@ export default function Home() {
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
               <PercentageCalculator />
             </div>
-             <div className="col-span-12 md:col-span-6">
+            <div className="col-span-12 sm:col-span-6 md:col-span-4">
               <NumberToWordsConverter />
             </div>
-             <div className="col-span-12 md:col-span-6">
+            <div className="col-span-12 sm:col-span-6 md:col-span-4">
               <NumberSystemConverter />
+            </div>
+             <div className="col-span-12 sm:col-span-6 md:col-span-4">
+              <RandomNumberGenerator />
             </div>
             <div className="col-span-12">
                <PasswordGenerator />
