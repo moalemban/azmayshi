@@ -1,7 +1,6 @@
 import Header from '@/components/layout/header';
-import QuickCalculator from '@/components/features/calculator';
-import CurrencyConverter from '@/components/features/currency-converter';
 import UnitConverter from '@/components/features/unit-converter';
+import CurrencyConverter from '@/components/features/currency-converter';
 import DateConverter from '@/components/features/date-converter';
 import LivePrices from '@/components/features/live-prices';
 import AgeCalculator from '@/components/features/age-calculator';
@@ -12,6 +11,12 @@ import Stopwatch from '@/components/features/stopwatch';
 import DepositCalculator from '@/components/features/deposit-calculator';
 import NumberToWordsConverter from '@/components/features/number-to-words-converter';
 import NumberSystemConverter from '@/components/features/number-system-converter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Info } from 'lucide-react';
+
+const SectionTitle = ({ title }: { title: string }) => (
+  <h2 className="col-span-12 text-2xl font-bold text-primary mb-4 mt-8">{title}</h2>
+);
 
 export default function Home() {
   return (
@@ -20,7 +25,9 @@ export default function Home() {
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-screen-2xl">
           <div className="grid grid-cols-12 gap-6">
-            {/* Row 1 */}
+            
+            {/* Section: Main Tools */}
+            <SectionTitle title="ابزارهای اصلی" />
             <div className="col-span-12 lg:col-span-8 xl:col-span-6">
               <UnitConverter />
             </div>
@@ -31,15 +38,13 @@ export default function Home() {
               <DateConverter />
             </div>
 
-            {/* Row 2 */}
-            <div className="col-span-12 lg:col-span-7">
-              <QuickCalculator />
-            </div>
-             <div className="col-span-12 lg:col-span-5">
+            {/* Section: Live Prices */}
+            <div className="col-span-12">
               <LivePrices />
             </div>
             
-            {/* Row 3 - Financial Tools */}
+            {/* Section: Financial Tools */}
+            <SectionTitle title="ابزارهای مالی" />
             <div className="col-span-12 md:col-span-6">
                <LoanCalculator />
             </div>
@@ -47,7 +52,8 @@ export default function Home() {
               <DepositCalculator />
             </div>
 
-            {/* Row 4 - Health & Misc Tools */}
+            {/* Section: Utility Tools */}
+            <SectionTitle title="ابزارهای کاربردی" />
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
                <AgeCalculator />
             </div>
@@ -57,8 +63,6 @@ export default function Home() {
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
               <PercentageCalculator />
             </div>
-
-            {/* Row 5 - New Tools */}
              <div className="col-span-12 md:col-span-6">
               <NumberToWordsConverter />
             </div>
@@ -66,12 +70,29 @@ export default function Home() {
               <NumberSystemConverter />
             </div>
             
-            {/* Row 6 - Stopwatch */}
-            <div className="col-span-12 sm:col-span-6 md:col-span-12">
+            {/* Section: Stopwatch */}
+             <div className="col-span-12">
               <Stopwatch />
             </div>
 
           </div>
+          
+           {/* About Us Section */}
+           <div className="mt-12">
+             <Card>
+               <CardContent className="p-6">
+                 <div className="flex items-center gap-4">
+                   <Info className="h-8 w-8 text-primary"/>
+                   <div>
+                      <h3 className="text-xl font-semibold">درباره ما</h3>
+                      <p className="text-muted-foreground mt-2">
+                        «تبدیلا» یک دستیار هوشمند و مدرن برای انجام انواع محاسبات و تبدیل‌های روزمره شماست. هدف ما ارائه ابزارهای دقیق، سریع و با رابط کاربری زیبا و ساده است تا نیازهای شما را به بهترین شکل ممکن برطرف کنیم.
+                      </p>
+                   </div>
+                 </div>
+               </CardContent>
+             </Card>
+           </div>
         </div>
       </main>
       <footer className="text-center p-6 text-muted-foreground text-sm">
