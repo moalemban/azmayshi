@@ -123,9 +123,16 @@ export default function Home() {
         </div>
       </main>
       <footer className="text-center p-6 text-muted-foreground text-sm font-body">
-        <a href="https://www.hosseintaheri.org/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 hover:text-primary transition-colors">
+        <a 
+          href="https://www.hosseintaheri.org/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="inline-flex items-center justify-center gap-2 hover:text-primary transition-colors"
+        >
             <Globe className="w-5 h-5" />
-            <span>توسعه داده شده توسط <span className="font-semibold text-foreground">حسین طاهری</span></span>
+            <span>
+              توسعه داده شده توسط <span className="font-semibold text-foreground hover:underline">حسین طاهری</span>
+            </span>
         </a>
       </footer>
     </div>
