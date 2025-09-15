@@ -22,7 +22,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="gradient-bg font-body antialiased">
+      <body className="gradient-bg antialiased">
         {children}
         <Toaster />
       </body>

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { QrCode, Download } from 'lucide-react';
+import { QrCode as QrCodeIcon, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function QrCodeGenerator() {
@@ -65,7 +65,7 @@ export default function QrCodeGenerator() {
     <Card className="glass-effect h-full card-hover">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 font-display text-white">
-          <QrCode className="h-6 w-6 text-lime-400" />
+          <QrCodeIcon className="h-6 w-6 text-lime-400" />
           تولید کننده QR Code
         </CardTitle>
       </CardHeader>

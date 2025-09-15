@@ -17,9 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Vazirmatn', 'sans-serif'],
-        headline: ['Vazirmatn', 'sans-serif'],
-        code: ['monospace'],
+        display: ['Estedad', 'sans-serif'],
+        body: ['Shabnam', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -62,21 +61,14 @@ export default {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
         },
-        sidebar: {
-          DEFAULT: 'hsl(var(--sidebar-background))',
-          foreground: 'hsl(var(--sidebar-foreground))',
-          primary: 'hsl(var(--sidebar-primary))',
-          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-          accent: 'hsl(var(--sidebar-accent))',
-          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-          border: 'hsl(var(--sidebar-border))',
-          ring: 'hsl(var(--sidebar-ring))',
-        },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        '3xl': 'calc(var(--radius) + 16px)',
+        '2xl': 'calc(var(--radius) + 8px)',
+        xl: 'var(--radius)',
+        lg: 'calc(var(--radius) - 4px)',
+        md: 'calc(var(--radius) - 8px)',
+        sm: 'calc(var(--radius) - 12px)',
       },
       keyframes: {
         'accordion-down': {

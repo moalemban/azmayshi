@@ -14,8 +14,7 @@ import NumberSystemConverter from '@/components/features/number-system-converter
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
 import QrCodeGenerator from '@/components/features/qr-code-generator';
-import { Card, CardContent } from '@/components/ui/card';
-import { Info, HeartHandshake, Zap, BarChart, Scale, Wallet, Calculator, HeartPulse, Gift, Percent, SpellCheck, Binary, KeyRound, Dices, QrCode as QrCodeIcon, TimerIcon } from 'lucide-react';
+import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, Gift, Percent, SpellCheck, Binary, KeyRound, Dices, QrCode as QrCodeIcon } from 'lucide-react';
 import BinaryConverter from '@/components/features/binary-converter';
 
 const SectionTitle = ({ title, icon }: { title: string, icon: React.ReactNode }) => (

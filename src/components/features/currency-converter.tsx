@@ -68,10 +68,10 @@ export default function CurrencyConverter() {
   ) => (
     <div className="w-full space-y-2">
       <div className="relative">
-        <Input dir="ltr" type="text" value={formatValue(value)} onChange={onValueChange} placeholder="0" className="pr-24 text-lg h-12 bg-black/20 text-white border-white/20"/>
-        <div className="absolute inset-y-0 right-0 flex items-center">
+        <Input dir="ltr" type="text" value={formatValue(value)} onChange={onValueChange} placeholder="0" className="pl-24 text-lg h-12 bg-black/20 text-white border-white/20 text-right"/>
+        <div className="absolute inset-y-0 left-0 flex items-center">
             <Select value={currencyCode} onValueChange={onCurrencyChange}>
-              <SelectTrigger className="w-[100px] border-0 bg-transparent h-full rounded-r-md text-white">
+              <SelectTrigger className="w-[100px] border-0 bg-transparent h-full rounded-l-md text-white">
                 <SelectValue placeholder="ارز" />
               </SelectTrigger>
               <SelectContent className="glass-effect">

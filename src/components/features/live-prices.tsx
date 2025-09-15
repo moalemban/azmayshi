@@ -19,7 +19,7 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
       )}
     >
       {isPositive ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
-      <span className="mr-1">{isPositive && '+'}
+      <span className="ml-1">{isPositive && '+'}
       {(change * 100).toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
       </span>
     </span>
