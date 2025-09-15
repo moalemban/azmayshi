@@ -33,12 +33,12 @@ export default function Home() {
       <Header />
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-screen-2xl">
-          <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
+          <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
               <LivePrices />
           </div>
 
           {/* Section: Main Tools */}
-          <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
+          <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
             <SectionTitle title="ابزارهای اصلی تبدیل" icon={<Scale className="w-6 h-6 text-white"/>} />
             <div className="grid grid-cols-12 gap-6">
               <div className="col-span-12 lg:col-span-6">
@@ -54,7 +54,7 @@ export default function Home() {
           </div>
 
           {/* Section: Financial Tools */}
-          <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
+          <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
             <SectionTitle title="ابزارهای مالی" icon={<Wallet className="w-6 h-6 text-white"/>} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                <LoanCalculator />
@@ -63,7 +63,7 @@ export default function Home() {
           </div>
 
           {/* Section: Utility Tools */}
-          <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
+          <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
              <SectionTitle title="ابزارهای کاربردی" icon={<Calculator className="w-6 h-6 text-white"/>} />
              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                <AgeCalculator />
@@ -77,7 +77,7 @@ export default function Home() {
             </div>
           </div>
           
-           <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
+           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
              <SectionTitle title="ابزارهای امنیتی و تولیدی" icon={<Zap className="w-6 h-6 text-white"/>} />
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <PasswordGenerator />
