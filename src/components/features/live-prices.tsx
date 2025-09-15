@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { fetchPrices as fetchPricesFlow } from '@/ai/flows/fetch-prices-flow';
 
 const PriceChangeIndicator = ({ change }: { change: string | null }) => {
-  if (!change) return <div className="h-5" />;
+  if (!change || change === "0" || change === "۰") return <div className="h-5" />;
 
   const isPositive = !change.startsWith('-');
   const isNegative = change.startsWith('-');
@@ -60,7 +60,7 @@ const PriceCardSkeleton = () => (
   </div>
 );
 
-const priceConfig: { [key in keyof PriceData]: Omit<LivePrice, 'price' | 'change'> | null } = {
+const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
     GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: '🥇' },
     MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: '⚖️' },
     Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: '✨' },
@@ -74,16 +74,25 @@ export default function LivePrices() {
   const [prices, setPrices] = useState<LivePrice[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  
+  const [isCooldown, setIsCooldown] = useState(false);
+  const [cooldownTime, setCooldownTime] = useState(0);
+  const cooldownIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  const COOLDOWN_SECONDS = 30;
 
   const fetchPrices = async () => {
     setLoading(true);
+    setIsCooldown(true);
+    setCooldownTime(COOLDOWN_SECONDS);
+
     try {
       const data = await fetchPricesFlow();
       if (!data) throw new Error("No data returned from flow");
 
       const newPrices: LivePrice[] = Object.entries(data)
         .map(([key, priceData]) => {
-          const configKey = key as keyof PriceData;
+          const configKey = key as keyof Omit<PriceData, 'Bourse' | 'BrentOil'>;
           const config = priceConfig[configKey];
           
           if (!config || !priceData?.price) return null;
@@ -105,11 +114,26 @@ export default function LivePrices() {
       setPrices([]);
     } finally {
       setLoading(false);
+      cooldownIntervalRef.current = setInterval(() => {
+        setCooldownTime(prev => prev - 1);
+      }, 1000);
+      setTimeout(() => {
+          setIsCooldown(false);
+          if (cooldownIntervalRef.current) {
+            clearInterval(cooldownIntervalRef.current);
+          }
+      }, COOLDOWN_SECONDS * 1000);
     }
   };
 
   useEffect(() => {
     fetchPrices();
+    
+    return () => {
+      if (cooldownIntervalRef.current) {
+        clearInterval(cooldownIntervalRef.current);
+      }
+    };
   }, []);
 
   return (
@@ -122,8 +146,11 @@ export default function LivePrices() {
           قیمت‌های لحظه‌ای
         </h2>
         <div className="flex items-center space-x-2 space-x-reverse">
-             <Button variant="ghost" size="icon" onClick={fetchPrices} disabled={loading} className="text-muted-foreground">
-                <RefreshCw className={cn("h-5 w-5", loading && "animate-spin")} />
+             <Button variant="ghost" size="sm" onClick={fetchPrices} disabled={loading || isCooldown} className="text-muted-foreground w-28">
+                {loading ? <RefreshCw className={cn("h-5 w-5 animate-spin")} /> 
+                         : isCooldown ? <><Timer className="h-5 w-5 ml-2" /> {cooldownTime} ثانیه</>
+                         : <><RefreshCw className="h-5 w-5 ml-2" /> به‌روزرسانی</>
+                }
              </Button>
             {lastUpdated && !loading && (
                 <>
@@ -141,7 +168,7 @@ export default function LivePrices() {
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-        {loading ? (
+        {loading && prices.length === 0 ? (
           Array.from({ length: 6 }).map((_, index) => <PriceCardSkeleton key={index} />)
         ) : (
           prices.map((item) => item ? <PriceCard key={item.id} item={item} /> : null)
