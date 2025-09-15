@@ -12,15 +12,18 @@ export type LivePrice = {
   icon: string;
 };
 
+export type PriceDataItem = {
+  price: string;
+  change: string | null;
+}
+
 export type PriceData = {
-  Bourse?: string;
-  GoldOunce?: string;
-  MesghalGold?: string;
-  Gold18K?: string;
-  EmamiCoin?: string;
-  Dollar?: string;
-  BrentOil?: string;
-  USDT?: string;
+  GoldOunce?: PriceDataItem;
+  MesghalGold?: PriceDataItem;
+  Gold18K?: PriceDataItem;
+  EmamiCoin?: PriceDataItem;
+  Dollar?: PriceDataItem;
+  USDT?: PriceDataItem;
 };
 
 

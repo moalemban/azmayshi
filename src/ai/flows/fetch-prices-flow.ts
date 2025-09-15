@@ -30,13 +30,18 @@ const IDS: Record<keyof Omit<PriceData, 'Bourse' | 'BrentOil'>, string> = {
 };
 
 
+const PriceDataItemSchema = z.object({
+    price: z.string(),
+    change: z.string().nullable(),
+});
+
 const PriceDataSchema = z.object({
-    GoldOunce: z.string().optional(),
-    MesghalGold: z.string().optional(),
-    Gold18K: z.string().optional(),
-    EmamiCoin: z.string().optional(),
-    Dollar: z.string().optional(),
-    USDT: z.string().optional(),
+    GoldOunce: PriceDataItemSchema.optional(),
+    MesghalGold: PriceDataItemSchema.optional(),
+    Gold18K: PriceDataItemSchema.optional(),
+    EmamiCoin: PriceDataItemSchema.optional(),
+    Dollar: PriceDataItemSchema.optional(),
+    USDT: PriceDataItemSchema.optional(),
 });
 
 
@@ -67,14 +72,17 @@ const fetchPricesFlow = ai.defineFlow(
 
                 if (element.length) {
                     const priceText = element.find(".info-price").text().trim().replace(/,/g, "");
-                    prices[typedKey] = priceText;
-                } else {
-                    prices[typedKey] = undefined;
+                    const changeText = element.find(".info-change").text().trim().replace(/,/g, "");
+                    prices[typedKey] = {
+                        price: priceText,
+                        change: changeText || null,
+                    };
                 }
             }
             return prices;
         } catch (error) {
             console.error("Failed to fetch prices from tgju.org", error);
+            // On error, return an empty object, the UI will handle it.
             return {};
         }
     }
