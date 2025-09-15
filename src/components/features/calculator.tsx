@@ -93,25 +93,25 @@ export default function QuickCalculator() {
   };
 
   const buttons = [
-    { label: 'AC', handler: clearAll, variant: 'destructive' },
-    { label: '±', handler: () => setDisplayValue(String(parseFloat(displayValue) * -1)), variant: 'secondary' },
-    { label: '%', handler: () => { handleOperator('%'); handleEquals(); }, variant: 'secondary' },
-    { label: '÷', handler: () => handleOperator('/'), variant: 'secondary' },
+    { label: 'AC', handler: clearAll, variant: 'destructive' as const },
+    { label: '±', handler: () => setDisplayValue(String(parseFloat(displayValue) * -1)), variant: 'secondary' as const },
+    { label: '%', handler: () => { handleOperator('%'); handleEquals(); }, variant: 'secondary' as const },
+    { label: '÷', handler: () => handleOperator('/'), variant: 'secondary' as const },
     { label: '۷', handler: () => inputDigit('7') },
     { label: '۸', handler: () => inputDigit('8') },
     { label: '۹', handler: () => inputDigit('9') },
-    { label: '×', handler: () => handleOperator('*'), variant: 'secondary' },
+    { label: '×', handler: () => handleOperator('*'), variant: 'secondary' as const },
     { label: '۴', handler: () => inputDigit('4') },
     { label: '۵', handler: () => inputDigit('5') },
     { label: '۶', handler: () => inputDigit('6') },
-    { label: '-', handler: () => handleOperator('-'), variant: 'secondary' },
+    { label: '-', handler: () => handleOperator('-'), variant: 'secondary' as const },
     { label: '۱', handler: () => inputDigit('1') },
     { label: '۲', handler: () => inputDigit('2') },
     { label: '۳', handler: () => inputDigit('3') },
-    { label: '+', handler: () => handleOperator('+'), variant: 'secondary' },
+    { label: '+', handler: () => handleOperator('+'), variant: 'secondary' as const },
     { label: '۰', handler: () => inputDigit('0'), className: 'col-span-2' },
     { label: '.', handler: inputDecimal },
-    { label: '=', handler: handleEquals, variant: 'primary' },
+    { label: '=', handler: handleEquals, variant: 'primary' as const },
   ];
 
   return (
@@ -139,7 +139,7 @@ export default function QuickCalculator() {
                 key={label}
                 onClick={handler}
                 className={cn('text-xl h-full w-full shadow-sm hover:shadow-lg transition-shadow aspect-square', className)}
-                variant={variant as any || 'outline'}
+                variant={variant || 'outline'}
               >
                 {label}
               </Button>
