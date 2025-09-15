@@ -8,11 +8,25 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { QrCode, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from 'next-themes';
 
 export default function QrCodeGenerator() {
   const [inputValue, setInputValue] = useState('https://tabdila.com');
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState('');
+  const { theme } = useTheme();
+  
+  const defaultDarkColor = theme === 'dark' ? '#FFFFFF' : '#010816';
+  const defaultLightColor = theme === 'dark' ? '#010816' : '#FFFFFF';
+
+  const [darkColor, setDarkColor] = useState(defaultDarkColor);
+  const [lightColor, setLightColor] = useState(defaultLightColor);
+
   const { toast } = useToast();
+
+  useEffect(() => {
+    setDarkColor(theme === 'dark' ? '#FFFFFF' : '#010816');
+    setLightColor(theme === 'dark' ? '#010816' : '#FFFFFF');
+  }, [theme]);
 
   useEffect(() => {
     if (inputValue.trim() === '') {
@@ -26,8 +40,8 @@ export default function QrCodeGenerator() {
       quality: 0.9,
       margin: 1,
       color: {
-        dark: '#010816', // Dark color
-        light: '#FFFFFF', // Light color
+        dark: darkColor,
+        light: lightColor,
       },
     })
       .then(url => {
@@ -41,7 +55,7 @@ export default function QrCodeGenerator() {
             variant: 'destructive'
         });
       });
-  }, [inputValue, toast]);
+  }, [inputValue, darkColor, lightColor, toast]);
 
   const handleDownload = () => {
     if (!qrCodeDataUrl) return;
@@ -79,6 +93,16 @@ export default function QrCodeGenerator() {
               dir="ltr"
             />
           </div>
+          <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                  <Label htmlFor="dark-color">رنگ QR</Label>
+                  <Input id="dark-color" type="color" value={darkColor} onChange={e => setDarkColor(e.target.value)} className="h-12 p-1"/>
+              </div>
+              <div className="space-y-2">
+                  <Label htmlFor="light-color">رنگ پس‌زمینه</Label>
+                  <Input id="light-color" type="color" value={lightColor} onChange={e => setLightColor(e.target.value)} className="h-12 p-1"/>
+              </div>
+          </div>
            <Button onClick={handleDownload} disabled={!qrCodeDataUrl} className="w-full h-12 text-base">
             <Download className="ml-2 h-5 w-5" />
             دانلود QR Code
@@ -86,12 +110,12 @@ export default function QrCodeGenerator() {
         </div>
         
         <div className="flex items-center justify-center">
-            <div className="p-4 bg-white rounded-lg shadow-md w-48 h-48 md:w-56 md:h-56 flex items-center justify-center">
+            <div className="p-2 rounded-lg shadow-md w-48 h-48 md:w-56 md:h-56 flex items-center justify-center" style={{ backgroundColor: lightColor }}>
             {qrCodeDataUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={qrCodeDataUrl} alt="Generated QR Code" className="w-full h-full object-contain" />
+                <img src={qrCodeDataUrl} alt="Generated QR Code" className="w-full h-full object-contain rounded-sm" />
             ) : (
-                <div className="text-center text-muted-foreground text-sm">
+                <div className="text-center text-muted-foreground text-sm p-4 bg-background rounded-md">
                     <p>متن خود را برای تولید کد وارد کنید.</p>
                 </div>
             )}
