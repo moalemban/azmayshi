@@ -14,8 +14,9 @@ import NumberSystemConverter from '@/components/features/number-system-converter
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
 import QrCodeGenerator from '@/components/features/qr-code-generator';
-import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, Gift, Percent, SpellCheck, Binary, KeyRound, Dices, QrCode as QrCodeIcon } from 'lucide-react';
+import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, Gift, Percent, SpellCheck, Binary, KeyRound, Dices, QrCode as QrCodeIcon, ArrowLeft } from 'lucide-react';
 import BinaryConverter from '@/components/features/binary-converter';
+import { Button } from '@/components/ui/button';
 
 const SectionTitle = ({ title, icon }: { title: string, icon: React.ReactNode }) => (
   <h2 className="col-span-12 text-2xl font-display font-bold text-white mb-8 flex items-center gap-3 text-glow">
@@ -86,12 +87,14 @@ export default function Home() {
           
            {/* About Us Section */}
            <div className="mt-12 glass-effect rounded-3xl p-6 md:p-8">
-             <div className="flex items-center gap-4">
-               <Info className="h-8 w-8 text-primary"/>
-               <div>
-                  <h3 className="text-xl font-semibold font-display text-white">درباره ما</h3>
-                  <p className="text-white/80 mt-2">
-                    «تبدیلا» یک دستیار هوشمند و مدرن برای انجام انواع محاسبات و تبدیل‌های روزمره شماست. هدف ما ارائه ابزارهای دقیق، سریع و با رابط کاربری زیبا و ساده است تا نیازهای شما را به بهترین شکل ممکن برطرف کنیم.
+             <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-right">
+                <div className="p-3 bg-gradient-to-br from-primary/50 to-primary/80 rounded-2xl inline-flex animate-pulse">
+                    <Info className="h-10 w-10 text-white"/>
+                </div>
+               <div className='flex-grow'>
+                  <h3 className="text-xl font-semibold font-display text-white">درباره «تبدیلا»</h3>
+                  <p className="text-white/80 mt-2 leading-relaxed">
+                    «تبدیلا» فقط یک ابزار نیست؛ یک دستیار هوشمند برای تمام لحظاتی است که به محاسبات و تبدیلات سریع، دقیق و زیبا نیاز دارید. ما با وسواس، مجموعه‌ای از بهترین ابزارهای روزمره را در یک پلتفرم مدرن و چشم‌نواز گرد هم آورده‌ایم تا کار شما را آسان‌تر کنیم.
                   </p>
                </div>
              </div>
@@ -99,20 +102,28 @@ export default function Home() {
            
            {/* Financial Support Section */}
            <div className="mt-6 glass-effect rounded-3xl p-6 md:p-8">
-             <div className="flex items-center gap-4">
-               <HeartHandshake className="h-8 w-8 text-pink-400"/>
-               <div>
-                  <h3 className="text-xl font-semibold font-display text-white">حمایت از توسعه «تبدیلا»</h3>
-                  <p className="text-white/80 mt-2">
-                    اگر این مجموعه ابزار برای شما کاربردی بوده است، می‌توانید با حمایت مالی خود به ما در توسعه، بهبود و افزودن ابزارهای جدید کمک کنید. هر حمایتی، هرچند کوچک، برای ما ارزشمند است.
-                  </p>
-               </div>
-             </div>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="flex-grow flex items-center gap-6 text-center sm:text-right">
+                    <div className="p-3 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl inline-flex animate-pulse">
+                        <HeartHandshake className="h-10 w-10 text-white"/>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-semibold font-display text-white">حمایت از توسعه «تبدیلا»</h3>
+                        <p className="text-white/80 mt-2">
+                           اگر «تبدیلا» برایتان مفید بوده، با حمایت خود به رشد و پیشرفت آن کمک کنید. هر حمایتی، انرژی ما را برای ساخت ابزارهای بهتر دوچندان می‌کند.
+                        </p>
+                    </div>
+                </div>
+                 <Button className="bg-pink-500/80 hover:bg-pink-500/90 text-white font-bold h-12 px-8 text-base shrink-0">
+                    حمایت می‌کنم
+                    <ArrowLeft className="mr-2 h-5 w-5" />
+                </Button>
+            </div>
            </div>
         </div>
       </main>
       <footer className="text-center p-6 text-white/60 text-sm font-body">
-        توسعه داده شده توسط حسین طاهری
+        ❤️ توسعه داده شده توسط حسین طاهری
       </footer>
     </div>
   );
