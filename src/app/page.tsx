@@ -14,7 +14,7 @@ import NumberSystemConverter from '@/components/features/number-system-converter
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
 import QrCodeGenerator from '@/components/features/qr-code-generator';
-import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, ArrowLeft, Heart } from 'lucide-react';
+import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, ArrowLeft, Heart, Globe } from 'lucide-react';
 import BinaryConverter from '@/components/features/binary-converter';
 import { Button } from '@/components/ui/button';
 
@@ -65,7 +65,7 @@ export default function Home() {
           {/* Section: Utility Tools */}
           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
              <SectionTitle title="ابزارهای کاربردی" icon={<Calculator className="w-6 h-6 text-primary-foreground"/>} />
-             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                <AgeCalculator />
                <BmiCalculator />
                <PercentageCalculator />
@@ -123,10 +123,10 @@ export default function Home() {
         </div>
       </main>
       <footer className="text-center p-6 text-muted-foreground text-sm font-body">
-        <div className="flex items-center justify-center gap-2">
-            <Heart className="w-5 h-5 text-red-500 fill-current" />
-            توسعه داده شده توسط <a href="https://www.hosseintaheri.org/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">حسین طاهری</a>
-        </div>
+        <a href="https://www.hosseintaheri.org/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 hover:text-primary transition-colors">
+            <Globe className="w-5 h-5" />
+            <span>توسعه داده شده توسط <span className="font-semibold text-foreground">حسین طاهری</span></span>
+        </a>
       </footer>
     </div>
   );
