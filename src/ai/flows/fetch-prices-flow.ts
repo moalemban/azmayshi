@@ -1,25 +1,46 @@
 'use server';
 /**
- * @fileOverview A flow to fetch and parse live prices from a given URL.
+ * @fileOverview A flow to fetch and parse live prices from tgju.org.
  *
- * - fetchPrices - A function that scrapes tgju.org for live prices.
+ * - fetchPrices - A function that scrapes tgju.org for live prices using Cheerio.
  */
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 import type { PriceData } from '@/lib/types';
 
-// Zod schema defines the expected structure of the output.
-// Descriptions help the model understand what each field means.
+
+const URL = "https://www.tgju.org/";
+const HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+    "AppleWebKit/537.36 (KHTML, like Gecko) " +
+    "Chrome/129.0.0.0 Safari/537.36",
+};
+
+const IDS: Record<keyof PriceData, string> = {
+    Bourse: 'l-gc30',
+    GoldOunce: 'l-ons',
+    MesghalGold: 'l-mesghal',
+    Gold18K: 'l-geram18',
+    EmamiCoin: 'l-sekee',
+    Dollar: 'l-price_dollar_rl',
+    BrentOil: 'l-oil_brent',
+    USDT: 'l-crypto-tether-irr',
+};
+
+
 const PriceDataSchema = z.object({
-    Bourse: z.string().optional().describe('The price for Bourse (l-gc30)'),
-    GoldOunce: z.string().optional().describe('The price for Gold Ounce (l-ons)'),
-    MesghalGold: z.string().optional().describe('The price for Mesghal Gold (l-mesghal)'),
-    Gold18K: z.string().optional().describe('The price for Gold 18K (l-geram18)'),
-    EmamiCoin: z.string().optional().describe('The price for Emami Coin (l-sekee)'),
-    Dollar: z.string().optional().describe('The price for Dollar (l-price_dollar_rl)'),
-    BrentOil: z.string().optional().describe('The price for Brent Oil (l-oil_brent)'),
-    USDT: z.string().optional().describe('The price for Tether/USDT (l-crypto-tether-irr)'),
+    Bourse: z.string().optional(),
+    GoldOunce: z.string().optional(),
+    MesghalGold: z.string().optional(),
+    Gold18K: z.string().optional(),
+    EmamiCoin: z.string().optional(),
+    Dollar: z.string().optional(),
+    BrentOil: z.string().optional(),
+    USDT: z.string().optional(),
 });
 
 
@@ -27,27 +48,6 @@ export async function fetchPrices(): Promise<PriceData> {
   return fetchPricesFlow();
 }
 
-const fetchPrompt = ai.definePrompt({
-    name: 'fetchPricesPrompt',
-    output: { schema: PriceDataSchema },
-    prompt: `Fetch the content from the URL https://www.tgju.org/.
-The content is in HTML format.
-From the HTML, find the following list items by their 'id' attributes.
-Inside each list item, find the span with class 'info-price'.
-Extract the text content of that span, remove any commas, and return it as a string for the corresponding field.
-
-- Bourse: id 'l-gc30'
-- GoldOunce: id 'l-ons'
-- MesghalGold: id 'l-mesghal'
-- Gold18K: id 'l-geram18'
-- EmamiCoin: id 'l-sekee'
-- Dollar: id 'l-price_dollar_rl'
-- BrentOil: id 'l-oil_brent'
-- USDT: id 'l-crypto-tether-irr'
-
-Only return the structured JSON data.
-`,
-});
 
 const fetchPricesFlow = ai.defineFlow(
     {
@@ -55,7 +55,31 @@ const fetchPricesFlow = ai.defineFlow(
         outputSchema: PriceDataSchema,
     },
     async () => {
-        const { output } = await fetchPrompt();
-        return output ?? {};
+        try {
+            const { data: html } = await axios.get(URL, {
+                headers: HEADERS,
+                timeout: 10000,
+            });
+
+            const $ = cheerio.load(html);
+            const prices: PriceData = {};
+
+            for (const key in IDS) {
+                const typedKey = key as keyof PriceData;
+                const elem_id = IDS[typedKey];
+                const element = $(`li#${elem_id}`);
+
+                if (element.length) {
+                    const priceText = element.find(".info-price").text().trim().replace(/,/g, "");
+                    prices[typedKey] = priceText;
+                } else {
+                    prices[typedKey] = undefined;
+                }
+            }
+            return prices;
+        } catch (error) {
+            console.error("Failed to fetch prices from tgju.org", error);
+            return {};
+        }
     }
 );

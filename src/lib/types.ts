@@ -7,7 +7,7 @@ export type LivePrice = {
   id: string;
   name: string;
   price: string;
-  change: number; // This might not be available from the new source, default to 0
+  change: string | null;
   symbol: string;
   icon: string;
 };

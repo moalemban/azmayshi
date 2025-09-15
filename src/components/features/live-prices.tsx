@@ -8,41 +8,54 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { fetchPrices as fetchPricesFlow } from '@/ai/flows/fetch-prices-flow';
 
-const PriceChangeIndicator = ({ change }: { change: number }) => {
-  // The new source does not provide change percentage easily, so we hide this for now.
-  // We can add it back later if we enhance the flow.
-  return null;
+const PriceChangeIndicator = ({ change }: { change: string | null }) => {
+  if (!change) return <div className="h-5" />; // Placeholder for alignment
+
+  const isPositive = !change.startsWith('-');
+  const isNegative = change.startsWith('-');
+  
+  // Remove +/- signs for display
+  const displayChange = change.replace(/[+-]/, '');
+
+  return (
+    <div className={cn("flex items-center text-xs font-mono", isPositive ? "text-green-500" : isNegative ? "text-red-500" : "text-muted-foreground")}>
+      <span>{displayChange}</span>
+      {isPositive && <ArrowUp className="w-3 h-3 ml-1" />}
+      {isNegative && <ArrowDown className="w-3 h-3 ml-1" />}
+    </div>
+  );
 };
 
+
 const PriceCard = ({ item }: { item: LivePrice }) => (
-    <div className="glass-effect rounded-2xl p-3 card-hover w-full">
-        <div className="flex items-center gap-3">
-            <div className="text-3xl">{item.icon}</div>
+    <div className="glass-effect rounded-2xl p-2 card-hover w-full flex-shrink-0">
+        <div className="flex items-center gap-2">
+            <div className="text-2xl">{item.icon}</div>
             <div className="flex-grow text-right">
-                <h3 className="text-foreground font-display font-semibold text-sm truncate">{item.name}</h3>
-                <div className="text-muted-foreground text-xs font-body">{item.symbol}</div>
+                <h3 className="text-foreground font-display font-semibold text-xs truncate">{item.name}</h3>
+                <div className="text-muted-foreground text-[10px] font-body">{item.symbol}</div>
             </div>
         </div>
-        <div className="mt-2 text-right">
-            <div className="text-xl text-foreground font-mono text-glow">{item.price}</div>
-             <div className="flex justify-end mt-1 h-5">
-                <PriceChangeIndicator change={item.change} />
+        <div className="mt-1.5 text-right">
+            <div className="text-base text-foreground font-mono text-glow">{item.price}</div>
+             <div className="flex justify-end mt-0.5 h-5">
+                {/* Change indicator is currently not supported by the new flow */}
             </div>
         </div>
     </div>
 );
 
 const PriceCardSkeleton = () => (
-  <div className="glass-effect rounded-2xl p-3 w-full">
-    <div className="flex items-center gap-3">
-      <Skeleton className="w-8 h-8 rounded-full" />
-      <div className="flex-grow space-y-2">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-3 w-1/4" />
+  <div className="glass-effect rounded-2xl p-2 w-full">
+    <div className="flex items-center gap-2">
+      <Skeleton className="w-7 h-7 rounded-full" />
+      <div className="flex-grow space-y-1.5">
+        <Skeleton className="h-3.5 w-3/4" />
+        <Skeleton className="h-2.5 w-1/4" />
       </div>
     </div>
-    <div className="mt-2 space-y-2 text-right">
-        <Skeleton className="h-6 w-1/2 ml-auto" />
+    <div className="mt-1.5 space-y-1.5 text-right">
+        <Skeleton className="h-5 w-1/2 ml-auto" />
         <Skeleton className="h-5 w-1/4 ml-auto" />
     </div>
   </div>
@@ -75,10 +88,13 @@ export default function LivePrices() {
         .map(([key, priceValue]) => {
           const config = priceConfig[key as keyof PriceData];
           if (!config || !priceValue) return null;
+          
+          const priceNumber = Number(priceValue);
+
           return {
             ...config,
-            price: Number(priceValue).toLocaleString('fa-IR'),
-            change: 0, // Change is not available from the new source
+            price: priceNumber.toLocaleString('fa-IR'),
+            change: null, // Change is not available from the new source yet
           };
         })
         .filter((p): p is LivePrice => p !== null);
