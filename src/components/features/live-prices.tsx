@@ -37,9 +37,9 @@ const PriceCard = ({ item }: { item: LivePrice }) => (
             </div>
         </div>
         <div className="mt-1.5 text-right">
-            <div className="text-base text-foreground font-mono text-glow">{item.price}</div>
+            <div className="text-base text-foreground font-display font-bold text-glow">{item.price}</div>
              <div className="flex justify-end mt-0.5 h-5">
-                {/* Change indicator is currently not supported by the new flow */}
+                <PriceChangeIndicator change={item.change} />
             </div>
         </div>
     </div>
@@ -61,14 +61,12 @@ const PriceCardSkeleton = () => (
   </div>
 );
 
-const priceConfig: { [key in keyof PriceData]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    Bourse: null,
+const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
     GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: '🥇' },
     MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: '⚖️' },
     Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: '⚖️' },
     EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: '🪙' },
     Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: '💵' },
-    BrentOil: null,
     USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: '₮' },
 };
 
@@ -85,16 +83,16 @@ export default function LivePrices() {
       if (!data) throw new Error("No data returned from flow");
 
       const newPrices: LivePrice[] = Object.entries(data)
-        .map(([key, priceValue]) => {
-          const config = priceConfig[key as keyof PriceData];
-          if (!config || !priceValue) return null;
+        .map(([key, priceData]) => {
+          const config = priceConfig[key as keyof typeof priceConfig];
+          if (!config || !priceData?.price) return null;
           
-          const priceNumber = Number(priceValue);
+          const priceNumber = Number(priceData.price);
 
           return {
             ...config,
             price: priceNumber.toLocaleString('fa-IR'),
-            change: null, // Change is not available from the new source yet
+            change: priceData.change,
           };
         })
         .filter((p): p is LivePrice => p !== null);
