@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Briefcase, Droplet, Mountain, Coins, Banknote, CircleDollarSign } from 'lucide-react';
+import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -61,14 +61,14 @@ const PriceCardSkeleton = () => (
   </div>
 );
 
-const priceConfig: { [key in keyof PriceData]: Omit<LivePrice, 'price' | 'change'> } = {
-    Bourse: { id: 'Bourse', name: 'بورس', symbol: 'واحد', icon: '📊' },
+const priceConfig: { [key in keyof PriceData]: Omit<LivePrice, 'price' | 'change'> | null } = {
+    Bourse: null,
     GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: '🥇' },
     MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: '⚖️' },
     Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: '⚖️' },
     EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: '🪙' },
     Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: '💵' },
-    BrentOil: { id: 'BrentOil', name: 'نفت برنت', symbol: 'USD', icon: '🛢️' },
+    BrentOil: null,
     USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: '₮' },
 };
 
@@ -115,7 +115,7 @@ export default function LivePrices() {
   }, []);
 
   const displayedPrices = loading 
-    ? Array(8).fill(null)
+    ? Array(6).fill(null)
     : prices;
 
   return (
@@ -131,15 +131,19 @@ export default function LivePrices() {
              <Button variant="ghost" size="icon" onClick={fetchPrices} disabled={loading} className="text-muted-foreground">
                 <RefreshCw className={cn("h-5 w-5", loading && "animate-spin")} />
              </Button>
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
-            <span className="text-sm text-muted-foreground font-body">
-              {loading ? 'در حال بروزرسانی...' : (lastUpdated ? `زنده - ${lastUpdated.toLocaleTimeString('fa-IR')}`: 'خطا در بروزرسانی')}
-            </span>
+            {lastUpdated && (
+                <>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                <span className="text-sm text-muted-foreground font-body">
+                {loading ? 'در حال بروزرسانی...' : `زنده - ${lastUpdated.toLocaleTimeString('fa-IR')}`}
+                </span>
+                </>
+            )}
         </div>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
         {loading ? (
-          Array.from({ length: 8 }).map((_, index) => <PriceCardSkeleton key={index} />)
+          Array.from({ length: 6 }).map((_, index) => <PriceCardSkeleton key={index} />)
         ) : (
           displayedPrices.map((item) => item ? <PriceCard key={item.id} item={item} /> : null)
         )}

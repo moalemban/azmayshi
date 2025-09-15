@@ -6,7 +6,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import type { PriceData } from '@/lib/types';
@@ -20,26 +20,22 @@ const HEADERS = {
     "Chrome/129.0.0.0 Safari/537.36",
 };
 
-const IDS: Record<keyof PriceData, string> = {
-    Bourse: 'l-gc30',
+const IDS: Record<keyof Omit<PriceData, 'Bourse' | 'BrentOil'>, string> = {
     GoldOunce: 'l-ons',
     MesghalGold: 'l-mesghal',
     Gold18K: 'l-geram18',
     EmamiCoin: 'l-sekee',
     Dollar: 'l-price_dollar_rl',
-    BrentOil: 'l-oil_brent',
     USDT: 'l-crypto-tether-irr',
 };
 
 
 const PriceDataSchema = z.object({
-    Bourse: z.string().optional(),
     GoldOunce: z.string().optional(),
     MesghalGold: z.string().optional(),
     Gold18K: z.string().optional(),
     EmamiCoin: z.string().optional(),
     Dollar: z.string().optional(),
-    BrentOil: z.string().optional(),
     USDT: z.string().optional(),
 });
 
@@ -65,7 +61,7 @@ const fetchPricesFlow = ai.defineFlow(
             const prices: PriceData = {};
 
             for (const key in IDS) {
-                const typedKey = key as keyof PriceData;
+                const typedKey = key as keyof Omit<PriceData, 'Bourse' | 'BrentOil'>;
                 const elem_id = IDS[typedKey];
                 const element = $(`li#${elem_id}`);
 
