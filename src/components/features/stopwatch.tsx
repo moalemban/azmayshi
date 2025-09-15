@@ -11,6 +11,7 @@ export default function Stopwatch() {
   const [isRunning, setIsRunning] = useState(false);
   const [laps, setLaps] = useState<number[]>([]);
   const timerRef = useRef<number | null>(null);
+  const lastLapTimeRef = useRef(0);
 
   const formatTime = (timeInMs: number) => {
     const milliseconds = `00${timeInMs % 1000}`.slice(-3);
@@ -26,11 +27,14 @@ export default function Stopwatch() {
     setIsRunning(false);
     setTime(0);
     setLaps([]);
+    lastLapTimeRef.current = 0;
   };
 
   const handleLap = () => {
     if (isRunning) {
-      setLaps(prevLaps => [time, ...prevLaps]);
+        const currentLapTime = time - lastLapTimeRef.current;
+        setLaps(prevLaps => [currentLapTime, ...prevLaps]);
+        lastLapTimeRef.current = time;
     }
   };
 
@@ -48,7 +52,7 @@ export default function Stopwatch() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isRunning]);
+  }, [isRunning, time]);
   
   const { minutes, seconds, milliseconds } = formatTime(time);
 
@@ -64,12 +68,12 @@ export default function Stopwatch() {
         <div className="text-center bg-muted/50 p-4 rounded-lg shadow-inner" dir="ltr">
             <p className="text-6xl font-mono text-primary tracking-wider text-glow">
               {minutes}:{seconds}
-              <span className="text-3xl text-primary/70">.{milliseconds}</span>
+              <span className="text-3xl text-primary/70 align-baseline">.{milliseconds}</span>
             </p>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-            <Button onClick={handleStartPause} size="lg" className={`h-14 text-lg ${isRunning ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600'} text-white`}>
+            <Button onClick={handleStartPause} size="lg" className={`h-14 text-lg ${isRunning ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-50' : 'bg-green-500 hover:bg-green-600 text-green-50'}`}>
               {isRunning ? <Pause className="ml-2" /> : <Play className="ml-2" />}
               {isRunning ? 'توقف' : 'شروع'}
             </Button>
