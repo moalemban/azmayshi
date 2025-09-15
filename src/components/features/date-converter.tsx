@@ -72,7 +72,7 @@ export default function DateConverter() {
 
   return (
     <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/opacity-100 transition-opacity duration-500 -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CalendarDays className="h-6 w-6 text-primary" />
@@ -105,10 +105,21 @@ export default function DateConverter() {
                     </PopoverContent>
                   </Popover>
               ) : (
-                <div className="flex gap-2" dir="ltr">
-                  <Input type="number" placeholder="روز" value={shamsiDay} onChange={e => setShamsiDay(parseInt(e.target.value))} className="h-12 text-center" max={31} min={1}/>
-                  <Input type="number" placeholder="ماه" value={shamsiMonth} onChange={e => setShamsiMonth(parseInt(e.target.value))} className="h-12 text-center" max={12} min={1}/>
-                  <Input type="number" placeholder="سال" value={shamsiYear} onChange={e => setShamsiYear(parseInt(e.target.value))} className="h-12 text-center" />
+                <div className="flex flex-col gap-2">
+                    <div className="flex gap-2" dir="ltr">
+                        <div className="flex-1 space-y-1">
+                            <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
+                            <Input id="shamsi-day" type="number" placeholder="مثلا ۲" value={shamsiDay} onChange={e => setShamsiDay(parseInt(e.target.value))} className="h-12 text-center" max={31} min={1}/>
+                        </div>
+                        <div className="flex-1 space-y-1">
+                            <Label htmlFor="shamsi-month" className="text-xs text-muted-foreground">ماه</Label>
+                            <Input id="shamsi-month" type="number" placeholder="مثلا ۸" value={shamsiMonth} onChange={e => setShamsiMonth(parseInt(e.target.value))} className="h-12 text-center" max={12} min={1}/>
+                        </div>
+                        <div className="flex-1 space-y-1">
+                            <Label htmlFor="shamsi-year" className="text-xs text-muted-foreground">سال</Label>
+                            <Input id="shamsi-year" type="number" placeholder="مثلا ۱۳۷۵" value={shamsiYear} onChange={e => setShamsiYear(parseInt(e.target.value))} className="h-12 text-center" />
+                        </div>
+                    </div>
                 </div>
               )}
             </div>

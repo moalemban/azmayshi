@@ -8,14 +8,14 @@ import { Percent } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 export default function PercentageCalculator() {
-  const [val1, setVal1] = useState<string>('10');
-  const [val2, setVal2] = useState<string>('50');
+  const [val1, setVal1] = useState<string>('0');
+  const [val2, setVal2] = useState<string>('0');
 
   const num1 = parseFloat(val1);
   const num2 = parseFloat(val2);
 
   const result1 = useMemo(() => {
-    if (isNaN(num1) || isNaN(num2) || num2 === 0) return '...';
+    if (isNaN(num1) || isNaN(num2)) return '...';
     const res = (num1 / 100) * num2;
     return res.toLocaleString('fa-IR');
   }, [num1, num2]);
@@ -28,7 +28,7 @@ export default function PercentageCalculator() {
 
   return (
     <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/opacity-100 transition-opacity duration-500 -z-10"></div>
+       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Percent className="h-6 w-6 text-primary" />
@@ -52,13 +52,13 @@ export default function PercentageCalculator() {
         <div className="space-y-3">
             <div className="p-3 bg-background/40 rounded-lg shadow-inner text-center">
                  <p className='text-sm text-muted-foreground'>
-                     <span className="font-mono text-primary">{val1 || '?'}</span> درصد از <span className="font-mono text-primary">{val2 || '?'}</span> برابر است با:
+                     <span className="font-mono text-primary">{val1 || '۰'}</span> درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> برابر است با:
                  </p>
                  <p className="text-2xl font-bold text-foreground mt-1">{result1}</p>
             </div>
              <div className="p-3 bg-background/40 rounded-lg shadow-inner text-center">
                  <p className='text-sm text-muted-foreground'>
-                    <span className="font-mono text-primary">{val1 || '?'}</span> چند درصد از <span className="font-mono text-primary">{val2 || '?'}</span> است؟
+                    <span className="font-mono text-primary">{val1 || '۰'}</span> چند درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> است؟
                  </p>
                  <p className="text-2xl font-bold text-foreground mt-1">
                     {result2}

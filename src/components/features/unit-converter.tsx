@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Scale, ArrowRightLeft } from 'lucide-react';
-import { unitCategories } from '@/lib/constants';
+import { unitCategories, unitNames, allUnits } from '@/lib/constants';
 
 // A simple conversion library (can be expanded)
 const conversionRates: { [key: string]: number } = {
@@ -27,17 +27,17 @@ const conversionRates: { [key: string]: number } = {
   // Volume
   liter: 1,
   milliliter: 0.001,
-  'cubic meter': 1000,
+  'cubic-meter': 1000,
   gallon: 3.78541,
   quart: 0.946353,
   pint: 0.473176,
   cup: 0.24,
 };
 
-const getUnitCategory = (unit: string) => {
-    for (const category in unitCategories) {
-        if (unitCategories[category].includes(unit)) {
-            return category;
+const getUnitCategoryKey = (unit: string) => {
+    for (const categoryKey in unitCategories) {
+        if (unitCategories[categoryKey].includes(unit)) {
+            return categoryKey;
         }
     }
     return null;
@@ -48,7 +48,7 @@ export default function UnitConverter() {
     const [toUnit, setToUnit] = useState('kilometer');
     const [fromValue, setFromValue] = useState<string>('1');
     const [toValue, setToValue] = useState<string>('');
-    const [currentCategory, setCurrentCategory] = useState('طول');
+    const [currentCategoryKey, setCurrentCategoryKey] = useState('length');
 
     const convert = (value: number, from: string, to: string) => {
         if (from === to) return value;
@@ -85,11 +85,11 @@ export default function UnitConverter() {
     }, [fromValue, fromUnit, toUnit]);
     
     const handleFromUnitChange = (unit: string) => {
-        const newCategory = getUnitCategory(unit);
+        const newCategoryKey = getUnitCategoryKey(unit);
         setFromUnit(unit);
-        if(newCategory !== currentCategory) {
-            setCurrentCategory(newCategory!);
-            const newToUnit = unitCategories[newCategory!][0] === unit ? unitCategories[newCategory!][1] : unitCategories[newCategory!][0];
+        if(newCategoryKey !== currentCategoryKey) {
+            setCurrentCategoryKey(newCategoryKey!);
+            const newToUnit = unitCategories[newCategoryKey!][0] === unit ? unitCategories[newCategoryKey!][1] : unitCategories[newCategoryKey!][0];
             setToUnit(newToUnit);
         }
     }
@@ -106,11 +106,11 @@ export default function UnitConverter() {
               <SelectValue placeholder="یک واحد انتخاب کنید" />
             </SelectTrigger>
           <SelectContent>
-            {Object.entries(unitCategories).map(([category, units]) => (
+            {Object.entries(unitNames).map(([category, units]) => (
                 <SelectGroup key={category}>
                     <SelectLabel>{category}</SelectLabel>
-                    {units.map((unit) => (
-                        <SelectItem key={unit} value={unit} disabled={currentCategory && currentCategory !== category}>{unit}</SelectItem>
+                    {Object.entries(units).map(([unitKey, unitName]) => (
+                        <SelectItem key={unitKey} value={unitKey} disabled={currentCategoryKey && currentCategoryKey !== getUnitCategoryKey(unitKey)}>{unitName}</SelectItem>
                     ))}
                 </SelectGroup>
             ))}

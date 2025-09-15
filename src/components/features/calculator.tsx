@@ -123,7 +123,7 @@ export default function QuickCalculator() {
       </CardHeader>
       <CardContent className="flex-grow flex flex-col md:flex-row gap-4">
         <div className="flex-grow flex flex-col">
-          <div className="bg-background/50 rounded-lg p-4 w-full text-left mb-4 shadow-inner">
+          <div className="bg-background/50 rounded-lg p-4 w-full text-left mb-4 shadow-inner min-h-[90px] flex flex-col justify-end">
             <p className="text-muted-foreground text-sm text-right h-6" dir="ltr">
               {operationDisplay}
             </p>
@@ -144,12 +144,12 @@ export default function QuickCalculator() {
             ))}
           </div>
         </div>
-        <div className="w-full md:w-64 flex-shrink-0">
+        <div className="w-full md:w-64 lg:w-80 flex-shrink-0">
           <div className="flex items-center gap-2 mb-2">
             <History className="h-5 w-5 text-muted-foreground" />
             <h4 className="font-semibold text-muted-foreground">تاریخچه</h4>
           </div>
-          <ScrollArea className="h-48 md:h-full bg-background/30 rounded-lg p-2 shadow-inner">
+          <ScrollArea className="h-48 md:h-[calc(100%-32px)] bg-background/30 rounded-lg p-2 shadow-inner">
             {history.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                     <p className="text-sm text-muted-foreground">تاریخچه‌ای وجود ندارد.</p>

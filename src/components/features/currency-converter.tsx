@@ -10,19 +10,33 @@ import { currencies, mockExchangeRates } from '@/lib/constants';
 
 export default function CurrencyConverter() {
   const [fromCurrency, setFromCurrency] = useState('USD');
-  const [toCurrency, setToCurrency] = useState('IRR');
+  const [toCurrency, setToCurrency] = useState('IRT');
   const [amount, setAmount] = useState<number>(1);
   const [isFrom, setIsFrom] = useState(true); // True if the user is editing the 'from' amount
 
   const getRate = (from: string, to: string) => {
     if (from === to) return 1;
-    if (mockExchangeRates[`${from}-${to}`]) return mockExchangeRates[`${from}-${to}`];
-    if (mockExchangeRates[`${to}-${from}`]) return 1 / mockExchangeRates[`${to}-${from}`];
+
+    // Direct conversion for Toman and Rial
+    if (from === 'IRR' && to === 'IRT') return 0.1;
+    if (from === 'IRT' && to === 'IRR') return 10;
     
-    // Fallback via USD
-    const fromToUsd = from === 'USD' ? 1 : (1 / (mockExchangeRates[`${from}-USD`] || (1/mockExchangeRates[`USD-${from}`] || 1)));
-    const usdToTo = to === 'USD' ? 1 : (mockExchangeRates[`USD-${to}`] || (1/mockExchangeRates[`${to}-USD`] || 1));
-    return fromToUsd * usdToTo;
+    // Handle Toman conversion through Rial
+    let fromRate = mockExchangeRates[`USD-${from}`]
+    if(from === 'IRT') fromRate = mockExchangeRates['USD-IRR'] / 10;
+
+    let toRate = mockExchangeRates[`USD-${to}`]
+    if(to === 'IRT') toRate = mockExchangeRates['USD-IRR'] / 10;
+    
+    if (from === 'USD') fromRate = 1;
+    if (to === 'USD') toRate = 1;
+
+    if (fromRate && toRate) {
+        return toRate / fromRate;
+    }
+
+    // Fallback if direct rate not found (less common with this structure)
+    return 1;
   };
 
   const fromAmount = isFrom ? amount : amount * getRate(toCurrency, fromCurrency);

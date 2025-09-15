@@ -22,7 +22,7 @@ export default function Home() {
             <div className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
               <CurrencyConverter />
             </div>
-            <div className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+            <div className="col-span-12 sm:col-span-6 lg:col-span-12 xl:col-span-3">
               <DateConverter />
             </div>
 
@@ -35,13 +35,13 @@ export default function Home() {
             </div>
 
             {/* Row 3 - New Tools */}
-            <div className="col-span-12 sm:col-span-6 lg:col-span-4">
+            <div className="col-span-12 sm:col-span-6 md:col-span-4">
                <AgeCalculator />
             </div>
-            <div className="col-span-12 sm:col-span-6 lg:col-span-4">
+            <div className="col-span-12 sm:col-span-6 md:col-span-4">
               <BmiCalculator />
             </div>
-            <div className="col-span-12 lg:col-span-4">
+            <div className="col-span-12 md:col-span-4">
               <PercentageCalculator />
             </div>
 
