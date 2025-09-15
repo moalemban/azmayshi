@@ -1,7 +1,6 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CandlestickChart, ArrowUp, ArrowDown } from 'lucide-react';
 import { livePrices } from '@/lib/constants';
 import { cn } from '@/lib/utils';
@@ -9,8 +8,6 @@ import type { LivePrice } from '@/lib/types';
 
 const PriceChangeIndicator = ({ change }: { change: number }) => {
   const isPositive = change > 0;
-  const isNegative = change < 0;
-
   if (change === 0) return null;
 
   return (
@@ -29,58 +26,38 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
   );
 };
 
-const PriceList = ({ prices }: { prices: LivePrice[] }) => (
-  <ul className="space-y-3">
-    {prices.map((item, index) => (
-      <li key={item.name} className="flex justify-between items-center bg-background/30 p-3 rounded-lg transition-all duration-200 hover:bg-background/60 hover:shadow-md hover:scale-[1.03]">
-        <div className="flex items-center gap-3">
-          <div className="w-2 h-8 rounded-full" style={{backgroundColor: `hsl(var(--primary) / ${((index % 5) * 0.15) + 0.3})`}}></div>
-          <div>
-            <p className="font-medium text-foreground">{item.name}</p>
-            <p className="text-xs text-muted-foreground">{item.symbol}</p>
-          </div>
+const PriceCard = ({ item, icon }: { item: LivePrice, icon: string }) => (
+    <div className="glass-effect rounded-2xl p-5 text-center card-hover">
+        <div className="text-4xl mb-3">{icon}</div>
+        <h3 className="text-white font-display font-bold mb-2 text-lg">{item.name}</h3>
+        <div className="text-3xl text-white mb-2 font-mono text-glow">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</div>
+        <div className="flex justify-center items-center gap-2">
+            <PriceChangeIndicator change={item.change} />
+            <div className="text-white/60 text-xs font-body">{item.symbol}</div>
         </div>
-        <div className="flex items-center gap-4">
-          <p className="font-semibold text-foreground font-mono text-lg">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</p>
-          <PriceChangeIndicator change={item.change} />
-        </div>
-      </li>
-    ))}
-  </ul>
+    </div>
 );
+
 
 export default function LivePrices() {
   return (
-    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <CandlestickChart className="h-6 w-6 text-primary" />
-          قیمت‌های لحظه‌ای
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="gold">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
-            <TabsTrigger value="gold">طلا و سکه</TabsTrigger>
-            <TabsTrigger value="currencies">ارز</TabsTrigger>
-            <TabsTrigger value="stocks">بورس</TabsTrigger>
-            <TabsTrigger value="crypto">ارز دیجیتال</TabsTrigger>
-          </TabsList>
-          <TabsContent value="gold" className="mt-4">
-            <PriceList prices={livePrices.gold} />
-          </TabsContent>
-          <TabsContent value="currencies" className="mt-4">
-            <PriceList prices={livePrices.currencies} />
-          </TabsContent>
-          <TabsContent value="stocks" className="mt-4">
-            <PriceList prices={livePrices.stocks} />
-          </TabsContent>
-          <TabsContent value="crypto" className="mt-4">
-            <PriceList prices={livePrices.crypto} />
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+    <>
+      <h2 className="text-2xl font-display font-bold text-white mb-6 flex items-center text-glow">
+        <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center ml-3 animate-pulse">
+            <CandlestickChart className="w-6 h-6 text-white" />
+        </div>
+        قیمت‌های لحظه‌ای
+        <div className="mr-auto flex items-center space-x-2 space-x-reverse">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+            <span className="text-sm text-white/80 font-body">زنده</span>
+        </div>
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <PriceCard item={livePrices.gold[0]} icon="🥇" />
+        <PriceCard item={livePrices.gold[1]} icon="🪙" />
+        <PriceCard item={livePrices.currencies[0]} icon="💵" />
+        <PriceCard item={livePrices.crypto[0]} icon="₿" />
+      </div>
+    </>
   );
 }

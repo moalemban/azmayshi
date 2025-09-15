@@ -15,122 +15,104 @@ import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
 import QrCodeGenerator from '@/components/features/qr-code-generator';
 import { Card, CardContent } from '@/components/ui/card';
-import { Info, HeartHandshake } from 'lucide-react';
+import { Info, HeartHandshake, Zap, BarChart, Scale, Wallet, Calculator, HeartPulse, Gift, Percent, SpellCheck, Binary, KeyRound, Dices, QrCode as QrCodeIcon, TimerIcon } from 'lucide-react';
 import BinaryConverter from '@/components/features/binary-converter';
 
-const SectionTitle = ({ title }: { title: string }) => (
-  <h2 className="col-span-12 text-2xl font-bold text-primary mb-4 mt-8">{title}</h2>
+const SectionTitle = ({ title, icon }: { title: string, icon: React.ReactNode }) => (
+  <h2 className="col-span-12 text-2xl font-display font-bold text-white mb-8 flex items-center gap-3 text-glow">
+    <div className="w-10 h-10 bg-gradient-to-br from-primary/50 to-primary/80 rounded-xl flex items-center justify-center animate-pulse">
+        {icon}
+    </div>
+    {title}
+  </h2>
 );
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen">
       <Header />
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-screen-2xl">
-          <div className="grid grid-cols-12 gap-6">
-            
-            {/* Section: Main Tools */}
-            <SectionTitle title="ابزارهای اصلی" />
-            <div className="col-span-12 lg:col-span-8 xl:col-span-6">
-              <UnitConverter />
-            </div>
-            <div className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
-              <CurrencyConverter />
-            </div>
-            <div className="col-span-12 sm:col-span-6 lg:col-span-12 xl:col-span-3">
-              <DateConverter />
-            </div>
-
-            {/* Section: Live Prices */}
-            <div className="col-span-12">
+          <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
               <LivePrices />
+          </div>
+
+          {/* Section: Main Tools */}
+          <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
+            <SectionTitle title="ابزارهای اصلی تبدیل" icon={<Scale className="w-6 h-6 text-white"/>} />
+            <div className="grid grid-cols-12 gap-6">
+              <div className="col-span-12 lg:col-span-6">
+                <UnitConverter />
+              </div>
+              <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+                <CurrencyConverter />
+              </div>
+              <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+                <DateConverter />
+              </div>
             </div>
-            
-            {/* Section: Financial Tools */}
-            <SectionTitle title="ابزارهای مالی" />
-            <div className="col-span-12 md:col-span-6">
+          </div>
+
+          {/* Section: Financial Tools */}
+          <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
+            <SectionTitle title="ابزارهای مالی" icon={<Wallet className="w-6 h-6 text-white"/>} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                <LoanCalculator />
+               <DepositCalculator />
             </div>
-             <div className="col-span-12 md:col-span-6">
-              <DepositCalculator />
-            </div>
+          </div>
 
-            {/* Section: Utility Tools */}
-            <SectionTitle title="ابزارهای کاربردی" />
-            <div className="col-span-12 sm:col-span-6 md:col-span-4">
+          {/* Section: Utility Tools */}
+          <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
+             <SectionTitle title="ابزارهای کاربردی" icon={<Calculator className="w-6 h-6 text-white"/>} />
+             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                <AgeCalculator />
+               <BmiCalculator />
+               <PercentageCalculator />
+               <NumberToWordsConverter />
+               <NumberSystemConverter />
+               <RandomNumberGenerator />
+               <BinaryConverter />
+               <Stopwatch />
             </div>
-            <div className="col-span-12 sm:col-span-6 md:col-span-4">
-              <BmiCalculator />
+          </div>
+          
+           <div className="glass-effect rounded-3xl p-6 md:p-8 mb-10">
+             <SectionTitle title="ابزارهای امنیتی و تولیدی" icon={<Zap className="w-6 h-6 text-white"/>} />
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <PasswordGenerator />
+                <QrCodeGenerator />
             </div>
-            <div className="col-span-12 sm:col-span-6 md:col-span-4">
-              <PercentageCalculator />
-            </div>
-            <div className="col-span-12 sm:col-span-6 md:col-span-4">
-              <NumberToWordsConverter />
-            </div>
-            <div className="col-span-12 sm:col-span-6 md:col-span-4">
-              <NumberSystemConverter />
-            </div>
-             <div className="col-span-12 sm:col-span-6 md:col-span-4">
-              <RandomNumberGenerator />
-            </div>
-             <div className="col-span-12 sm:col-span-6 md:col-span-4">
-              <BinaryConverter />
-            </div>
-            <div className="col-span-12">
-               <PasswordGenerator />
-            </div>
-            
-            {/* Section: Stopwatch */}
-             <div className="col-span-12">
-              <Stopwatch />
-            </div>
-            
-             {/* Section: QR Code */}
-             <div className="col-span-12">
-              <QrCodeGenerator />
-            </div>
-
           </div>
           
            {/* About Us Section */}
-           <div className="mt-12">
-             <Card>
-               <CardContent className="p-6">
-                 <div className="flex items-center gap-4">
-                   <Info className="h-8 w-8 text-primary"/>
-                   <div>
-                      <h3 className="text-xl font-semibold">درباره ما</h3>
-                      <p className="text-muted-foreground mt-2">
-                        «تبدیلا» یک دستیار هوشمند و مدرن برای انجام انواع محاسبات و تبدیل‌های روزمره شماست. هدف ما ارائه ابزارهای دقیق، سریع و با رابط کاربری زیبا و ساده است تا نیازهای شما را به بهترین شکل ممکن برطرف کنیم.
-                      </p>
-                   </div>
-                 </div>
-               </CardContent>
-             </Card>
+           <div className="mt-12 glass-effect rounded-3xl p-6 md:p-8">
+             <div className="flex items-center gap-4">
+               <Info className="h-8 w-8 text-primary"/>
+               <div>
+                  <h3 className="text-xl font-semibold font-display text-white">درباره ما</h3>
+                  <p className="text-white/80 mt-2">
+                    «تبدیلا» یک دستیار هوشمند و مدرن برای انجام انواع محاسبات و تبدیل‌های روزمره شماست. هدف ما ارائه ابزارهای دقیق، سریع و با رابط کاربری زیبا و ساده است تا نیازهای شما را به بهترین شکل ممکن برطرف کنیم.
+                  </p>
+               </div>
+             </div>
            </div>
            
            {/* Financial Support Section */}
-           <div className="mt-6">
-             <Card>
-               <CardContent className="p-6">
-                 <div className="flex items-center gap-4">
-                   <HeartHandshake className="h-8 w-8 text-pink-500"/>
-                   <div>
-                      <h3 className="text-xl font-semibold">حمایت از توسعه «تبدیلا»</h3>
-                      <p className="text-muted-foreground mt-2">
-                        اگر این مجموعه ابزار برای شما کاربردی بوده است، می‌توانید با حمایت مالی خود به ما در توسعه، بهبود و افزودن ابزارهای جدید کمک کنید. هر حمایتی، هرچند کوچک، برای ما ارزشمند است.
-                      </p>
-                   </div>
-                 </div>
-               </CardContent>
-             </Card>
+           <div className="mt-6 glass-effect rounded-3xl p-6 md:p-8">
+             <div className="flex items-center gap-4">
+               <HeartHandshake className="h-8 w-8 text-pink-400"/>
+               <div>
+                  <h3 className="text-xl font-semibold font-display text-white">حمایت از توسعه «تبدیلا»</h3>
+                  <p className="text-white/80 mt-2">
+                    اگر این مجموعه ابزار برای شما کاربردی بوده است، می‌توانید با حمایت مالی خود به ما در توسعه، بهبود و افزودن ابزارهای جدید کمک کنید. هر حمایتی، هرچند کوچک، برای ما ارزشمند است.
+                  </p>
+               </div>
+             </div>
            </div>
         </div>
       </main>
-      <footer className="text-center p-6 text-muted-foreground text-sm">
+      <footer className="text-center p-6 text-white/60 text-sm font-body">
         توسعه داده شده توسط حسین طاهری
       </footer>
     </div>

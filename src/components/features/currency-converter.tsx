@@ -12,16 +12,13 @@ export default function CurrencyConverter() {
   const [fromCurrency, setFromCurrency] = useState('USD');
   const [toCurrency, setToCurrency] = useState('IRT');
   const [amount, setAmount] = useState<number>(1);
-  const [isFrom, setIsFrom] = useState(true); // True if the user is editing the 'from' amount
+  const [isFrom, setIsFrom] = useState(true);
 
   const getRate = (from: string, to: string) => {
     if (from === to) return 1;
-
-    // Direct conversion for Toman and Rial
     if (from === 'IRR' && to === 'IRT') return 0.1;
     if (from === 'IRT' && to === 'IRR') return 10;
     
-    // Handle Toman conversion through Rial
     let fromRate = mockExchangeRates[`USD-${from}`]
     if(from === 'IRT') fromRate = mockExchangeRates['USD-IRR'] / 10;
 
@@ -34,8 +31,6 @@ export default function CurrencyConverter() {
     if (fromRate && toRate) {
         return toRate / fromRate;
     }
-
-    // Fallback if direct rate not found (less common with this structure)
     return 1;
   };
 
@@ -57,7 +52,6 @@ export default function CurrencyConverter() {
     const newTo = fromCurrency;
     setFromCurrency(newFrom);
     setToCurrency(newTo);
-    // Keep the input that was being edited stable
     setIsFrom(!isFrom); 
   };
   
@@ -74,19 +68,19 @@ export default function CurrencyConverter() {
   ) => (
     <div className="w-full space-y-2">
       <div className="relative">
-        <Input dir="ltr" type="text" value={formatValue(value)} onChange={onValueChange} placeholder="0" className="pr-24 text-lg h-12"/>
+        <Input dir="ltr" type="text" value={formatValue(value)} onChange={onValueChange} placeholder="0" className="pr-24 text-lg h-12 bg-black/20 text-white border-white/20"/>
         <div className="absolute inset-y-0 right-0 flex items-center">
             <Select value={currencyCode} onValueChange={onCurrencyChange}>
-              <SelectTrigger className="w-[100px] border-0 bg-transparent h-full rounded-r-md">
+              <SelectTrigger className="w-[100px] border-0 bg-transparent h-full rounded-r-md text-white">
                 <SelectValue placeholder="ارز" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="glass-effect">
                 {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code}</SelectItem>)}
               </SelectContent>
             </Select>
         </div>
       </div>
-       <p className="text-xs text-muted-foreground text-right pr-2 h-4">
+       <p className="text-xs text-white/70 text-right pr-2 h-4">
         {currencies.find(c => c.code === currencyCode)?.name}
       </p>
     </div>
@@ -94,11 +88,10 @@ export default function CurrencyConverter() {
 
 
   return (
-    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 -z-10"></div>
+    <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Landmark className="h-6 w-6 text-primary" />
+        <CardTitle className="flex items-center gap-2 font-display text-white">
+          <Landmark className="h-6 w-6 text-green-400" />
           تبدیل ارز
         </CardTitle>
       </CardHeader>
@@ -106,8 +99,8 @@ export default function CurrencyConverter() {
         <div className="flex flex-col items-center gap-2">
            {renderInput(fromAmount, (e) => handleAmountChange(e, true), fromCurrency, setFromCurrency)}
 
-          <Button variant="ghost" size="icon" className="shrink-0 my-1" onClick={swapCurrencies}>
-            <ArrowRightLeft className="h-5 w-5 text-muted-foreground transition-transform group-hover/card:rotate-180 duration-300" />
+          <Button variant="ghost" size="icon" className="shrink-0 my-1 text-white/70 hover:bg-white/10" onClick={swapCurrencies}>
+            <ArrowRightLeft className="h-5 w-5 transition-transform group-hover/card:rotate-180 duration-300" />
           </Button>
 
           {renderInput(toAmount, (e) => handleAmountChange(e, false), toCurrency, setToCurrency)}

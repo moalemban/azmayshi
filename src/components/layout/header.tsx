@@ -3,22 +3,22 @@ import { ThemeToggle } from './theme-toggle';
 
 export default function Header() {
   return (
-    <header className="px-4 sm:px-6 lg:px-8 pt-8 pb-4 max-w-screen-2xl mx-auto">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center justify-center gap-3">
-          <div className="relative">
-            <Zap className="h-10 w-10 text-primary" />
-            <Zap className="h-10 w-10 text-primary/50 absolute top-0 left-0 animate-pulse" />
+    <header className="glass-effect rounded-b-3xl p-4 mb-8 sticky top-0 z-50">
+      <div className="container mx-auto flex justify-between items-center">
+        <div className="flex items-center space-x-3 space-x-reverse">
+          <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center animate-float shadow-2xl backdrop-blur-sm">
+            <Zap className="w-8 h-8 text-primary/80 text-glow" />
           </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold text-foreground bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-pink-500 animate-text-gradient bg-300% bg-pos-0% hover:bg-pos-100% transition-all duration-500">
-            تبدیلا
-          </h1>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-display gradient-text text-glow">تبدیلا</h1>
+            <p className="text-white/80 text-sm font-body hidden sm:block">دستیار هوشمند شما ✨</p>
+          </div>
         </div>
-        <ThemeToggle />
+        <div className="hidden md:flex items-center space-x-2 space-x-reverse bg-white/10 rounded-full px-4 py-2">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span className="text-white/80 text-sm font-body">آنلاین</span>
+        </div>
       </div>
-      <p className="text-muted-foreground mt-3 text-lg md:text-xl text-center">
-        دستیار هوشمند شما برای انواع محاسبات و تبدیل واحدها
-      </p>
     </header>
   );
 }

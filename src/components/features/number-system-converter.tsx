@@ -23,35 +23,34 @@ export default function NumberSystemConverter() {
   const englishOutput = useMemo(() => toEnglish(inputValue), [inputValue]);
 
   return (
-    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 -z-10"></div>
+    <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Binary className="h-6 w-6 text-primary" />
+        <CardTitle className="flex items-center gap-2 font-display text-white">
+          <Binary className="h-6 w-6 text-sky-400" />
           تبدیل ارقام
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="space-y-2">
-          <Label htmlFor="number-input">عدد را وارد کنید (فارسی یا انگلیسی)</Label>
+          <Label htmlFor="number-input" className="text-white/80">عدد را وارد کنید (فارسی یا انگلیسی)</Label>
           <Input 
             id="number-input" 
             value={inputValue} 
             onChange={(e) => setInputValue(e.target.value)} 
             placeholder="مثلا: 123۴۵۶"
-            className="h-12 text-lg text-center"
+            className="h-12 text-lg text-center bg-black/20 text-white border-white/20"
             dir="ltr"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-            <div className="p-4 bg-background/40 rounded-lg shadow-inner">
-                <p className="text-sm text-muted-foreground">ارقام فارسی</p>
+            <div className="p-4 bg-black/20 rounded-lg shadow-inner">
+                <p className="text-sm text-white/70">ارقام فارسی</p>
                 <p className="text-2xl font-bold text-primary mt-1 font-mono" dir="rtl">{persianOutput || '۰'}</p>
             </div>
-            <div className="p-4 bg-background/40 rounded-lg shadow-inner">
-                <p className="text-sm text-muted-foreground">ارقام انگلیسی</p>
-                <p className="text-2xl font-bold text-foreground mt-1 font-mono" dir="ltr">{englishOutput || '0'}</p>
+            <div className="p-4 bg-black/20 rounded-lg shadow-inner">
+                <p className="text-sm text-white/70">ارقام انگلیسی</p>
+                <p className="text-2xl font-bold text-white mt-1 font-mono" dir="ltr">{englishOutput || '0'}</p>
             </div>
         </div>
       </CardContent>

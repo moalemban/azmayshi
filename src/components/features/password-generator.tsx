@@ -49,40 +49,36 @@ export default function PasswordGenerator() {
     }
 
     let newPassword = '';
+    // Use crypto.getRandomValues for better randomness
+    const randomValues = new Uint32Array(length);
+    window.crypto.getRandomValues(randomValues);
     for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * charset.length);
-      newPassword += charset[randomIndex];
+      newPassword += charset[randomValues[i] % charset.length];
     }
     setPassword(newPassword);
   };
-
+  
   const calculateStrength = () => {
     let score = 0;
-    const activeOptions = Object.values(options).filter(Boolean).length;
-
-    // Length score
-    if (length >= 8) score += 1;
-    if (length >= 12) score += 1;
-    if (length >= 16) score += 1;
-    if (length >= 20) score += 1;
-    
-    // Character type score
     if (options.lowercase) score += 1;
     if (options.uppercase) score += 1;
     if (options.numbers) score += 1;
-    if (options.symbols) score += 2; // Symbols add more strength
+    if (options.symbols) score += 2;
 
-    // Total score calculation (simple version)
-    let totalScore = (score / 9) * 100;
-    if (length < 8) totalScore = Math.min(totalScore, 20);
+    if (length >= 8) score += 1;
+    if (length >= 12) score += 1;
+    if (length >= 16) score += 1;
+
+    let totalScore = (score / 8) * 100;
+     if (length < 8) totalScore = Math.min(totalScore, 20);
 
     let strengthLabel = 'بسیار ضعیف';
     let strengthColor = 'bg-red-500';
 
-    if (totalScore > 90) {
+    if (totalScore > 85) {
         strengthLabel = 'بسیار قوی';
         strengthColor = 'bg-emerald-500';
-    } else if (totalScore > 70) {
+    } else if (totalScore > 65) {
         strengthLabel = 'قوی';
         strengthColor = 'bg-green-500';
     } else if (totalScore > 40) {
@@ -99,12 +95,10 @@ export default function PasswordGenerator() {
 
   useEffect(() => {
     generatePassword();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [length, options]);
 
   useEffect(() => {
     calculateStrength();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password, length, options]);
 
   const copyToClipboard = () => {
@@ -121,11 +115,10 @@ export default function PasswordGenerator() {
   };
 
   return (
-    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 -z-10"></div>
+    <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <KeyRound className="h-6 w-6 text-primary" />
+        <CardTitle className="flex items-center gap-2 font-display text-white">
+          <KeyRound className="h-6 w-6 text-violet-400" />
           تولیدکننده رمز عبور
         </CardTitle>
       </CardHeader>
@@ -134,14 +127,14 @@ export default function PasswordGenerator() {
           <Input
             readOnly
             value={password}
-            className="h-14 text-lg text-center font-mono tracking-widest pr-24 pl-12"
+            className="h-14 text-lg text-center font-mono tracking-widest pr-24 pl-12 bg-black/20 text-white border-white/20"
             placeholder="رمز شما اینجا ظاهر می‌شود..."
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-             <Button variant="ghost" size="icon" onClick={generatePassword}>
+             <Button variant="ghost" size="icon" onClick={generatePassword} className="text-white/70 hover:bg-white/10 hover:text-white">
                 <RefreshCw className="h-5 w-5" />
              </Button>
-            <Button variant="ghost" size="icon" onClick={copyToClipboard}>
+            <Button variant="ghost" size="icon" onClick={copyToClipboard} className="text-white/70 hover:bg-white/10 hover:text-white">
               <Clipboard className="h-5 w-5" />
             </Button>
           </div>
@@ -149,7 +142,7 @@ export default function PasswordGenerator() {
 
         <div className="space-y-4">
             <div className='flex items-center justify-between'>
-                <Label>طول رمز: <span className='font-mono text-primary text-lg'>{length}</span></Label>
+                <Label className="text-white/80">طول رمز: <span className='font-mono text-primary text-lg'>{length}</span></Label>
                  <div className='w-48'>
                      <Slider
                         value={[length]}
@@ -162,7 +155,7 @@ export default function PasswordGenerator() {
             </div>
              <div className='space-y-2'>
                 <div className='flex items-center justify-between'>
-                    <Label>قدرت رمز:</Label>
+                    <Label className="text-white/80">قدرت رمز:</Label>
                     <span className='text-sm font-medium' style={{color: `hsl(var(${strength.color.replace('bg-', '--')}))`}}>{strength.label}</span>
                 </div>
                  <Progress value={strength.value} className={cn("h-2", strength.color)} />
@@ -176,14 +169,15 @@ export default function PasswordGenerator() {
                 id={key}
                 checked={options[key as keyof typeof options]}
                 onCheckedChange={() => handleOptionChange(key as keyof typeof options)}
+                className="border-primary data-[state=checked]:bg-primary"
               />
-              <Label htmlFor={key} className="text-base cursor-pointer">
+              <Label htmlFor={key} className="text-base cursor-pointer text-white/80">
                 {
                     {
-                        'lowercase': 'حروف کوچک (a-z)',
-                        'uppercase': 'حروف بزرگ (A-Z)',
-                        'numbers': 'اعداد (0-9)',
-                        'symbols': 'نمادها (!@#)'
+                        'lowercase': 'حروف کوچک',
+                        'uppercase': 'حروف بزرگ',
+                        'numbers': 'اعداد',
+                        'symbols': 'نمادها'
                     }[key]
                 }
               </Label>

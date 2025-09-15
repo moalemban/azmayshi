@@ -39,52 +39,49 @@ export default function LoanCalculator() {
 
 
   return (
-    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 -z-10"></div>
+    <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Banknote className="h-6 w-6 text-primary" />
+        <CardTitle className="flex items-center gap-2 font-display text-white">
+          <Banknote className="h-6 w-6 text-rose-400" />
           ماشین‌حساب اقساط وام
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
-        {/* Inputs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="loanAmount">مبلغ وام (تومان)</Label>
-            <Input id="loanAmount" type="number" value={loanAmount} onChange={(e) => setLoanAmount(e.target.value)} placeholder="مثلا: ۱۰۰,۰۰۰,۰۰۰" className="h-12 text-lg"/>
+            <Label htmlFor="loanAmount" className="text-white/80">مبلغ وام (تومان)</Label>
+            <Input id="loanAmount" type="number" value={loanAmount} onChange={(e) => setLoanAmount(e.target.value)} placeholder="۱۰۰,۰۰۰,۰۰۰" className="h-12 text-lg bg-black/20 text-white border-white/20"/>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="interestRate">نرخ سود سالانه (%)</Label>
-            <Input id="interestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="مثلا: ۲۳" className="h-12 text-lg" />
+            <Label htmlFor="interestRate" className="text-white/80">نرخ سود سالانه (%)</Label>
+            <Input id="interestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="۲۳" className="h-12 text-lg bg-black/20 text-white border-white/20" />
           </div>
            <div className="space-y-2">
-            <Label htmlFor="loanTerm">مدت بازپرداخت (ماه)</Label>
-            <Input id="loanTerm" type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="مثلا: ۳۶" className="h-12 text-lg" />
+            <Label htmlFor="loanTerm" className="text-white/80">مدت بازپرداخت (ماه)</Label>
+            <Input id="loanTerm" type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="۳۶" className="h-12 text-lg bg-black/20 text-white border-white/20" />
           </div>
         </div>
 
-        {/* Outputs */}
         {hasValues ? (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                <div className="p-4 bg-background/40 rounded-lg shadow-inner">
-                    <p className="text-sm text-muted-foreground">مبلغ هر قسط</p>
+                <div className="p-4 bg-black/20 rounded-lg shadow-inner">
+                    <p className="text-sm text-white/70">مبلغ هر قسط</p>
                     <p className="text-2xl font-bold text-primary mt-1">{formatNumber(monthlyPayment)}</p>
-                    <p className="text-xs text-muted-foreground/80">تومان</p>
+                    <p className="text-xs text-white/60">تومان</p>
                 </div>
-                <div className="p-4 bg-background/40 rounded-lg shadow-inner">
-                    <p className="text-sm text-muted-foreground">مجموع سود</p>
-                    <p className="text-2xl font-bold text-foreground mt-1">{formatNumber(totalInterest)}</p>
-                    <p className="text-xs text-muted-foreground/80">تومان</p>
+                <div className="p-4 bg-black/20 rounded-lg shadow-inner">
+                    <p className="text-sm text-white/70">مجموع سود</p>
+                    <p className="text-2xl font-bold text-white mt-1">{formatNumber(totalInterest)}</p>
+                    <p className="text-xs text-white/60">تومان</p>
                 </div>
-                 <div className="p-4 bg-background/40 rounded-lg shadow-inner">
-                    <p className="text-sm text-muted-foreground">مبلغ کل بازپرداخت</p>
-                    <p className="text-2xl font-bold text-foreground mt-1">{formatNumber(totalPayment)}</p>
-                    <p className="text-xs text-muted-foreground/80">تومان</p>
+                 <div className="p-4 bg-black/20 rounded-lg shadow-inner">
+                    <p className="text-sm text-white/70">مبلغ کل بازپرداخت</p>
+                    <p className="text-2xl font-bold text-white mt-1">{formatNumber(totalPayment)}</p>
+                    <p className="text-xs text-white/60">تومان</p>
                 </div>
             </div>
         ) : (
-             <div className="flex items-center justify-center text-muted-foreground h-24 bg-background/30 rounded-lg">
+             <div className="flex items-center justify-center text-white/60 h-24 bg-black/10 rounded-lg">
                 <p>مقادیر را برای محاسبه وارد کنید.</p>
             </div>
         )}

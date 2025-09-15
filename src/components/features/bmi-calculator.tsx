@@ -43,39 +43,36 @@ export default function BmiCalculator() {
     }
   };
   
-  // Effect to calculate BMI whenever height or weight changes
   useEffect(() => {
     calculateBmi();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, weight]);
 
   return (
-    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 -z-10"></div>
+    <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <HeartPulse className="h-6 w-6 text-primary" />
+        <CardTitle className="flex items-center gap-2 font-display text-white">
+          <HeartPulse className="h-6 w-6 text-red-400" />
           محاسبه BMI
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="space-y-2">
-          <Label htmlFor="height">قد (سانتی‌متر)</Label>
-          <Input id="height" type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="مثلا: 175" className="h-12 text-lg" />
+          <Label htmlFor="height" className="text-white/80">قد (سانتی‌متر)</Label>
+          <Input id="height" type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="مثلا: 175" className="h-12 text-lg bg-black/20 text-white border-white/20"/>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="weight">وزن (کیلوگرم)</Label>
-          <Input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="مثلا: 70" className="h-12 text-lg" />
+          <Label htmlFor="weight" className="text-white/80">وزن (کیلوگرم)</Label>
+          <Input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="مثلا: 70" className="h-12 text-lg bg-black/20 text-white border-white/20"/>
         </div>
 
         {bmi ? (
-          <div className="w-full text-center bg-background/50 p-4 rounded-lg shadow-inner mt-2">
-            <p className="text-lg text-muted-foreground">شاخص توده بدنی (BMI)</p>
+          <div className="w-full text-center bg-black/20 p-4 rounded-lg shadow-inner mt-2">
+            <p className="text-lg text-white/70">شاخص توده بدنی (BMI)</p>
             <p className="text-4xl font-bold text-primary">{bmi.value}</p>
             <p className={`text-xl font-semibold ${bmi.color}`}>{bmi.category}</p>
           </div>
         ) : (
-            <div className="flex items-center justify-center text-muted-foreground h-28 bg-background/30 rounded-lg">
+            <div className="flex items-center justify-center text-white/60 h-28 bg-black/10 rounded-lg">
                 <p>قد و وزن خود را وارد کنید.</p>
             </div>
         )}

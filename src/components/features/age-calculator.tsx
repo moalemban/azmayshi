@@ -18,15 +18,12 @@ type InputMode = 'shamsi' | 'gregorian';
 export default function AgeCalculator() {
   const [inputMode, setInputMode] = useState<InputMode>('shamsi');
   
-  // Gregorian state
   const [gregorianDate, setGregorianDate] = useState<Date | undefined>();
   const [gregorianPopoverOpen, setGregorianPopoverOpen] = useState(false);
   
-  // Shamsi state
-  const todayInJalali = gregorianToJalali(new Date());
-  const [shamsiYear, setShamsiYear] = useState<number | string>('');
-  const [shamsiMonth, setShamsiMonth] = useState<number | string>('');
-  const [shamsiDay, setShamsiDay] = useState<number | string>('');
+  const [shamsiYear, setShamsiYear] = useState<string>('');
+  const [shamsiMonth, setShamsiMonth] = useState<string>('');
+  const [shamsiDay, setShamsiDay] = useState<string>('');
 
   const [age, setAge] = useState<{ years: number; months: number; days: number } | null>(null);
   const [ageInWords, setAgeInWords] = useState<string | null>(null);
@@ -88,22 +85,21 @@ export default function AgeCalculator() {
   };
 
   return (
-    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 -z-10"></div>
+    <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Gift className="h-6 w-6 text-primary" />
+        <CardTitle className="flex items-center gap-2 font-display text-white">
+          <Gift className="h-6 w-6 text-pink-400" />
           محاسبه سن
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="flex items-center justify-between p-1 bg-muted rounded-lg">
+        <div className="flex items-center justify-between p-1 bg-black/20 rounded-lg">
           {['shamsi', 'gregorian'].map((mode) => (
             <Button 
               key={mode}
               onClick={() => setInputMode(mode as InputMode)} 
-              variant={inputMode === mode ? 'default' : 'ghost'}
-              className="w-full"
+              variant={inputMode === mode ? 'secondary' : 'ghost'}
+              className={`w-full ${inputMode === mode ? 'bg-primary/80 hover:bg-primary/90 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
             >
               {mode === 'shamsi' ? 'شمسی' : 'میلادی'}
             </Button>
@@ -113,27 +109,27 @@ export default function AgeCalculator() {
         {inputMode === 'shamsi' ? (
            <div className="flex gap-2" dir="ltr">
              <div className="flex-1 space-y-1">
-                 <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
-                 <Input id="shamsi-day" type="number" placeholder="مثلا ۲" value={shamsiDay} onChange={e => setShamsiDay(e.target.value)} className="h-12 text-center" max={31} min={1}/>
+                 <Label htmlFor="shamsi-day" className="text-xs text-white/70">روز</Label>
+                 <Input id="shamsi-day" type="number" placeholder="۲" value={shamsiDay} onChange={e => setShamsiDay(e.target.value)} className="h-12 text-center bg-black/20 text-white" max={31} min={1}/>
              </div>
              <div className="flex-1 space-y-1">
-                 <Label htmlFor="shamsi-month" className="text-xs text-muted-foreground">ماه</Label>
-                 <Input id="shamsi-month" type="number" placeholder="مثلا ۸" value={shamsiMonth} onChange={e => setShamsiMonth(e.target.value)} className="h-12 text-center" max={12} min={1}/>
+                 <Label htmlFor="shamsi-month" className="text-xs text-white/70">ماه</Label>
+                 <Input id="shamsi-month" type="number" placeholder="۸" value={shamsiMonth} onChange={e => setShamsiMonth(e.target.value)} className="h-12 text-center bg-black/20 text-white" max={12} min={1}/>
              </div>
              <div className="flex-1 space-y-1">
-                 <Label htmlFor="shamsi-year" className="text-xs text-muted-foreground">سال</Label>
-                 <Input id="shamsi-year" type="number" placeholder="مثلا ۱۳۷۵" value={shamsiYear} onChange={e => setShamsiYear(e.target.value)} className="h-12 text-center" />
+                 <Label htmlFor="shamsi-year" className="text-xs text-white/70">سال</Label>
+                 <Input id="shamsi-year" type="number" placeholder="۱۳۷۵" value={shamsiYear} onChange={e => setShamsiYear(e.target.value)} className="h-12 text-center bg-black/20 text-white" />
              </div>
            </div>
         ) : (
           <Popover open={gregorianPopoverOpen} onOpenChange={setGregorianPopoverOpen}>
             <PopoverTrigger asChild>
-              <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal h-12 text-base', !gregorianDate && 'text-muted-foreground')}>
+              <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal h-12 text-base bg-black/20 text-white border-white/20', !gregorianDate && 'text-white/70')}>
                 <CalendarIcon className="ml-2 h-5 w-5" />
                 {gregorianDate ? format(gregorianDate, 'PPP') : <span>تاریخ تولد خود را انتخاب کنید</span>}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0 glass-effect" align="start">
               <Calendar
                 mode="single"
                 selected={gregorianDate}
@@ -142,15 +138,19 @@ export default function AgeCalculator() {
                 fromYear={1900}
                 toYear={new Date().getFullYear()}
                 initialFocus
+                classNames={{
+                  day_selected: "bg-primary text-primary-foreground",
+                  day_today: "bg-accent text-accent-foreground",
+                }}
               />
             </PopoverContent>
           </Popover>
         )}
 
         {age ? (
-          <div className="w-full text-center bg-background/50 p-4 rounded-lg shadow-inner mt-2 space-y-2">
+          <div className="w-full text-center bg-black/20 p-4 rounded-lg shadow-inner mt-2 space-y-2">
             <div>
-              <p className="text-lg text-muted-foreground">سن شما (به عدد)</p>
+              <p className="text-lg text-white/70">سن شما (به عدد)</p>
               <div className="text-2xl font-bold text-primary" dir="rtl">
                 <span>{age.years}</span>
                 <span className="text-base font-normal mx-1">سال و</span>
@@ -162,13 +162,13 @@ export default function AgeCalculator() {
             </div>
             {ageInWords && (
               <div>
-                <p className="text-lg text-muted-foreground">سن شما (به حروف)</p>
+                <p className="text-lg text-white/70">سن شما (به حروف)</p>
                 <p className="text-xl font-medium text-primary/90">{ageInWords}</p>
               </div>
             )}
           </div>
         ) : (
-            <div className="flex items-center justify-center text-muted-foreground h-24 bg-background/30 rounded-lg">
+            <div className="flex items-center justify-center text-white/60 h-24 bg-black/10 rounded-lg">
                 <p>تاریخ تولد را برای محاسبه انتخاب کنید.</p>
             </div>
         )}

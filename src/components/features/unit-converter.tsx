@@ -8,38 +8,15 @@ import { Scale, ArrowRightLeft } from 'lucide-react';
 import { unitCategories, unitNames } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 
-// A simple conversion library (can be expanded)
 const conversionRates: { [key: string]: number } = {
-  // Length
-  meter: 1,
-  kilometer: 1000,
-  centimeter: 0.01,
-  millimeter: 0.001,
-  mile: 1609.34,
-  yard: 0.9144,
-  foot: 0.3048,
-  inch: 0.0254,
-  // Mass
-  kilogram: 1,
-  gram: 0.001,
-  milligram: 0.000001,
-  pound: 0.453592,
-  ounce: 0.0283495,
-  // Volume
-  liter: 1,
-  milliliter: 0.001,
-  'cubic-meter': 1000,
-  gallon: 3.78541,
-  quart: 0.946353,
-  pint: 0.473176,
-  cup: 0.24,
+  meter: 1, kilometer: 1000, centimeter: 0.01, millimeter: 0.001, mile: 1609.34, yard: 0.9144, foot: 0.3048, inch: 0.0254,
+  kilogram: 1, gram: 0.001, milligram: 0.000001, pound: 0.453592, ounce: 0.0283495,
+  liter: 1, milliliter: 0.001, 'cubic-meter': 1000, gallon: 3.78541, quart: 0.946353, pint: 0.473176, cup: 0.24,
 };
 
 const getUnitCategoryKey = (unit: string): string | null => {
     for (const categoryKey in unitCategories) {
-        if (unitCategories[categoryKey].includes(unit)) {
-            return categoryKey;
-        }
+        if (unitCategories[categoryKey].includes(unit)) return categoryKey;
     }
     return null;
 }
@@ -64,12 +41,10 @@ export default function UnitConverter() {
 
         const fromRate = conversionRates[from];
         const toRate = conversionRates[to];
-
         if (fromRate && toRate) {
-            const valueInBase = value * fromRate;
-            return valueInBase / toRate;
+            return (value * fromRate) / toRate;
         }
-        return NaN; // Cannot convert
+        return NaN;
     };
 
     useEffect(() => {
@@ -89,8 +64,6 @@ export default function UnitConverter() {
     const handleFromUnitChange = (unit: string) => {
         const newCategoryKey = getUnitCategoryKey(unit);
         setFromUnit(unit);
-
-        // If the category changes, update the 'to' unit to a default in the new category
         if(newCategoryKey !== getUnitCategoryKey(toUnit)) {
             const newCategoryUnits = unitCategories[newCategoryKey!];
             const newToUnit = newCategoryUnits[0] === unit ? newCategoryUnits[1] : newCategoryUnits[0];
@@ -104,35 +77,17 @@ export default function UnitConverter() {
         setFromValue(toValue.replace(/,/g, ''));
     }
 
-    const renderSelect = (value: string, onChange: (val:string)=>void) => (
+    const renderSelect = (value: string, onChange: (val:string)=>void, isDisabledCheck?: (key: string) => boolean) => (
          <Select onValueChange={onChange} value={value}>
-            <SelectTrigger className="h-12 text-base">
+            <SelectTrigger className="h-12 text-base bg-black/20 text-white border-white/20">
               <SelectValue placeholder="یک واحد انتخاب کنید" />
             </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="glass-effect">
             {Object.entries(unitNames).map(([category, units]) => (
                 <SelectGroup key={category}>
                     <SelectLabel>{category}</SelectLabel>
                     {Object.entries(units).map(([unitKey, unitName]) => (
-                        <SelectItem key={unitKey} value={unitKey}>{unitName}</SelectItem>
-                    ))}
-                </SelectGroup>
-            ))}
-          </SelectContent>
-        </Select>
-    );
-    
-    const renderToSelect = (value: string, onChange: (val:string)=>void) => (
-         <Select onValueChange={onChange} value={value}>
-            <SelectTrigger className="h-12 text-base">
-              <SelectValue placeholder="یک واحد انتخاب کنید" />
-            </SelectTrigger>
-          <SelectContent>
-            {Object.entries(unitNames).map(([category, units]) => (
-                <SelectGroup key={category}>
-                    <SelectLabel>{category}</SelectLabel>
-                    {Object.entries(units).map(([unitKey, unitName]) => (
-                        <SelectItem key={unitKey} value={unitKey} disabled={currentCategoryKey !== getUnitCategoryKey(unitKey)}>{unitName}</SelectItem>
+                        <SelectItem key={unitKey} value={unitKey} disabled={isDisabledCheck ? isDisabledCheck(unitKey) : false}>{unitName}</SelectItem>
                     ))}
                 </SelectGroup>
             ))}
@@ -141,11 +96,10 @@ export default function UnitConverter() {
     );
 
   return (
-    <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+    <Card className="glass-effect h-full card-hover">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl">
-          <Scale className="h-7 w-7 text-primary" />
+        <CardTitle className="flex items-center gap-2 text-2xl font-display text-white">
+          <Scale className="h-7 w-7 text-blue-400" />
           تبدیل واحد
         </CardTitle>
       </CardHeader>
@@ -153,19 +107,19 @@ export default function UnitConverter() {
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row items-center gap-2">
                 <div className='w-full space-y-2'>
-                    <Input type="number" value={fromValue} onChange={e => setFromValue(e.target.value)} className="h-12 text-lg text-center" />
+                    <Input type="number" value={fromValue} onChange={e => setFromValue(e.target.value)} placeholder="1" className="h-12 text-lg text-center bg-black/20 text-white border-white/20" />
                     {renderSelect(fromUnit, handleFromUnitChange)}
                 </div>
 
                 <div className='my-2 sm:my-0'>
-                     <Button variant="ghost" size="icon" className="shrink-0" onClick={swapUnits}>
-                        <ArrowRightLeft className="h-6 w-6 text-muted-foreground transition-transform group-hover/card:rotate-180 duration-300"/>
+                     <Button variant="ghost" size="icon" className="shrink-0 text-white/70 hover:bg-white/10" onClick={swapUnits}>
+                        <ArrowRightLeft className="h-6 w-6 transition-transform group-hover/card:rotate-180 duration-300"/>
                     </Button>
                 </div>
                
                 <div className='w-full space-y-2'>
-                    <Input readOnly value={toValue} className="h-12 text-lg text-center bg-background/50" />
-                     {renderToSelect(toUnit, setToUnit)}
+                    <Input readOnly value={toValue} className="h-12 text-lg text-center bg-black/30 border-white/10 text-primary" placeholder="نتیجه"/>
+                     {renderSelect(toUnit, setToUnit, (unitKey) => currentCategoryKey !== getUnitCategoryKey(unitKey))}
                 </div>
             </div>
           </div>
