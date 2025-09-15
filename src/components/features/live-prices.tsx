@@ -29,23 +29,36 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
 };
 
 const PriceCard = ({ item }: { item: LivePrice }) => (
-    <div className="glass-effect rounded-2xl p-3 sm:p-4 text-center card-hover">
-        <div className="text-3xl sm:text-4xl mb-2">{item.icon}</div>
-        <h3 className="text-foreground font-display font-semibold mb-1 text-sm sm:text-base">{item.name}</h3>
-        <div className="text-lg sm:text-xl lg:text-2xl text-foreground mb-2 font-mono text-glow">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</div>
-        <div className="flex justify-center items-center gap-2">
-            <PriceChangeIndicator change={item.change} />
-            <div className="text-muted-foreground text-xs font-body">{item.symbol}</div>
+    <div className="flex-shrink-0 w-48 sm:w-52 glass-effect rounded-2xl p-3 card-hover">
+        <div className="flex items-center gap-3">
+            <div className="text-3xl">{item.icon}</div>
+            <div className="flex-grow text-right">
+                <h3 className="text-foreground font-display font-semibold text-sm truncate">{item.name}</h3>
+                <div className="text-muted-foreground text-xs font-body">{item.symbol}</div>
+            </div>
+        </div>
+        <div className="mt-2 text-right">
+            <div className="text-xl text-foreground font-mono text-glow">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</div>
+            <div className="flex justify-end mt-1">
+                <PriceChangeIndicator change={item.change} />
+            </div>
         </div>
     </div>
 );
 
 const PriceCardSkeleton = () => (
-  <div className="glass-effect rounded-2xl p-4 sm:p-5 text-center">
-    <Skeleton className="w-10 h-10 rounded-full mx-auto mb-3" />
-    <Skeleton className="h-5 w-3/4 mx-auto mb-2" />
-    <Skeleton className="h-8 w-1/2 mx-auto mb-2" />
-    <Skeleton className="h-4 w-1/4 mx-auto" />
+  <div className="flex-shrink-0 w-48 sm:w-52 glass-effect rounded-2xl p-3">
+    <div className="flex items-center gap-3">
+      <Skeleton className="w-8 h-8 rounded-full" />
+      <div className="flex-grow space-y-2">
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-3 w-1/4" />
+      </div>
+    </div>
+    <div className="mt-2 space-y-2 text-right">
+        <Skeleton className="h-6 w-1/2 ml-auto" />
+        <Skeleton className="h-4 w-1/4 ml-auto" />
+    </div>
   </div>
 );
 
@@ -109,6 +122,8 @@ export default function LivePrices() {
 
   useEffect(() => {
     fetchPrices();
+    const interval = setInterval(fetchPrices, 300000); // Refresh every 5 minutes
+    return () => clearInterval(interval);
   }, []);
 
   const findPrice = (id: string) => prices.find(p => p.id === id);
@@ -125,7 +140,7 @@ export default function LivePrices() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-y-2 mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-y-2 mb-4">
         <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground flex items-center text-glow">
           <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center ml-3 animate-pulse">
               <CandlestickChart className="w-6 h-6 text-white" />
@@ -138,11 +153,11 @@ export default function LivePrices() {
              </Button>
             <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
             <span className="text-sm text-muted-foreground font-body">
-              {loading ? 'در حال بروزرسانی...' : `زنده - آخرین بروزرسانی در ${lastUpdated?.toLocaleTimeString('fa-IR')}`}
+              {loading ? 'در حال بروزرسانی...' : `زنده - ${lastUpdated?.toLocaleTimeString('fa-IR')}`}
             </span>
         </div>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+      <div className="horizontal-scrollbar flex items-center gap-4 overflow-x-auto pb-4 -mb-4">
         {loading ? (
           <>
             <PriceCardSkeleton />
