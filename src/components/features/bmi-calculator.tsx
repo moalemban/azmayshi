@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { HeartPulse } from 'lucide-react';
 
 export default function BmiCalculator() {
-  const [height, setHeight] = useState<number | string>('');
-  const [weight, setWeight] = useState<number | string>('');
+  const [height, setHeight] = useState<string>('');
+  const [weight, setWeight] = useState<string>('');
   const [bmi, setBmi] = useState<{ value: string; category: string; color: string } | null>(null);
 
   const calculateBmi = () => {
@@ -44,25 +43,15 @@ export default function BmiCalculator() {
     }
   };
   
-  const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setHeight(e.target.value);
-      setTimeout(calculateBmi, 0); // Recalculate on next tick
-  }
-  
-  const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setWeight(e.target.value);
-      setTimeout(calculateBmi, 0); // Recalculate on next tick
-  }
-
   // Effect to calculate BMI whenever height or weight changes
-  useState(() => {
+  useEffect(() => {
     calculateBmi();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, weight]);
 
   return (
     <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/opacity-100 transition-opacity duration-500 -z-10"></div>
+       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <HeartPulse className="h-6 w-6 text-primary" />
@@ -72,11 +61,11 @@ export default function BmiCalculator() {
       <CardContent className="flex flex-col gap-4">
         <div className="space-y-2">
           <Label htmlFor="height">قد (سانتی‌متر)</Label>
-          <Input id="height" type="number" value={height} onChange={handleHeightChange} placeholder="مثلا: 175" className="h-12 text-lg" />
+          <Input id="height" type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="مثلا: 175" className="h-12 text-lg" />
         </div>
         <div className="space-y-2">
           <Label htmlFor="weight">وزن (کیلوگرم)</Label>
-          <Input id="weight" type="number" value={weight} onChange={handleWeightChange} placeholder="مثلا: 70" className="h-12 text-lg" />
+          <Input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="مثلا: 70" className="h-12 text-lg" />
         </div>
 
         {bmi ? (

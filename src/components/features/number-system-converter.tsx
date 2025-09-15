@@ -3,8 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { ArrowRightLeft, TextCursorInput } from 'lucide-react';
+import { Binary } from 'lucide-react';
 import { Label } from '../ui/label';
 
 export default function NumberSystemConverter() {
@@ -25,10 +24,10 @@ export default function NumberSystemConverter() {
 
   return (
     <Card className="h-full group/card transition-all duration-300 hover:border-primary/50">
-       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/opacity-100 transition-opacity duration-500 -z-10"></div>
+       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 -z-10"></div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <TextCursorInput className="h-6 w-6 text-primary" />
+          <Binary className="h-6 w-6 text-primary" />
           تبدیل ارقام
         </CardTitle>
       </CardHeader>
