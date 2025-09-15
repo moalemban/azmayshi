@@ -65,7 +65,7 @@ export default function Home() {
           {/* Section: Utility Tools */}
           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
              <SectionTitle title="ابزارهای کاربردی" icon={<Calculator className="w-6 h-6 text-primary-foreground"/>} />
-             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
                <AgeCalculator />
                <BmiCalculator />
                <PercentageCalculator />
