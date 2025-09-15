@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
+import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
   title: 'تبدیلا | دستیار هوشمند شما',
@@ -22,9 +23,18 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="gradient-bg antialiased">
-        {children}
-        <Toaster />
+      <body>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+            <div className="gradient-bg antialiased">
+                {children}
+                <Toaster />
+            </div>
+        </ThemeProvider>
       </body>
     </html>
   );

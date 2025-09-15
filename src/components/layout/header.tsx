@@ -1,4 +1,5 @@
 import { Zap } from 'lucide-react';
+import { ThemeToggle } from './theme-toggle';
 
 export default function Header() {
   return (
@@ -10,12 +11,15 @@ export default function Header() {
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-display gradient-text text-glow">تبدیلا</h1>
-            <p className="text-white/80 text-sm font-body hidden sm:block">دستیار هوشمند شما ✨</p>
+            <p className="text-foreground/80 text-sm font-body hidden sm:block">دستیار هوشمند شما ✨</p>
           </div>
         </div>
-        <div className="hidden md:flex items-center space-x-2 space-x-reverse bg-white/10 rounded-full px-4 py-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span className="text-white/80 text-sm font-body">آنلاین</span>
+        <div className="flex items-center gap-2">
+            <div className="hidden md:flex items-center space-x-2 space-x-reverse bg-background/20 rounded-full px-4 py-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-foreground/80 text-sm font-body">آنلاین</span>
+            </div>
+            <ThemeToggle />
         </div>
       </div>
     </header>
