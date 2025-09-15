@@ -123,7 +123,7 @@ export default function Home() {
         </div>
       </main>
       <footer className="text-center p-6 text-muted-foreground text-sm font-body">
-        ❤️ توسعه داده شده توسط حسین طاهری
+        ❤️ توسعه داده شده توسط <a href="https://www.hosseintaheri.org/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">حسین طاهری</a>
       </footer>
     </div>
   );
