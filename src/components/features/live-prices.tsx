@@ -94,9 +94,8 @@ export default function LivePrices() {
         setPrices(newPrices);
       } catch (error) {
         console.error("Failed to fetch prices:", error);
-        // In case of error, you might want to set some default or cached prices
-        // For now, we'll just show the static prices
-        setPrices([...staticPrices.gold, ...staticPrices.currencies.slice(0,1), ...staticPrices.crypto.slice(0,1)]);
+        const staticCrypto = staticPrices.crypto.find(c => c.id === 'bitcoin') || [];
+        setPrices([...staticPrices.gold, staticPrices.currencies[0], ...staticCrypto ? [staticCrypto] : [] ]);
       } finally {
         setLoading(false);
       }
@@ -105,7 +104,16 @@ export default function LivePrices() {
     fetchPrices();
   }, []);
 
-  const displayedPrices = loading ? [] : [prices[0], staticPrices.gold[0], prices[2], prices[3]];
+  const findPrice = (id: string) => prices.find(p => p.id === id);
+
+  const displayedPrices = loading 
+    ? [] 
+    : [
+        findPrice('gold'),        // انس طلا
+        findPrice('sekkeh'),      // سکه امامی (از داده ثابت)
+        findPrice('usd-market'),  // دلار (تتر)
+        findPrice('bitcoin'),     // بیت‌کوین
+      ];
 
   return (
     <>

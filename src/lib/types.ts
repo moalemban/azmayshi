@@ -9,7 +9,7 @@ export type LivePrice = {
   price: string;
   change: number;
   symbol: string;
-  icon?: string;
+  icon: string;
 };
 
 export type ConversionSuggestion = {
