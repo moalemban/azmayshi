@@ -66,7 +66,8 @@ export default function Home() {
               <NumberSystemConverter />
             </div>
             
-            <div className="col-span-12">
+            {/* Row 6 - Stopwatch */}
+            <div className="col-span-12 sm:col-span-6 md:col-span-12">
               <Stopwatch />
             </div>
 

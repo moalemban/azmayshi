@@ -4,8 +4,7 @@ import { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Timer, Play, Pause, Square, History, Redo } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Timer, Play, Pause, History, Redo } from 'lucide-react';
 
 export default function Stopwatch() {
   const [time, setTime] = useState(0);
