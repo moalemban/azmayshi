@@ -29,10 +29,10 @@ const PriceChangeIndicator = ({ change }: { change: number }) => {
 };
 
 const PriceCard = ({ item }: { item: LivePrice }) => (
-    <div className="glass-effect rounded-2xl p-4 sm:p-5 text-center card-hover">
-        <div className="text-4xl mb-3">{item.icon}</div>
-        <h3 className="text-foreground font-display font-bold mb-2 text-md sm:text-lg h-12 sm:h-auto">{item.name}</h3>
-        <div className="text-xl sm:text-2xl lg:text-3xl text-foreground mb-2 font-mono text-glow">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</div>
+    <div className="glass-effect rounded-2xl p-3 sm:p-4 text-center card-hover">
+        <div className="text-3xl sm:text-4xl mb-2">{item.icon}</div>
+        <h3 className="text-foreground font-display font-semibold mb-1 text-sm sm:text-base">{item.name}</h3>
+        <div className="text-lg sm:text-xl lg:text-2xl text-foreground mb-2 font-mono text-glow">{Number(item.price.replace(/,/g, '')).toLocaleString('fa-IR')}</div>
         <div className="flex justify-center items-center gap-2">
             <PriceChangeIndicator change={item.change} />
             <div className="text-muted-foreground text-xs font-body">{item.symbol}</div>
