@@ -9,6 +9,7 @@ import BmiCalculator from '@/components/features/bmi-calculator';
 import PercentageCalculator from '@/components/features/percentage-calculator';
 import LoanCalculator from '@/components/features/loan-calculator';
 import Stopwatch from '@/components/features/stopwatch';
+import DepositCalculator from '@/components/features/deposit-calculator';
 
 export default function Home() {
   return (
@@ -37,11 +38,11 @@ export default function Home() {
             </div>
             
             {/* Row 3 - Financial Tools */}
-            <div className="col-span-12 md:col-span-7">
+            <div className="col-span-12 md:col-span-6">
                <LoanCalculator />
             </div>
-             <div className="col-span-12 md:col-span-5">
-              <Stopwatch />
+             <div className="col-span-12 md:col-span-6">
+              <DepositCalculator />
             </div>
 
 
@@ -52,8 +53,11 @@ export default function Home() {
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
               <BmiCalculator />
             </div>
-            <div className="col-span-12 md:col-span-4">
+            <div className="col-span-12 sm:col-span-6 md:col-span-4">
               <PercentageCalculator />
+            </div>
+             <div className="col-span-12 sm:col-span-6 md:col-span-12">
+              <Stopwatch />
             </div>
 
           </div>

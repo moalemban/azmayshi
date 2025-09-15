@@ -5,12 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Banknote } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function LoanCalculator() {
-  const [loanAmount, setLoanAmount] = useState<string>('10000000');
+  const [loanAmount, setLoanAmount] = useState<string>('100000000');
   const [interestRate, setInterestRate] = useState<string>('23');
-  const [loanTerm, setLoanTerm] = useState<string>('12'); // in months
+  const [loanTerm, setLoanTerm] = useState<string>('36'); // in months
 
   const amount = parseFloat(loanAmount);
   const rate = parseFloat(interestRate);
@@ -52,7 +51,7 @@ export default function LoanCalculator() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label htmlFor="loanAmount">مبلغ وام (تومان)</Label>
-            <Input id="loanAmount" type="number" value={loanAmount} onChange={(e) => setLoanAmount(e.target.value)} placeholder="مثلا: ۱۰۰۰۰۰۰۰" className="h-12 text-lg"/>
+            <Input id="loanAmount" type="number" value={loanAmount} onChange={(e) => setLoanAmount(e.target.value)} placeholder="مثلا: ۱۰۰,۰۰۰,۰۰۰" className="h-12 text-lg"/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="interestRate">نرخ سود سالانه (%)</Label>
@@ -60,7 +59,7 @@ export default function LoanCalculator() {
           </div>
            <div className="space-y-2">
             <Label htmlFor="loanTerm">مدت بازپرداخت (ماه)</Label>
-            <Input id="loanTerm" type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="مثلا: ۱۲" className="h-12 text-lg" />
+            <Input id="loanTerm" type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="مثلا: ۳۶" className="h-12 text-lg" />
           </div>
         </div>
 
@@ -69,17 +68,17 @@ export default function LoanCalculator() {
             <div className="p-4 bg-background/40 rounded-lg shadow-inner">
                 <p className="text-sm text-muted-foreground">مبلغ هر قسط</p>
                 <p className="text-2xl font-bold text-primary mt-1">{formatNumber(monthlyPayment)}</p>
-                <p className="text-xs text-primary-foreground/80">تومان</p>
+                <p className="text-xs text-muted-foreground/80">تومان</p>
             </div>
             <div className="p-4 bg-background/40 rounded-lg shadow-inner">
                 <p className="text-sm text-muted-foreground">مجموع سود</p>
                 <p className="text-2xl font-bold text-foreground mt-1">{formatNumber(totalInterest)}</p>
-                <p className="text-xs text-primary-foreground/80">تومان</p>
+                <p className="text-xs text-muted-foreground/80">تومان</p>
             </div>
              <div className="p-4 bg-background/40 rounded-lg shadow-inner">
                 <p className="text-sm text-muted-foreground">مبلغ کل بازپرداخت</p>
                 <p className="text-2xl font-bold text-foreground mt-1">{formatNumber(totalPayment)}</p>
-                <p className="text-xs text-primary-foreground/80">تومان</p>
+                <p className="text-xs text-muted-foreground/80">تومان</p>
             </div>
         </div>
       </CardContent>
