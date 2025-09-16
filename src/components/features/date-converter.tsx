@@ -17,15 +17,25 @@ type ConversionMode = 'gregorian-to-shamsi' | 'shamsi-to-gregorian';
 export default function DateConverter() {
   const [mode, setMode] = useState<ConversionMode>('gregorian-to-shamsi');
   
-  const [gregorianDate, setGregorianDate] = useState<Date | undefined>(new Date());
+  const [gregorianDate, setGregorianDate] = useState<Date | undefined>();
   const [gregorianPopoverOpen, setGregorianPopoverOpen] = useState(false);
 
-  const [shamsiYear, setShamsiYear] = useState(gregorianToJalali(new Date()).jy);
-  const [shamsiMonth, setShamsiMonth] = useState(gregorianToJalali(new Date()).jm);
-  const [shamsiDay, setShamsiDay] = useState(gregorianToJalali(new Date()).jd);
+  const [shamsiYear, setShamsiYear] = useState<number>(0);
+  const [shamsiMonth, setShamsiMonth] = useState<number>(0);
+  const [shamsiDay, setShamsiDay] = useState<number>(0);
   
   const [convertedDate, setConvertedDate] = useState('');
   const [convertedWeekday, setConvertedWeekday] = useState('');
+
+  useEffect(() => {
+    // Set initial dates only on the client-side to avoid hydration mismatch
+    const today = new Date();
+    setGregorianDate(today);
+    const { jy, jm, jd } = gregorianToJalali(today);
+    setShamsiYear(jy);
+    setShamsiMonth(jm);
+    setShamsiDay(jd);
+  }, []);
 
   const performConversion = () => {
     try {
@@ -97,15 +107,15 @@ export default function DateConverter() {
                   <div className="flex gap-2" dir="ltr">
                       <div className="flex-1 space-y-1">
                           <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
-                          <Input id="shamsi-day" type="number" placeholder="۲" value={shamsiDay} onChange={e => setShamsiDay(parseInt(e.target.value))} className="h-12 text-center" max={31} min={1}/>
+                          <Input id="shamsi-day" type="number" placeholder="۲" value={shamsiDay || ''} onChange={e => setShamsiDay(parseInt(e.target.value))} className="h-12 text-center" max={31} min={1}/>
                       </div>
                       <div className="flex-1 space-y-1">
                           <Label htmlFor="shamsi-month" className="text-xs text-muted-foreground">ماه</Label>
-                          <Input id="shamsi-month" type="number" placeholder="۸" value={shamsiMonth} onChange={e => setShamsiMonth(parseInt(e.target.value))} className="h-12 text-center" max={12} min={1}/>
+                          <Input id="shamsi-month" type="number" placeholder="۸" value={shamsiMonth || ''} onChange={e => setShamsiMonth(parseInt(e.target.value))} className="h-12 text-center" max={12} min={1}/>
                       </div>
                       <div className="flex-1 space-y-1">
                           <Label htmlFor="shamsi-year" className="text-xs text-muted-foreground">سال</Label>
-                          <Input id="shamsi-year" type="number" placeholder="۱۳۷۵" value={shamsiYear} onChange={e => setShamsiYear(parseInt(e.target.value))} className="h-12 text-center" />
+                          <Input id="shamsi-year" type="number" placeholder="۱۳۷۵" value={shamsiYear || ''} onChange={e => setShamsiYear(parseInt(e.target.value))} className="h-12 text-center" />
                       </div>
                   </div>
               </div>
