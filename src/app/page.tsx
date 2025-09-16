@@ -14,6 +14,7 @@ import NumberSystemConverter from '@/components/features/number-system-converter
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
 import QrCodeGenerator from '@/components/features/qr-code-generator';
+import IpDetector from '@/components/features/ip-detector';
 import { Info, HeartHandshake, Zap, Scale, Wallet, Calculator, ArrowLeft, Heart, Globe, SpellCheck } from 'lucide-react';
 import BinaryConverter from '@/components/features/binary-converter';
 import { Button } from '@/components/ui/button';
@@ -86,9 +87,10 @@ export default function Home() {
           
            <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
              <SectionTitle title="ابزارهای امنیتی و تولیدی" icon={<Zap className="w-6 h-6 text-primary-foreground"/>} />
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <PasswordGenerator />
                 <QrCodeGenerator />
+                <IpDetector />
             </div>
           </div>
           
@@ -131,14 +133,14 @@ export default function Home() {
       </main>
       <footer className="text-center p-6 text-muted-foreground text-sm font-body">
         <a 
-          href="https://www.hosseintaheri.org/" 
+          href="https://www.nigardip.site/" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="inline-flex items-center justify-center gap-2 hover:text-primary transition-colors"
         >
             <Globe className="w-5 h-5" />
             <span>
-              توسعه داده شده توسط <span className="font-semibold text-foreground hover:underline">حسین طاهری</span>
+              توسعه داده شده توسط <span className="font-semibold text-foreground hover:underline">نگار دی پی</span>
             </span>
         </a>
       </footer>
