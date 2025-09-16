@@ -18,6 +18,7 @@ import QrCodeGenerator from '@/components/features/qr-code-generator';
 import IpDetector from '@/components/features/ip-detector';
 import BinaryConverter from '@/components/features/binary-converter';
 import DistanceCalculator from '@/components/features/distance-calculator';
+import VehiclePlateIdentifier from '@/components/features/vehicle-plate-identifier';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 
@@ -44,6 +45,7 @@ import {
   Wrench,
   ArrowDown,
   Map,
+  RectangleEllipsis,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -60,6 +62,7 @@ const tools = [
   { id: 'age-calculator', title: 'محاسبه سن', icon: <Gift className="h-8 w-8 text-pink-400" />, component: <AgeCalculator /> },
   { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulse className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
   { id: 'distance-calculator', title: 'محاسبه مسافت', icon: <Map className="h-8 w-8 text-fuchsia-400" />, component: <DistanceCalculator /> },
+  { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
   { id: 'random-number', title: 'تولید عدد تصادفی', icon: <Dices className="h-8 w-8 text-orange-400" />, component: <RandomNumberGenerator /> },
   { id: 'stopwatch', title: 'کرونومتر', icon: <Timer className="h-8 w-8 text-indigo-400" />, component: <Stopwatch /> },
   { id: 'password-generator', title: 'تولیدکننده رمز عبور', icon: <KeyRound className="h-8 w-8 text-violet-400" />, component: <PasswordGenerator /> },
