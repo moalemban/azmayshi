@@ -44,34 +44,62 @@ import {
   ArrowLeft,
   Globe,
   Wrench,
-  ArrowDown,
   Map,
   RectangleEllipsis,
   FileText,
+  Wallet,
+  Activity,
+  User,
+  FlaskConical,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const tools = [
-  { id: 'unit-converter', title: 'تبدیل واحد', icon: <Scale className="h-8 w-8 text-blue-400" />, component: <UnitConverter /> },
-  { id: 'currency-converter', title: 'تبدیل ارز', icon: <Landmark className="h-8 w-8 text-green-400" />, component: <CurrencyConverter /> },
-  { id: 'date-converter', title: 'تبدیل تاریخ', icon: <CalendarDays className="h-8 w-8 text-purple-400" />, component: <DateConverter /> },
-  { id: 'loan-calculator', title: 'ماشین‌حساب اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
-  { id: 'deposit-calculator', title: 'ماشین‌حساب سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
-  { id: 'number-to-words', title: 'تبدیل عدد به حروف', icon: <SpellCheck className="h-8 w-8 text-amber-400" />, component: <NumberToWordsConverter /> },
-  { id: 'number-system', title: 'تبدیل ارقام', icon: <Binary className="h-8 w-8 text-sky-400" />, component: <NumberSystemConverter /> },
-  { id: 'binary-converter', title: 'تبدیل متن و باینری', icon: <Binary className="h-8 w-8 text-cyan-400" />, component: <BinaryConverter /> },
-  { id: 'percentage-calculator', title: 'محاسبه درصد', icon: <Percent className="h-8 w-8 text-teal-400" />, component: <PercentageCalculator /> },
-  { id: 'age-calculator', title: 'محاسبه سن', icon: <Gift className="h-8 w-8 text-pink-400" />, component: <AgeCalculator /> },
-  { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulse className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
-  { id: 'distance-calculator', title: 'محاسبه مسافت', icon: <Map className="h-8 w-8 text-fuchsia-400" />, component: <DistanceCalculator /> },
-  { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
-  { id: 'text-analyzer', title: 'تحلیلگر متن', icon: <FileText className="h-8 w-8 text-yellow-400" />, component: <TextAnalyzer /> },
-  { id: 'random-number', title: 'تولید عدد تصادفی', icon: <Dices className="h-8 w-8 text-orange-400" />, component: <RandomNumberGenerator /> },
-  { id: 'stopwatch', title: 'کرونومتر', icon: <Timer className="h-8 w-8 text-indigo-400" />, component: <Stopwatch /> },
-  { id: 'password-generator', title: 'تولیدکننده رمز عبور', icon: <KeyRound className="h-8 w-8 text-violet-400" />, component: <PasswordGenerator /> },
-  { id: 'qr-code-generator', title: 'تولید کننده QR Code', icon: <QrCode className="h-8 w-8 text-lime-400" />, component: <QrCodeGenerator /> },
-  { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, component: <IpDetector /> },
+const toolCategories = [
+  {
+    title: 'مبدل‌ها',
+    icon: <FlaskConical className="h-6 w-6 text-primary-foreground" />,
+    tools: [
+      { id: 'unit-converter', title: 'تبدیل واحد', icon: <Scale className="h-8 w-8 text-blue-400" />, component: <UnitConverter /> },
+      { id: 'currency-converter', title: 'تبدیل ارز', icon: <Landmark className="h-8 w-8 text-green-400" />, component: <CurrencyConverter /> },
+      { id: 'date-converter', title: 'تبدیل تاریخ', icon: <CalendarDays className="h-8 w-8 text-purple-400" />, component: <DateConverter /> },
+      { id: 'number-to-words', title: 'عدد به حروف', icon: <SpellCheck className="h-8 w-8 text-amber-400" />, component: <NumberToWordsConverter /> },
+      { id: 'number-system', title: 'تبدیل ارقام', icon: <Binary className="h-8 w-8 text-sky-400" />, component: <NumberSystemConverter /> },
+      { id: 'binary-converter', title: 'متن و باینری', icon: <Binary className="h-8 w-8 text-cyan-400" />, component: <BinaryConverter /> },
+      { id: 'text-analyzer', title: 'تحلیلگر متن', icon: <FileText className="h-8 w-8 text-yellow-400" />, component: <TextAnalyzer /> },
+    ]
+  },
+  {
+    title: 'محاسبات مالی',
+    icon: <Wallet className="h-6 w-6 text-primary-foreground" />,
+    tools: [
+      { id: 'loan-calculator', title: 'اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
+      { id: 'deposit-calculator', title: 'سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
+      { id: 'percentage-calculator', title: 'محاسبه درصد', icon: <Percent className="h-8 w-8 text-teal-400" />, component: <PercentageCalculator /> },
+    ]
+  },
+  {
+    title: 'سلامت و روزمره',
+    icon: <Activity className="h-6 w-6 text-primary-foreground" />,
+    tools: [
+      { id: 'age-calculator', title: 'محاسبه سن', icon: <Gift className="h-8 w-8 text-pink-400" />, component: <AgeCalculator /> },
+      { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulse className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
+      { id: 'distance-calculator', title: 'محاسبه مسافت', icon: <Map className="h-8 w-8 text-fuchsia-400" />, component: <DistanceCalculator /> },
+      { id: 'stopwatch', title: 'کرونومتر', icon: <Timer className="h-8 w-8 text-indigo-400" />, component: <Stopwatch /> },
+    ]
+  },
+  {
+    title: 'ابزارهای کاربردی',
+    icon: <User className="h-6 w-6 text-primary-foreground" />,
+    tools: [
+      { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
+      { id: 'random-number', title: 'عدد تصادفی', icon: <Dices className="h-8 w-8 text-orange-400" />, component: <RandomNumberGenerator /> },
+      { id: 'password-generator', title: 'تولید رمز عبور', icon: <KeyRound className="h-8 w-8 text-violet-400" />, component: <PasswordGenerator /> },
+      { id: 'qr-code-generator', title: 'QR Code ساز', icon: <QrCode className="h-8 w-8 text-lime-400" />, component: <QrCodeGenerator /> },
+      { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, component: <IpDetector /> },
+    ]
+  }
 ];
+
 
 export default function Home() {
   return (
@@ -91,30 +119,49 @@ export default function Home() {
               </div>
               جعبه ابزار
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {tools.map((tool) => (
-                <a href={`#${tool.id}`} key={`shortcut-${tool.id}`} className="block">
-                  <div className="glass-effect rounded-2xl p-4 card-hover w-full h-full flex flex-col items-center justify-center text-center gap-3">
-                    {tool.icon}
-                    <span className="font-semibold text-sm text-foreground">{tool.title}</span>
+            <div className="space-y-8">
+              {toolCategories.map((category) => (
+                <div key={category.title}>
+                  <h3 className="text-lg font-semibold font-display text-foreground/90 mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-primary/70 to-accent/70 rounded-lg flex items-center justify-center">
+                      {category.icon}
+                    </div>
+                    {category.title}
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    {category.tools.map((tool) => (
+                      <a href={`#${tool.id}`} key={`shortcut-${tool.id}`} className="block">
+                        <div className="glass-effect rounded-2xl p-4 card-hover w-full h-full flex flex-col items-center justify-center text-center gap-3">
+                          {tool.icon}
+                          <span className="font-semibold text-sm text-foreground">{tool.title}</span>
+                        </div>
+                      </a>
+                    ))}
                   </div>
-                </a>
+                </div>
               ))}
             </div>
           </div>
           
           {/* Tools Sections */}
-          <div className="space-y-6">
-            {tools.map((tool) => (
-              <Card key={tool.id} id={tool.id} className="glass-effect scroll-mt-24">
-                <CardHeader>
-                  <CardTitle className='flex items-center gap-3 text-xl font-display'>
-                     {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
-                     {tool.title}
-                  </CardTitle>
-                </CardHeader>
-                {tool.component}
-              </Card>
+          <div className="space-y-12">
+            {toolCategories.map((category) => (
+              <div key={`category-section-${category.title}`} className="space-y-6">
+                <h2 className="text-2xl font-bold font-display text-foreground text-glow border-r-4 border-primary pr-4">
+                  {category.title}
+                </h2>
+                {category.tools.map((tool) => (
+                  <Card key={tool.id} id={tool.id} className="glass-effect scroll-mt-24">
+                    <CardHeader>
+                      <CardTitle className='flex items-center gap-3 text-xl font-display'>
+                         {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
+                         {tool.title}
+                      </CardTitle>
+                    </CardHeader>
+                    {tool.component}
+                  </Card>
+                ))}
+              </div>
             ))}
           </div>
           
