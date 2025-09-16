@@ -52,7 +52,7 @@ export default function UnitConverter() {
         if (!isNaN(value)) {
             const result = convert(value, fromUnit, toUnit);
             if (!isNaN(result)) {
-                setToValue(result.toLocaleString('fa-IR', { maximumFractionDigits: 6, useGrouping: false }).replace(/\.?0+$/, ""));
+                setToValue(result.toLocaleString('en-US', { maximumFractionDigits: 6, useGrouping: false }).replace(/\.?0+$/, ""));
             } else {
                 setToValue('');
             }
@@ -111,7 +111,7 @@ export default function UnitConverter() {
             </div>
             
             <div className='w-full space-y-2'>
-                <Input readOnly value={toValue} className="h-12 text-lg text-center bg-muted/50 text-primary" placeholder="نتیجه"/>
+                <Input readOnly value={toValue.toLocaleString()} className="h-12 text-lg text-center bg-muted/50 text-primary" placeholder="نتیجه"/>
                     {renderSelect(toUnit, setToUnit, (unitKey) => currentCategoryKey !== getUnitCategoryKey(unitKey))}
             </div>
         </div>

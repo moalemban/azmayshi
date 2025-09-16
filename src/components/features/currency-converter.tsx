@@ -1,102 +1,132 @@
 "use client";
 
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useMemo } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ArrowRightLeft, Landmark } from 'lucide-react';
+import { ArrowRightLeft, Clipboard } from 'lucide-react';
 import { currencies, mockExchangeRates } from '@/lib/constants';
+import { Label } from '@/components/ui/label';
+import { numToWords } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import { Separator } from '../ui/separator';
 
 export default function CurrencyConverter() {
   const [fromCurrency, setFromCurrency] = useState('USD');
   const [toCurrency, setToCurrency] = useState('IRT');
-  const [amount, setAmount] = useState<number>(1);
-  const [isFrom, setIsFrom] = useState(true);
+  const [amount, setAmount] = useState<string>('1');
+  const { toast } = useToast();
 
   const getRate = (from: string, to: string) => {
     if (from === to) return 1;
     if (from === 'IRR' && to === 'IRT') return 0.1;
     if (from === 'IRT' && to === 'IRR') return 10;
     
-    let fromRate = mockExchangeRates[`USD-${from}`]
-    if(from === 'IRT') fromRate = mockExchangeRates['USD-IRR'] / 10;
+    let fromRateUSD = from === 'USD' ? 1 : mockExchangeRates[`USD-${from}`];
+    if (from === 'IRT') fromRateUSD = mockExchangeRates['USD-IRR'] / 10;
 
-    let toRate = mockExchangeRates[`USD-${to}`]
-    if(to === 'IRT') toRate = mockExchangeRates['USD-IRR'] / 10;
+    let toRateUSD = to === 'USD' ? 1 : mockExchangeRates[`USD-${to}`];
+    if (to === 'IRT') toRateUSD = mockExchangeRates['USD-IRR'] / 10;
     
-    if (from === 'USD') fromRate = 1;
-    if (to === 'USD') toRate = 1;
-
-    if (fromRate && toRate) {
-        return toRate / fromRate;
+    if (fromRateUSD && toRateUSD) {
+        return toRateUSD / fromRateUSD;
     }
-    return 1;
-  };
-
-  const fromAmount = isFrom ? amount : amount * getRate(toCurrency, fromCurrency);
-  const toAmount = isFrom ? amount * getRate(fromCurrency, toCurrency) : amount;
-
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>, isFromField: boolean) => {
-    const value = e.target.value.replace(/,/g, '');
-    const numValue = Number(value);
-
-    if (!isNaN(numValue) || value === '') {
-      setIsFrom(isFromField);
-      setAmount(numValue || 0);
-    }
-  };
-
-  const swapCurrencies = () => {
-    const newFrom = toCurrency;
-    const newTo = fromCurrency;
-    setFromCurrency(newFrom);
-    setToCurrency(newTo);
-    setIsFrom(!isFrom); 
+    return NaN;
   };
   
-  const formatValue = (val: number) => {
-    if (isNaN(val) || val === 0) return '0';
-    return val.toLocaleString('fa-IR', { maximumFractionDigits: val < 1 ? 6 : 2 });
+  const numericAmount = parseFloat(amount.replace(/,/g, ''));
+
+  const convertedValue = useMemo(() => {
+    if (isNaN(numericAmount) || !fromCurrency || !toCurrency) return 0;
+    const rate = getRate(fromCurrency, toCurrency);
+    if(isNaN(rate)) return 0;
+    return numericAmount * rate;
+  }, [numericAmount, fromCurrency, toCurrency]);
+
+  const formattedResult = useMemo(() => {
+    if (convertedValue === 0 && numericAmount !== 0) return 'نرخ تبدیل موجود نیست';
+    return convertedValue.toLocaleString('fa-IR', { maximumFractionDigits: convertedValue < 1 ? 6 : 2 });
+  }, [convertedValue, numericAmount]);
+  
+  const resultInWords = useMemo(() => {
+    if (convertedValue <= 0) return '';
+    const toCurrencyInfo = currencies.find(c => c.code === toCurrency);
+    const integerValue = Math.floor(convertedValue);
+    const words = numToWords(String(integerValue));
+    return `${words} ${toCurrencyInfo?.name || ''}`;
+  }, [convertedValue, toCurrency]);
+
+
+  const swapCurrencies = () => {
+    setFromCurrency(toCurrency);
+    setToCurrency(fromCurrency);
+  };
+  
+  const copyToClipboard = () => {
+    if (!convertedValue) return;
+    const textToCopy = `مقدار عددی: ${formattedResult}\nبه حروف: ${resultInWords}`;
+    navigator.clipboard.writeText(textToCopy);
+    toast({
+        title: 'کپی شد!',
+        description: 'نتیجه تبدیل ارز با موفقیت کپی شد.',
+    });
   }
 
-  const renderInput = (
-    value: number,
-    onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    currencyCode: string,
-    onCurrencyChange: (code: string) => void
+  const renderSelect = (
+    value: string,
+    onChange: (code: string) => void
   ) => (
-    <div className="w-full space-y-2">
-      <div className="relative">
-        <Input dir="ltr" type="text" value={formatValue(value)} onChange={onValueChange} placeholder="0" className="pl-24 text-lg h-12 text-right"/>
-        <div className="absolute inset-y-0 left-0 flex items-center">
-            <Select value={currencyCode} onValueChange={onCurrencyChange}>
-              <SelectTrigger className="w-[100px] border-0 bg-transparent h-full rounded-l-md text-foreground">
-                <SelectValue placeholder="ارز" />
-              </SelectTrigger>
-              <SelectContent className="glass-effect">
-                {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code}</SelectItem>)}
-              </SelectContent>
-            </Select>
-        </div>
-      </div>
-       <p className="text-xs text-muted-foreground text-right pr-2 h-4">
-        {currencies.find(c => c.code === currencyCode)?.name}
-      </p>
-    </div>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="w-full h-12 text-base">
+          <SelectValue placeholder="ارز" />
+        </SelectTrigger>
+        <SelectContent className="glass-effect">
+          {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.name} ({c.code})</SelectItem>)}
+        </SelectContent>
+      </Select>
   );
-
 
   return (
     <CardContent>
-      <div className="flex flex-col items-center gap-2">
-          {renderInput(fromAmount, (e) => handleAmountChange(e, true), fromCurrency, setFromCurrency)}
+      <div className="flex flex-col gap-4">
+        
+        {/* Inputs */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+            <div className="space-y-2">
+                <Label htmlFor="amount-input" className="text-muted-foreground">مبلغ</Label>
+                <Input dir="ltr" id="amount-input" type="text" value={amount} onChange={e => setAmount(e.target.value)} placeholder="1" className="text-lg h-12 text-center"/>
+            </div>
+            <div className="space-y-2">
+                <Label className="text-muted-foreground">از</Label>
+                {renderSelect(fromCurrency, setFromCurrency)}
+            </div>
+        </div>
 
-        <Button variant="ghost" size="icon" className="shrink-0 my-1 text-muted-foreground" onClick={swapCurrencies}>
-          <ArrowRightLeft className="h-5 w-5 transition-transform group-hover/card:rotate-180 duration-300" />
-        </Button>
+        {/* Swap Button */}
+        <div className="flex justify-center">
+            <Button variant="ghost" size="icon" className="shrink-0 my-1 text-muted-foreground" onClick={swapCurrencies}>
+                <ArrowRightLeft className="h-5 w-5 transition-transform group-hover/card:rotate-180 duration-300" />
+            </Button>
+        </div>
 
-        {renderInput(toAmount, (e) => handleAmountChange(e, false), toCurrency, setToCurrency)}
+        {/* Output */}
+        <div className="space-y-2">
+             <Label className="text-muted-foreground">به</Label>
+            {renderSelect(toCurrency, setToCurrency)}
+        </div>
+        
+        <Separator className="my-2"/>
+
+        {/* Result */}
+        <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner relative">
+          <Button variant="ghost" size="icon" className="absolute top-2 left-2 text-muted-foreground" onClick={copyToClipboard}>
+            <Clipboard className="w-5 h-5"/>
+          </Button>
+          <p className="text-sm text-muted-foreground">نتیجه تبدیل</p>
+          <p className="text-3xl font-bold text-primary mt-1">{formattedResult}</p>
+          {resultInWords && <p className="text-base text-primary/80 mt-2">{resultInWords}</p>}
+        </div>
 
       </div>
     </CardContent>
