@@ -23,37 +23,29 @@ export default function NumberSystemConverter() {
   const englishOutput = useMemo(() => toEnglish(inputValue), [inputValue]);
 
   return (
-    <Card className="glass-effect h-full card-hover">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-foreground">
-          <Binary className="h-6 w-6 text-sky-400" />
-          تبدیل ارقام
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="number-input" className="text-muted-foreground">عدد را وارد کنید (فارسی یا انگلیسی)</Label>
-          <Input 
-            id="number-input" 
-            value={inputValue} 
-            onChange={(e) => setInputValue(e.target.value)} 
-            placeholder="مثلا: 123۴۵۶"
-            className="h-12 text-lg text-center"
-            dir="ltr"
-          />
-        </div>
+    <CardContent className="flex flex-col gap-4">
+      <div className="space-y-2">
+        <Label htmlFor="number-input" className="text-muted-foreground">عدد را وارد کنید (فارسی یا انگلیسی)</Label>
+        <Input 
+          id="number-input" 
+          value={inputValue} 
+          onChange={(e) => setInputValue(e.target.value)} 
+          placeholder="مثلا: 123۴۵۶"
+          className="h-12 text-lg text-center"
+          dir="ltr"
+        />
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-            <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
-                <p className="text-sm text-muted-foreground">ارقام فارسی</p>
-                <p className="text-2xl font-bold text-primary mt-1 font-mono" dir="rtl">{persianOutput || '۰'}</p>
-            </div>
-            <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
-                <p className="text-sm text-muted-foreground">ارقام انگلیسی</p>
-                <p className="text-2xl font-bold text-foreground mt-1 font-mono" dir="ltr">{englishOutput || '0'}</p>
-            </div>
-        </div>
-      </CardContent>
-    </Card>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+          <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
+              <p className="text-sm text-muted-foreground">ارقام فارسی</p>
+              <p className="text-2xl font-bold text-primary mt-1 font-mono" dir="rtl">{persianOutput || '۰'}</p>
+          </div>
+          <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
+              <p className="text-sm text-muted-foreground">ارقام انگلیسی</p>
+              <p className="text-2xl font-bold text-foreground mt-1 font-mono" dir="ltr">{englishOutput || '0'}</p>
+          </div>
+      </div>
+    </CardContent>
   );
 }

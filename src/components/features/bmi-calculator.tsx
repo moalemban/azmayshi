@@ -48,35 +48,27 @@ export default function BmiCalculator() {
   }, [height, weight]);
 
   return (
-    <Card className="glass-effect h-full card-hover">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-foreground">
-          <HeartPulse className="h-6 w-6 text-red-400" />
-          محاسبه BMI
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="height" className="text-muted-foreground">قد (سانتی‌متر)</Label>
-          <Input id="height" type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="مثلا: 175" className="h-12 text-lg"/>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="weight" className="text-muted-foreground">وزن (کیلوگرم)</Label>
-          <Input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="مثلا: 70" className="h-12 text-lg"/>
-        </div>
+    <CardContent className="flex flex-col gap-4">
+      <div className="space-y-2">
+        <Label htmlFor="height" className="text-muted-foreground">قد (سانتی‌متر)</Label>
+        <Input id="height" type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="مثلا: 175" className="h-12 text-lg"/>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="weight" className="text-muted-foreground">وزن (کیلوگرم)</Label>
+        <Input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="مثلا: 70" className="h-12 text-lg"/>
+      </div>
 
-        {bmi ? (
-          <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner mt-2">
-            <p className="text-lg text-muted-foreground">شاخص توده بدنی (BMI)</p>
-            <p className="text-4xl font-bold text-primary">{bmi.value}</p>
-            <p className={`text-xl font-semibold ${bmi.color}`}>{bmi.category}</p>
+      {bmi ? (
+        <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner mt-2">
+          <p className="text-lg text-muted-foreground">شاخص توده بدنی (BMI)</p>
+          <p className="text-4xl font-bold text-primary">{bmi.value}</p>
+          <p className={`text-xl font-semibold ${bmi.color}`}>{bmi.category}</p>
+        </div>
+      ) : (
+          <div className="flex items-center justify-center text-muted-foreground h-28 bg-muted/30 rounded-lg">
+              <p>قد و وزن خود را وارد کنید.</p>
           </div>
-        ) : (
-            <div className="flex items-center justify-center text-muted-foreground h-28 bg-muted/30 rounded-lg">
-                <p>قد و وزن خود را وارد کنید.</p>
-            </div>
-        )}
-      </CardContent>
-    </Card>
+      )}
+    </CardContent>
   );
 }

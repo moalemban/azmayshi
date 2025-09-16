@@ -85,94 +85,86 @@ export default function AgeCalculator() {
   };
 
   return (
-    <Card className="glass-effect h-full card-hover">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-foreground">
-          <Gift className="h-6 w-6 text-pink-400" />
-          محاسبه سن
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="flex items-center justify-between p-1 bg-muted rounded-lg">
-          {['shamsi', 'gregorian'].map((mode) => (
-            <Button 
-              key={mode}
-              onClick={() => setInputMode(mode as InputMode)} 
-              variant={inputMode === mode ? 'default' : 'ghost'}
-              className={`w-full ${inputMode === mode ? '' : 'text-muted-foreground'}`}
-            >
-              {mode === 'shamsi' ? 'شمسی' : 'میلادی'}
-            </Button>
-          ))}
-        </div>
+    <CardContent className="flex flex-col gap-4">
+      <div className="flex items-center justify-between p-1 bg-muted rounded-lg">
+        {['shamsi', 'gregorian'].map((mode) => (
+          <Button 
+            key={mode}
+            onClick={() => setInputMode(mode as InputMode)} 
+            variant={inputMode === mode ? 'default' : 'ghost'}
+            className={`w-full ${inputMode === mode ? '' : 'text-muted-foreground'}`}
+          >
+            {mode === 'shamsi' ? 'شمسی' : 'میلادی'}
+          </Button>
+        ))}
+      </div>
 
-        {inputMode === 'shamsi' ? (
-           <div className="flex gap-2" dir="ltr">
-             <div className="flex-1 space-y-1">
-                 <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
-                 <Input id="shamsi-day" type="number" placeholder="۲" value={shamsiDay} onChange={e => setShamsiDay(e.target.value)} className="h-12 text-center" max={31} min={1}/>
-             </div>
-             <div className="flex-1 space-y-1">
-                 <Label htmlFor="shamsi-month" className="text-xs text-muted-foreground">ماه</Label>
-                 <Input id="shamsi-month" type="number" placeholder="۸" value={shamsiMonth} onChange={e => setShamsiMonth(e.target.value)} className="h-12 text-center" max={12} min={1}/>
-             </div>
-             <div className="flex-1 space-y-1">
-                 <Label htmlFor="shamsi-year" className="text-xs text-muted-foreground">سال</Label>
-                 <Input id="shamsi-year" type="number" placeholder="۱۳۷۵" value={shamsiYear} onChange={e => setShamsiYear(e.target.value)} className="h-12 text-center" />
-             </div>
-           </div>
-        ) : (
-          <Popover open={gregorianPopoverOpen} onOpenChange={setGregorianPopoverOpen}>
-            <PopoverTrigger asChild>
-              <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal h-12 text-base', !gregorianDate && 'text-muted-foreground')}>
-                <CalendarIcon className="ml-2 h-5 w-5" />
-                {gregorianDate ? format(gregorianDate, 'PPP') : <span>تاریخ تولد خود را انتخاب کنید</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 glass-effect" align="start">
-              <Calendar
-                mode="single"
-                selected={gregorianDate}
-                onSelect={handleGregorianSelect}
-                captionLayout="dropdown-buttons"
-                fromYear={1900}
-                toYear={new Date().getFullYear()}
-                initialFocus
-                classNames={{
-                  day_selected: "bg-primary text-primary-foreground",
-                  day_today: "bg-accent text-accent-foreground",
-                }}
-              />
-            </PopoverContent>
-          </Popover>
-        )}
-
-        {age ? (
-          <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner mt-2 space-y-2">
-            <div>
-              <p className="text-lg text-muted-foreground">سن شما (به عدد)</p>
-              <div className="text-2xl font-bold text-primary" dir="rtl">
-                <span>{age.years}</span>
-                <span className="text-base font-normal mx-1">سال و</span>
-                <span>{age.months}</span>
-                <span className="text-base font-normal mx-1">ماه و</span>
-                <span>{age.days}</span>
-                <span className="text-base font-normal mx-1">روز</span>
-              </div>
+      {inputMode === 'shamsi' ? (
+          <div className="flex gap-2" dir="ltr">
+            <div className="flex-1 space-y-1">
+                <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
+                <Input id="shamsi-day" type="number" placeholder="۲" value={shamsiDay} onChange={e => setShamsiDay(e.target.value)} className="h-12 text-center" max={31} min={1}/>
             </div>
-            {ageInWords && (
-              <div>
-                <p className="text-lg text-muted-foreground">سن شما (به حروف)</p>
-                <p className="text-xl font-medium text-primary/90">{ageInWords}</p>
-              </div>
-            )}
+            <div className="flex-1 space-y-1">
+                <Label htmlFor="shamsi-month" className="text-xs text-muted-foreground">ماه</Label>
+                <Input id="shamsi-month" type="number" placeholder="۸" value={shamsiMonth} onChange={e => setShamsiMonth(e.target.value)} className="h-12 text-center" max={12} min={1}/>
+            </div>
+            <div className="flex-1 space-y-1">
+                <Label htmlFor="shamsi-year" className="text-xs text-muted-foreground">سال</Label>
+                <Input id="shamsi-year" type="number" placeholder="۱۳۷۵" value={shamsiYear} onChange={e => setShamsiYear(e.target.value)} className="h-12 text-center" />
+            </div>
           </div>
-        ) : (
-            <div className="flex items-center justify-center text-muted-foreground h-24 bg-muted/30 rounded-lg">
-                <p>تاریخ تولد را برای محاسبه انتخاب کنید.</p>
+      ) : (
+        <Popover open={gregorianPopoverOpen} onOpenChange={setGregorianPopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal h-12 text-base', !gregorianDate && 'text-muted-foreground')}>
+              <CalendarIcon className="ml-2 h-5 w-5" />
+              {gregorianDate ? format(gregorianDate, 'PPP') : <span>تاریخ تولد خود را انتخاب کنید</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 glass-effect" align="start">
+            <Calendar
+              mode="single"
+              selected={gregorianDate}
+              onSelect={handleGregorianSelect}
+              captionLayout="dropdown-buttons"
+              fromYear={1900}
+              toYear={new Date().getFullYear()}
+              initialFocus
+              classNames={{
+                day_selected: "bg-primary text-primary-foreground",
+                day_today: "bg-accent text-accent-foreground",
+              }}
+            />
+          </PopoverContent>
+        </Popover>
+      )}
+
+      {age ? (
+        <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner mt-2 space-y-2">
+          <div>
+            <p className="text-lg text-muted-foreground">سن شما (به عدد)</p>
+            <div className="text-2xl font-bold text-primary" dir="rtl">
+              <span>{age.years}</span>
+              <span className="text-base font-normal mx-1">سال و</span>
+              <span>{age.months}</span>
+              <span className="text-base font-normal mx-1">ماه و</span>
+              <span>{age.days}</span>
+              <span className="text-base font-normal mx-1">روز</span>
             </div>
-        )}
-      </CardContent>
-    </Card>
+          </div>
+          {ageInWords && (
+            <div>
+              <p className="text-lg text-muted-foreground">سن شما (به حروف)</p>
+              <p className="text-xl font-medium text-primary/90">{ageInWords}</p>
+            </div>
+          )}
+        </div>
+      ) : (
+          <div className="flex items-center justify-center text-muted-foreground h-24 bg-muted/30 rounded-lg">
+              <p>تاریخ تولد را برای محاسبه انتخاب کنید.</p>
+          </div>
+      )}
+    </CardContent>
   );
 }

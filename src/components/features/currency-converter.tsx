@@ -88,25 +88,17 @@ export default function CurrencyConverter() {
 
 
   return (
-    <Card className="glass-effect h-full card-hover">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-foreground">
-          <Landmark className="h-6 w-6 text-green-400" />
-          تبدیل ارز
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col items-center gap-2">
-           {renderInput(fromAmount, (e) => handleAmountChange(e, true), fromCurrency, setFromCurrency)}
+    <CardContent>
+      <div className="flex flex-col items-center gap-2">
+          {renderInput(fromAmount, (e) => handleAmountChange(e, true), fromCurrency, setFromCurrency)}
 
-          <Button variant="ghost" size="icon" className="shrink-0 my-1 text-muted-foreground" onClick={swapCurrencies}>
-            <ArrowRightLeft className="h-5 w-5 transition-transform group-hover/card:rotate-180 duration-300" />
-          </Button>
+        <Button variant="ghost" size="icon" className="shrink-0 my-1 text-muted-foreground" onClick={swapCurrencies}>
+          <ArrowRightLeft className="h-5 w-5 transition-transform group-hover/card:rotate-180 duration-300" />
+        </Button>
 
-          {renderInput(toAmount, (e) => handleAmountChange(e, false), toCurrency, setToCurrency)}
+        {renderInput(toAmount, (e) => handleAmountChange(e, false), toCurrency, setToCurrency)}
 
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+    </CardContent>
   );
 }

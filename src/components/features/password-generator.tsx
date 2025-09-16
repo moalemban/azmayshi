@@ -70,7 +70,7 @@ export default function PasswordGenerator() {
     if (length >= 16) score += 1;
 
     let totalScore = (score / 8) * 100;
-     if (length < 8) totalScore = Math.min(totalScore, 20);
+      if (length < 8) totalScore = Math.min(totalScore, 20);
 
     let strengthLabel = 'بسیار ضعیف';
     let strengthColor = 'bg-red-500';
@@ -115,75 +115,67 @@ export default function PasswordGenerator() {
   };
 
   return (
-    <Card className="glass-effect h-full card-hover">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-foreground">
-          <KeyRound className="h-6 w-6 text-violet-400" />
-          تولیدکننده رمز عبور
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="relative">
-          <Input
-            readOnly
-            value={password}
-            className="h-14 text-lg text-center font-mono tracking-widest pr-24 pl-12"
-            placeholder="رمز شما اینجا ظاهر می‌شود..."
-          />
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-             <Button variant="ghost" size="icon" onClick={generatePassword} className="text-muted-foreground hover:text-foreground">
-                <RefreshCw className="h-5 w-5" />
-             </Button>
-            <Button variant="ghost" size="icon" onClick={copyToClipboard} className="text-muted-foreground hover:text-foreground">
-              <Clipboard className="h-5 w-5" />
+    <CardContent className="space-y-6">
+      <div className="relative">
+        <Input
+          readOnly
+          value={password}
+          className="h-14 text-lg text-center font-mono tracking-widest pr-24 pl-12"
+          placeholder="رمز شما اینجا ظاهر می‌شود..."
+        />
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+            <Button variant="ghost" size="icon" onClick={generatePassword} className="text-muted-foreground hover:text-foreground">
+              <RefreshCw className="h-5 w-5" />
             </Button>
-          </div>
+          <Button variant="ghost" size="icon" onClick={copyToClipboard} className="text-muted-foreground hover:text-foreground">
+            <Clipboard className="h-5 w-5" />
+          </Button>
         </div>
+      </div>
 
-        <div className="space-y-4">
-            <div className='flex items-center justify-between'>
-                <Label className="text-muted-foreground">طول رمز: <span className='font-mono text-primary text-lg'>{length}</span></Label>
-                 <div className='w-48'>
-                     <Slider
-                        value={[length]}
-                        onValueChange={(val) => setLength(val[0])}
-                        min={6}
-                        max={32}
-                        step={1}
-                     />
-                 </div>
-            </div>
-             <div className='space-y-2'>
-                <div className='flex items-center justify-between'>
-                    <Label className="text-muted-foreground">قدرت رمز:</Label>
-                    <span className='text-sm font-medium' style={{color: `hsl(var(${strength.color.replace('bg-', '--')}))`}}>{strength.label}</span>
+      <div className="space-y-4">
+          <div className='flex items-center justify-between'>
+              <Label className="text-muted-foreground">طول رمز: <span className='font-mono text-primary text-lg'>{length}</span></Label>
+                <div className='w-48'>
+                    <Slider
+                      value={[length]}
+                      onValueChange={(val) => setLength(val[0])}
+                      min={6}
+                      max={32}
+                      step={1}
+                    />
                 </div>
-                 <Progress value={strength.value} className={cn("h-2", strength.color)} />
-             </div>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {Object.keys(options).map(key => (
-            <div key={key} className="flex items-center space-x-2 space-x-reverse">
-              <Checkbox
-                id={key}
-                checked={options[key as keyof typeof options]}
-                onCheckedChange={() => handleOptionChange(key as keyof typeof options)}
-              />
-              <Label htmlFor={key} className="text-base cursor-pointer text-muted-foreground">
-                {
-                    {
-                        'lowercase': 'حروف کوچک',
-                        'uppercase': 'حروف بزرگ',
-                        'numbers': 'اعداد',
-                        'symbols': 'نمادها'
-                    }[key]
-                }
-              </Label>
+          </div>
+            <div className='space-y-2'>
+              <div className='flex items-center justify-between'>
+                  <Label className="text-muted-foreground">قدرت رمز:</Label>
+                  <span className='text-sm font-medium' style={{color: `hsl(var(${strength.color.replace('bg-', '--')}))`}}>{strength.label}</span>
+              </div>
+                <Progress value={strength.value} className={cn("h-2", strength.color)} />
             </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {Object.keys(options).map(key => (
+          <div key={key} className="flex items-center space-x-2 space-x-reverse">
+            <Checkbox
+              id={key}
+              checked={options[key as keyof typeof options]}
+              onCheckedChange={() => handleOptionChange(key as keyof typeof options)}
+            />
+            <Label htmlFor={key} className="text-base cursor-pointer text-muted-foreground">
+              {
+                  {
+                      'lowercase': 'حروف کوچک',
+                      'uppercase': 'حروف بزرگ',
+                      'numbers': 'اعداد',
+                      'symbols': 'نمادها'
+                  }[key]
+              }
+            </Label>
+          </div>
+        ))}
+      </div>
+    </CardContent>
   );
 }

@@ -68,68 +68,60 @@ export default function DateConverter() {
   }
 
   return (
-    <Card className="glass-effect h-full card-hover">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-foreground">
-          <CalendarDays className="h-6 w-6 text-purple-400" />
-          تبدیل تاریخ
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 flex flex-col justify-between h-[calc(100%-80px)]">
-        
-        <div className='flex flex-col items-center gap-2'>
-            <div>
-              <Label className='text-sm font-medium text-muted-foreground'>{mode === 'gregorian-to-shamsi' ? 'تاریخ میلادی' : 'تاریخ شمسی'}</Label>
-              {mode === 'gregorian-to-shamsi' ? (
-                  <Popover open={gregorianPopoverOpen} onOpenChange={setGregorianPopoverOpen}>
-                    <PopoverTrigger asChild>
-                      <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal h-12 text-base', !gregorianDate && 'text-muted-foreground')} >
-                        <CalendarIcon className="ml-2 h-5 w-5" />
-                        {gregorianDate ? format(gregorianDate, 'PPP') : <span>یک تاریخ انتخاب کنید</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 glass-effect" align="start">
-                      <Calendar 
-                        mode="single" 
-                        selected={gregorianDate} 
-                        onSelect={handleDateSelect}
-                        captionLayout="dropdown-buttons"
-                        fromYear={1900}
-                        toYear={new Date().getFullYear() + 10}
-                        initialFocus />
-                    </PopoverContent>
-                  </Popover>
-              ) : (
-                <div className="flex flex-col gap-2">
-                    <div className="flex gap-2" dir="ltr">
-                        <div className="flex-1 space-y-1">
-                            <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
-                            <Input id="shamsi-day" type="number" placeholder="۲" value={shamsiDay} onChange={e => setShamsiDay(parseInt(e.target.value))} className="h-12 text-center" max={31} min={1}/>
-                        </div>
-                        <div className="flex-1 space-y-1">
-                            <Label htmlFor="shamsi-month" className="text-xs text-muted-foreground">ماه</Label>
-                            <Input id="shamsi-month" type="number" placeholder="۸" value={shamsiMonth} onChange={e => setShamsiMonth(parseInt(e.target.value))} className="h-12 text-center" max={12} min={1}/>
-                        </div>
-                        <div className="flex-1 space-y-1">
-                            <Label htmlFor="shamsi-year" className="text-xs text-muted-foreground">سال</Label>
-                            <Input id="shamsi-year" type="number" placeholder="۱۳۷۵" value={shamsiYear} onChange={e => setShamsiYear(parseInt(e.target.value))} className="h-12 text-center" />
-                        </div>
-                    </div>
-                </div>
-              )}
-            </div>
+    <CardContent className="space-y-4 flex flex-col justify-between">
+      
+      <div className='flex flex-col items-center gap-2'>
+          <div>
+            <Label className='text-sm font-medium text-muted-foreground'>{mode === 'gregorian-to-shamsi' ? 'تاریخ میلادی' : 'تاریخ شمسی'}</Label>
+            {mode === 'gregorian-to-shamsi' ? (
+                <Popover open={gregorianPopoverOpen} onOpenChange={setGregorianPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal h-12 text-base', !gregorianDate && 'text-muted-foreground')} >
+                      <CalendarIcon className="ml-2 h-5 w-5" />
+                      {gregorianDate ? format(gregorianDate, 'PPP') : <span>یک تاریخ انتخاب کنید</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 glass-effect" align="start">
+                    <Calendar 
+                      mode="single" 
+                      selected={gregorianDate} 
+                      onSelect={handleDateSelect}
+                      captionLayout="dropdown-buttons"
+                      fromYear={1900}
+                      toYear={new Date().getFullYear() + 10}
+                      initialFocus />
+                  </PopoverContent>
+                </Popover>
+            ) : (
+              <div className="flex flex-col gap-2">
+                  <div className="flex gap-2" dir="ltr">
+                      <div className="flex-1 space-y-1">
+                          <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
+                          <Input id="shamsi-day" type="number" placeholder="۲" value={shamsiDay} onChange={e => setShamsiDay(parseInt(e.target.value))} className="h-12 text-center" max={31} min={1}/>
+                      </div>
+                      <div className="flex-1 space-y-1">
+                          <Label htmlFor="shamsi-month" className="text-xs text-muted-foreground">ماه</Label>
+                          <Input id="shamsi-month" type="number" placeholder="۸" value={shamsiMonth} onChange={e => setShamsiMonth(parseInt(e.target.value))} className="h-12 text-center" max={12} min={1}/>
+                      </div>
+                      <div className="flex-1 space-y-1">
+                          <Label htmlFor="shamsi-year" className="text-xs text-muted-foreground">سال</Label>
+                          <Input id="shamsi-year" type="number" placeholder="۱۳۷۵" value={shamsiYear} onChange={e => setShamsiYear(parseInt(e.target.value))} className="h-12 text-center" />
+                      </div>
+                  </div>
+              </div>
+            )}
+          </div>
 
-            <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground" onClick={swapConversion}>
-                <ArrowRightLeft className="h-5 w-5 transition-transform group-hover/card:rotate-180 duration-300" />
-            </Button>
-            
-            <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner">
-                <p className="text-sm text-muted-foreground">{mode === 'gregorian-to-shamsi' ? 'معادل شمسی' : 'معادل میلادی'}</p>
-                <p className="text-xl font-semibold text-primary">{convertedWeekday}</p>
-                <p className="text-2xl font-bold text-primary" dir="ltr">{convertedDate}</p>
-            </div>
-        </div>
-      </CardContent>
-    </Card>
+          <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground" onClick={swapConversion}>
+              <ArrowRightLeft className="h-5 w-5 transition-transform group-hover/card:rotate-180 duration-300" />
+          </Button>
+          
+          <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner">
+              <p className="text-sm text-muted-foreground">{mode === 'gregorian-to-shamsi' ? 'معادل شمسی' : 'معادل میلادی'}</p>
+              <p className="text-xl font-semibold text-primary">{convertedWeekday}</p>
+              <p className="text-2xl font-bold text-primary" dir="ltr">{convertedDate}</p>
+          </div>
+      </div>
+    </CardContent>
   );
 }

@@ -28,52 +28,44 @@ export default function PercentageCalculator() {
   }, [num1, num2]);
 
   return (
-    <Card className="glass-effect h-full card-hover">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-foreground">
-          <Percent className="h-6 w-6 text-teal-400" />
-          محاسبه درصد
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="flex gap-4 items-end">
-          <div className="space-y-2 flex-1">
-            <Label htmlFor="val1" className="text-muted-foreground">مقدار اول</Label>
-            <Input id="val1" type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="h-12 text-lg text-center" placeholder="20"/>
-          </div>
-          <div className="space-y-2 flex-1">
-            <Label htmlFor="val2" className="text-muted-foreground">مقدار دوم</Label>
-            <Input id="val2" type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="h-12 text-lg text-center" placeholder="150"/>
-          </div>
+    <CardContent className="flex flex-col gap-4">
+      <div className="flex gap-4 items-end">
+        <div className="space-y-2 flex-1">
+          <Label htmlFor="val1" className="text-muted-foreground">مقدار اول</Label>
+          <Input id="val1" type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="h-12 text-lg text-center" placeholder="20"/>
         </div>
+        <div className="space-y-2 flex-1">
+          <Label htmlFor="val2" className="text-muted-foreground">مقدار دوم</Label>
+          <Input id="val2" type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="h-12 text-lg text-center" placeholder="150"/>
+        </div>
+      </div>
 
-        <Separator className="my-2 bg-border/50" />
+      <Separator className="my-2 bg-border/50" />
 
-        { hasValues ? (
-            <div className="space-y-3">
+      { hasValues ? (
+          <div className="space-y-3">
+              <div className="p-3 bg-muted/50 rounded-lg shadow-inner text-center">
+                    <p className='text-sm text-muted-foreground'>
+                        <span className="font-mono text-primary">{val1 || '۰'}</span> درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> برابر است با:
+                    </p>
+                    <p className="text-2xl font-bold text-foreground mt-1">{result1}</p>
+              </div>
                 <div className="p-3 bg-muted/50 rounded-lg shadow-inner text-center">
-                     <p className='text-sm text-muted-foreground'>
-                         <span className="font-mono text-primary">{val1 || '۰'}</span> درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> برابر است با:
-                     </p>
-                     <p className="text-2xl font-bold text-foreground mt-1">{result1}</p>
-                </div>
-                 <div className="p-3 bg-muted/50 rounded-lg shadow-inner text-center">
-                     <p className='text-sm text-muted-foreground'>
-                        <span className="font-mono text-primary">{val1 || '۰'}</span> چند درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> است؟
-                     </p>
-                     <p className="text-2xl font-bold text-foreground mt-1">
-                        {result2}
-                        <span className="text-lg font-normal">%</span>
-                     </p>
-                </div>
-            </div>
-        ) : (
-             <div className="flex items-center justify-center text-muted-foreground h-36 bg-muted/30 rounded-lg">
-                <p>مقادیر را برای محاسبه وارد کنید.</p>
-            </div>
-        )}
+                    <p className='text-sm text-muted-foreground'>
+                      <span className="font-mono text-primary">{val1 || '۰'}</span> چند درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> است؟
+                    </p>
+                    <p className="text-2xl font-bold text-foreground mt-1">
+                      {result2}
+                      <span className="text-lg font-normal">%</span>
+                    </p>
+              </div>
+          </div>
+      ) : (
+            <div className="flex items-center justify-center text-muted-foreground h-36 bg-muted/30 rounded-lg">
+              <p>مقادیر را برای محاسبه وارد کنید.</p>
+          </div>
+      )}
 
-      </CardContent>
-    </Card>
+    </CardContent>
   );
 }

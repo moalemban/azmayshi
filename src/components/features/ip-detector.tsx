@@ -61,43 +61,35 @@ export default function IpDetector() {
   }
 
   return (
-    <Card className="glass-effect h-full card-hover">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-display text-foreground">
-          <LocateFixed className="h-6 w-6 text-sky-400" />
-          تشخیص IP و موقعیت
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {loading ? (
-            <div className="space-y-4">
+    <CardContent>
+      {loading ? (
+          <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-5 w-32" />
+              </div>
                 <div className="flex items-center justify-between">
-                    <Skeleton className="h-5 w-24" />
-                    <Skeleton className="h-5 w-32" />
-                </div>
-                 <div className="flex items-center justify-between">
-                    <Skeleton className="h-5 w-20" />
-                    <Skeleton className="h-5 w-28" />
-                </div>
-                 <div className="flex items-center justify-between">
-                    <Skeleton className="h-5 w-16" />
-                    <Skeleton className="h-5 w-24" />
-                </div>
-            </div>
-        ) : error ? (
-          <div className="flex items-center justify-center text-destructive h-24 bg-destructive/10 rounded-lg">
-            <p>{error}</p>
+                  <Skeleton className="h-5 w-20" />
+                  <Skeleton className="h-5 w-28" />
+              </div>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-5 w-16" />
+                  <Skeleton className="h-5 w-24" />
+              </div>
           </div>
-        ) : (
-          <div className="space-y-3">
-            <InfoRow icon={<Wifi className="h-4 w-4" />} label="آدرس IP شما" value={maskIp(ipInfo?.query)} />
-            <InfoRow icon={<Globe className="h-4 w-4" />} label="کشور" value={ipInfo?.country} />
-            <InfoRow icon={<Building className="h-4 w-4" />} label="شهر" value={ipInfo?.city} />
-            <InfoRow icon={<Building className="h-4 w-4" />} label="منطقه" value={ipInfo?.regionName} />
-            <InfoRow icon={<Wifi className="h-4 w-4" />} label="سرویس‌دهنده" value={ipInfo?.isp} />
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      ) : error ? (
+        <div className="flex items-center justify-center text-destructive h-24 bg-destructive/10 rounded-lg">
+          <p>{error}</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <InfoRow icon={<Wifi className="h-4 w-4" />} label="آدرس IP شما" value={maskIp(ipInfo?.query)} />
+          <InfoRow icon={<Globe className="h-4 w-4" />} label="کشور" value={ipInfo?.country} />
+          <InfoRow icon={<Building className="h-4 w-4" />} label="شهر" value={ipInfo?.city} />
+          <InfoRow icon={<Building className="h-4 w-4" />} label="منطقه" value={ipInfo?.regionName} />
+          <InfoRow icon={<Wifi className="h-4 w-4" />} label="سرویس‌دهنده" value={ipInfo?.isp} />
+        </div>
+      )}
+    </CardContent>
   );
 }
