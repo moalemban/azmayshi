@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LocateFixed, Globe, Building, Wifi } from 'lucide-react';
 
@@ -36,9 +35,11 @@ export default function IpDetector() {
       setError(null);
       try {
         // We use a timestamp to bypass browser cache for this request
-        const response = await axios.get(`https://ip-api.com/json?_=${new Date().getTime()}`);
-        if (response.data.status === 'success') {
-          setIpInfo(response.data);
+        const response = await fetch(`https://ip-api.com/json?_=${new Date().getTime()}`);
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          setIpInfo(data);
         } else {
           setError('اطلاعاتی یافت نشد.');
         }
