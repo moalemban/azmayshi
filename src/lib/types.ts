@@ -1,3 +1,5 @@
+import type React from 'react';
+
 export type Currency = {
   code: string;
   name: string;
@@ -9,7 +11,7 @@ export type LivePrice = {
   price: string;
   change: string | null;
   symbol: string;
-  icon: string;
+  icon: React.ReactNode;
 };
 
 export type PriceDataItem = {

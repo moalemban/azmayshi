@@ -25,23 +25,33 @@ export const mockExchangeRates: { [key: string]: number } = {
   'USD-CNY': 7.25,
 };
 
-
-export const livePrices: { [key: string]: LivePrice[] } = {
-  gold: [
-    { name: 'سکه امامی', price: '41,500,000', change: -0.012, symbol: 'IRT', id: 'sekkeh', icon: '🪙' },
-    { name: 'گرم طلا ۱۸ عیار', price: '3,745,000', change: 0.008, symbol: 'IRT', id: 'gold-18', icon: '⚖️' },
-  ],
-  currencies: [
-    { name: 'دلار بازار', price: '59,000', change: 0.008, symbol: 'IRT', id: 'usd-market', icon: '💵' },
-  ],
-  stocks: [
-    { name: 'شاخص کل بورس', price: '2,075,630', change: -0.0025, symbol: 'واحد', id: 'bourse-total' },
-    { name: 'شاخص هم‌وزن', price: '675,120', change: 0.001, symbol: 'واحد', id: 'bourse-hamvazn' },
-  ],
-  crypto: [
-    { name: 'بیت‌کوین', price: '68,500', change: 0.025, symbol: 'USD', id: 'bitcoin', icon: '₿' }
-  ],
-};
+export const iranCities: { label: string; value: string }[] = [
+    { label: 'تهران', value: 'Tehran' },
+    { label: 'مشهد', value: 'Mashhad' },
+    { label: 'اصفهان', value: 'Isfahan' },
+    { label: 'کرج', value: 'Karaj' },
+    { label: 'شیراز', value: 'Shiraz' },
+    { label: 'تبریز', value: 'Tabriz' },
+    { label: 'قم', value: 'Qom' },
+    { label: 'اهواز', value: 'Ahvaz' },
+    { label: 'کرمانشاه', value: 'Kermanshah' },
+    { label: 'ارومیه', value: 'Urmia' },
+    { label: 'رشت', value: 'Rasht' },
+    { label: 'زاهدان', value: 'Zahedan' },
+    { label: 'همدان', value: 'Hamadan' },
+    { label: 'کرمان', value: 'Kerman' },
+    { label: 'یزد', value: 'Yazd' },
+    { label: 'اردبیل', value: 'Ardabil' },
+    { label: 'بندرعباس', value: 'Bandar Abbas' },
+    { label: 'اراک', value: 'Arak' },
+    { label: 'اسلامشهر', value: 'Eslamshahr' },
+    { label: 'زنجان', value: 'Zanjan' },
+    { label: 'سنندج', value: 'Sanandaj' },
+    { label: 'قزوین', value: 'Qazvin' },
+    { label: 'خرم‌آباد', value: 'Khorramabad' },
+    { label: 'گرگان', value: 'Gorgan' },
+    { label: 'ساری', value: 'Sari' },
+];
 
 export const unitCategories: { [key: string]: string[] } = {
   length: ['meter', 'kilometer', 'centimeter', 'millimeter', 'mile', 'yard', 'foot', 'inch'],

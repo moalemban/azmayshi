@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer, Globe, Scale, Gem, CircleDollarSign, Coins, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -29,7 +29,9 @@ const PriceChangeIndicator = ({ change }: { change: string | null }) => {
 const PriceCard = ({ item }: { item: LivePrice }) => (
     <div className="glass-effect rounded-2xl p-3 card-hover w-full flex-shrink-0">
         <div className="flex items-center gap-2">
-            <div className="text-2xl">{item.icon}</div>
+            <div className="text-primary w-8 h-8 flex items-center justify-center">
+                {React.isValidElement(item.icon) ? React.cloneElement(item.icon, { className: 'w-6 h-6' }) : item.icon}
+            </div>
             <div className="flex-grow text-right">
                 <h3 className="text-foreground font-display font-semibold text-sm truncate">{item.name}</h3>
                 <div className="text-muted-foreground text-[11px] font-body">{item.symbol}</div>
@@ -61,12 +63,12 @@ const PriceCardSkeleton = () => (
 );
 
 const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: '🥇' },
-    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: '⚖️' },
-    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: '✨' },
-    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: '🪙' },
-    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: '💵' },
-    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: '₮' },
+    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: <Globe /> },
+    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: <Scale /> },
+    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: <Gem /> },
+    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: <Coins /> },
+    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: <CircleDollarSign /> },
+    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: <Bot /> },
 };
 
 
