@@ -1,3 +1,4 @@
+import React from 'react';
 import Header from '@/components/layout/header';
 import UnitConverter from '@/components/features/unit-converter';
 import CurrencyConverter from '@/components/features/currency-converter';
@@ -16,7 +17,8 @@ import RandomNumberGenerator from '@/components/features/random-number-generator
 import QrCodeGenerator from '@/components/features/qr-code-generator';
 import IpDetector from '@/components/features/ip-detector';
 import BinaryConverter from '@/components/features/binary-converter';
-import ToolWrapper from '@/components/layout/tool-wrapper';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 
 import {
   Scale,
@@ -38,27 +40,28 @@ import {
   HeartHandshake,
   ArrowLeft,
   Globe,
-  Wrench
+  Wrench,
+  ArrowDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const tools = [
-  { id: 'unit-converter', title: 'تبدیل واحد', icon: <Scale className="h-6 w-6 text-blue-400" />, component: <UnitConverter /> },
-  { id: 'currency-converter', title: 'تبدیل ارز', icon: <Landmark className="h-6 w-6 text-green-400" />, component: <CurrencyConverter /> },
-  { id: 'date-converter', title: 'تبدیل تاریخ', icon: <CalendarDays className="h-6 w-6 text-purple-400" />, component: <DateConverter /> },
-  { id: 'loan-calculator', title: 'ماشین‌حساب اقساط وام', icon: <Banknote className="h-6 w-6 text-rose-400" />, component: <LoanCalculator /> },
-  { id: 'deposit-calculator', title: 'ماشین‌حساب سود سپرده', icon: <PiggyBank className="h-6 w-6 text-emerald-400" />, component: <DepositCalculator /> },
-  { id: 'number-to-words', title: 'تبدیل عدد به حروف', icon: <SpellCheck className="h-6 w-6 text-amber-400" />, component: <NumberToWordsConverter /> },
-  { id: 'number-system', title: 'تبدیل ارقام', icon: <Binary className="h-6 w-6 text-sky-400" />, component: <NumberSystemConverter /> },
-  { id: 'binary-converter', title: 'تبدیل متن و باینری', icon: <Binary className="h-6 w-6 text-cyan-400" />, component: <BinaryConverter /> },
-  { id: 'percentage-calculator', title: 'محاسبه درصد', icon: <Percent className="h-6 w-6 text-teal-400" />, component: <PercentageCalculator /> },
-  { id: 'age-calculator', title: 'محاسبه سن', icon: <Gift className="h-6 w-6 text-pink-400" />, component: <AgeCalculator /> },
-  { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulse className="h-6 w-6 text-red-400" />, component: <BmiCalculator /> },
-  { id: 'random-number', title: 'تولید عدد تصادفی', icon: <Dices className="h-6 w-6 text-orange-400" />, component: <RandomNumberGenerator /> },
-  { id: 'stopwatch', title: 'کرونومتر', icon: <Timer className="h-6 w-6 text-indigo-400" />, component: <Stopwatch /> },
-  { id: 'password-generator', title: 'تولیدکننده رمز عبور', icon: <KeyRound className="h-6 w-6 text-violet-400" />, component: <PasswordGenerator /> },
-  { id: 'qr-code-generator', title: 'تولید کننده QR Code', icon: <QrCode className="h-6 w-6 text-lime-400" />, component: <QrCodeGenerator /> },
-  { id: 'ip-detector', title: 'تشخیص IP و موقعیت', icon: <LocateFixed className="h-6 w-6 text-sky-400" />, component: <IpDetector /> },
+  { id: 'unit-converter', title: 'تبدیل واحد', icon: <Scale className="h-8 w-8 text-blue-400" />, component: <UnitConverter /> },
+  { id: 'currency-converter', title: 'تبدیل ارز', icon: <Landmark className="h-8 w-8 text-green-400" />, component: <CurrencyConverter /> },
+  { id: 'date-converter', title: 'تبدیل تاریخ', icon: <CalendarDays className="h-8 w-8 text-purple-400" />, component: <DateConverter /> },
+  { id: 'loan-calculator', title: 'ماشین‌حساب اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
+  { id: 'deposit-calculator', title: 'ماشین‌حساب سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
+  { id: 'number-to-words', title: 'تبدیل عدد به حروف', icon: <SpellCheck className="h-8 w-8 text-amber-400" />, component: <NumberToWordsConverter /> },
+  { id: 'number-system', title: 'تبدیل ارقام', icon: <Binary className="h-8 w-8 text-sky-400" />, component: <NumberSystemConverter /> },
+  { id: 'binary-converter', title: 'تبدیل متن و باینری', icon: <Binary className="h-8 w-8 text-cyan-400" />, component: <BinaryConverter /> },
+  { id: 'percentage-calculator', title: 'محاسبه درصد', icon: <Percent className="h-8 w-8 text-teal-400" />, component: <PercentageCalculator /> },
+  { id: 'age-calculator', title: 'محاسبه سن', icon: <Gift className="h-8 w-8 text-pink-400" />, component: <AgeCalculator /> },
+  { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulse className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
+  { id: 'random-number', title: 'تولید عدد تصادفی', icon: <Dices className="h-8 w-8 text-orange-400" />, component: <RandomNumberGenerator /> },
+  { id: 'stopwatch', title: 'کرونومتر', icon: <Timer className="h-8 w-8 text-indigo-400" />, component: <Stopwatch /> },
+  { id: 'password-generator', title: 'تولیدکننده رمز عبور', icon: <KeyRound className="h-8 w-8 text-violet-400" />, component: <PasswordGenerator /> },
+  { id: 'qr-code-generator', title: 'تولید کننده QR Code', icon: <QrCode className="h-8 w-8 text-lime-400" />, component: <QrCodeGenerator /> },
+  { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, component: <IpDetector /> },
 ];
 
 export default function Home() {
@@ -71,20 +74,39 @@ export default function Home() {
             <LivePrices />
           </div>
 
+          {/* Toolbox Shortcuts */}
           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
-            <h2 className="col-span-12 text-2xl font-display font-bold text-foreground mb-8 flex items-center gap-3 text-glow">
+             <h2 className="col-span-12 text-2xl font-display font-bold text-foreground mb-6 flex items-center gap-3 text-glow">
               <div className="w-10 h-10 bg-gradient-to-br from-primary/80 to-accent/80 rounded-xl flex items-center justify-center animate-pulse">
                   <Wrench className="w-6 h-6 text-primary-foreground"/>
               </div>
               جعبه ابزار
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {tools.map((tool) => (
-                <ToolWrapper key={tool.id} title={tool.title} icon={tool.icon}>
-                  {tool.component}
-                </ToolWrapper>
+                <a href={`#${tool.id}`} key={`shortcut-${tool.id}`} className="block">
+                  <div className="glass-effect rounded-2xl p-4 card-hover w-full h-full flex flex-col items-center justify-center text-center gap-3">
+                    {tool.icon}
+                    <span className="font-semibold text-sm text-foreground">{tool.title}</span>
+                  </div>
+                </a>
               ))}
             </div>
+          </div>
+          
+          {/* Tools Sections */}
+          <div className="space-y-6">
+            {tools.map((tool) => (
+              <Card key={tool.id} id={tool.id} className="glass-effect scroll-mt-24">
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-3 text-xl font-display'>
+                     {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
+                     {tool.title}
+                  </CardTitle>
+                </CardHeader>
+                {tool.component}
+              </Card>
+            ))}
           </div>
           
            {/* About Us Section */}

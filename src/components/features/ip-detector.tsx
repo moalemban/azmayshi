@@ -36,7 +36,7 @@ export default function IpDetector() {
       setError(null);
       try {
         // We use a timestamp to bypass browser cache for this request
-        const response = await axios.get(`http://ip-api.com/json?_=${new Date().getTime()}`);
+        const response = await axios.get(`https://ip-api.com/json?_=${new Date().getTime()}`);
         if (response.data.status === 'success') {
           setIpInfo(response.data);
         } else {
