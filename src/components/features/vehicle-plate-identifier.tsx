@@ -52,15 +52,7 @@ export default function VehiclePlateIdentifier() {
 
                 {/* Middle section (Inputs) */}
                 <div className="flex-grow flex items-center justify-evenly px-2 h-full">
-                    <Input
-                        type="text"
-                        value={plateNumber}
-                        onChange={handlePlateNumberChange}
-                        placeholder="11"
-                        className="w-12 h-16 text-2xl text-center font-mono tracking-widest border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
-                        maxLength={2}
-                    />
-
+                     <span className="text-2xl font-mono text-gray-400">•••</span>
                     <Select value={plateLetter} onValueChange={setPlateLetter}>
                         <SelectTrigger className="w-16 h-12 text-lg border-none bg-transparent focus:ring-0 focus:ring-offset-0 font-bold">
                            <SelectValue placeholder="ب" />
@@ -73,10 +65,17 @@ export default function VehiclePlateIdentifier() {
                     </Select>
                 </div>
 
-                {/* Right section (Iran & placeholder) */}
+                {/* Right section (Iran & plate number) */}
                 <div className="border-l-2 border-blue-800 h-full flex flex-col items-center justify-center px-2 w-20 shrink-0">
                     <span className="text-sm font-bold text-gray-800" style={{fontFamily: 'Vazirmatn'}}>ایران</span>
-                     <span className="text-2xl font-mono text-gray-400">•••</span>
+                    <Input
+                        type="text"
+                        value={plateNumber}
+                        onChange={handlePlateNumberChange}
+                        placeholder="11"
+                        className="w-12 h-12 text-3xl text-center font-mono tracking-widest border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
+                        maxLength={2}
+                    />
                 </div>
             </div>
         </div>
