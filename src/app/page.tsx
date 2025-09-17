@@ -23,6 +23,7 @@ import VehiclePlateIdentifier from '@/components/features/vehicle-plate-identifi
 import TextAnalyzer from '@/components/features/text-analyzer';
 import ImageOptimizer from '@/components/features/image-optimizer';
 import WebsiteScreenshot from '@/components/features/website-screenshot';
+import TextSummarizer from '@/components/features/text-summarizer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 
@@ -57,10 +58,19 @@ import {
   FlaskConical,
   Image,
   MonitorScreenshot,
+  BookText,
+  BrainCircuit,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const toolCategories = [
+  {
+    title: 'ابزارهای هوش مصنوعی',
+    icon: <BrainCircuit className="h-6 w-6 text-primary-foreground" />,
+    tools: [
+       { id: 'text-summarizer', title: 'خلاصه‌ساز هوشمند', icon: <BookText className="h-8 w-8 text-cyan-400" />, component: <TextSummarizer /> },
+    ]
+  },
   {
     title: 'مبدل‌ها',
     icon: <FlaskConical className="h-6 w-6 text-primary-foreground" />,

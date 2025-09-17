@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
     ],
   },
   webpack(config) {
-    config.externals = [...config.externals, 'sharp'];
+    config.externals = [...config.externals, 'sharp', 'chrome-aws-lambda', 'puppeteer-core'];
     return config;
   },
 };
