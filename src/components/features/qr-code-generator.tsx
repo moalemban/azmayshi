@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { QrCode as QrCodeIcon, Download } from 'lucide-react';
+import { QrCode as QrCodeIcon, Download, Droplet } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function QrCodeGenerator() {
@@ -85,6 +85,10 @@ export default function QrCodeGenerator() {
                 <Input id="light-color" type="color" value={lightColor} onChange={e => setLightColor(e.target.value)} className="h-12 p-1"/>
             </div>
         </div>
+         <Button onClick={() => setLightColor('#00000000')} variant="outline" className="w-full h-12 text-base">
+            <Droplet className="ml-2 h-5 w-5" />
+            حذف پس‌زمینه (شفاف)
+        </Button>
           <Button onClick={handleDownload} disabled={!qrCodeDataUrl} className="w-full h-12 text-base">
           <Download className="ml-2 h-5 w-5" />
           دانلود QR Code
