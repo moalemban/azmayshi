@@ -21,6 +21,7 @@ import BinaryConverter from '@/components/features/binary-converter';
 import DistanceCalculator from '@/components/features/distance-calculator';
 import VehiclePlateIdentifier from '@/components/features/vehicle-plate-identifier';
 import TextAnalyzer from '@/components/features/text-analyzer';
+import ImageOptimizer from '@/components/features/image-optimizer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 
@@ -53,6 +54,7 @@ import {
   Activity,
   User,
   FlaskConical,
+  Image,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -99,6 +101,7 @@ const toolCategories = [
       { id: 'qr-code-generator', title: 'QR Code ساز', icon: <QrCode className="h-8 w-8 text-lime-400" />, component: <QrCodeGenerator /> },
       { id: 'qr-code-reader', title: 'QR Code خوان', icon: <ScanLine className="h-8 w-8 text-green-400" />, component: <QrCodeReader /> },
       { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, component: <IpDetector /> },
+      { id: 'image-optimizer', title: 'بهینه‌ساز تصویر', icon: <Image className="h-8 w-8 text-orange-400" />, component: <ImageOptimizer /> },
     ]
   }
 ];
