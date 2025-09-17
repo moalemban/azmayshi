@@ -25,7 +25,7 @@ export default function VehiclePlateIdentifier() {
 
     const city = provinceData.cities[plateLetter];
     if (!city) {
-      return { province: provinceData.province, city: `حرف '${plateLetter}' برای این کد استان تعریف نشده.` };
+      return { province: provinceData.province, city: `حرف '${plateLetter}' برای این کد استان تعریف نشده است.` };
     }
 
     return { province: provinceData.province, city };
