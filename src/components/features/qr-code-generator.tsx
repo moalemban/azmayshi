@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Download, Text, Link, Wifi, Mail, Phone, Droplet } from 'lucide-react';
+import { Textarea } from '../ui/textarea';
 
 type QRType = 'text' | 'url' | 'wifi' | 'email' | 'tel';
 
@@ -101,7 +102,7 @@ export default function QrCodeGenerator() {
       case 'url':
         return <Input dir="ltr" placeholder="https://example.com" value={text} onChange={(e) => setText(e.target.value)} />;
       case 'text':
-        return <Input placeholder="متن خود را وارد کنید" value={text} onChange={(e) => setText(e.target.value)} />;
+        return <Textarea placeholder="متن خود را وارد کنید" value={text} onChange={(e) => setText(e.target.value)} className="min-h-[100px]" />;
       case 'email':
         return <Input dir="ltr" type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />;
       case 'tel':
