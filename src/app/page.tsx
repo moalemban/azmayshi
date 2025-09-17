@@ -203,17 +203,14 @@ export default function Home() {
         </div>
       </main>
       <footer className="text-center p-6 text-muted-foreground text-sm font-body">
-        <a 
-          href="https://www.nigardip.site/" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="inline-flex items-center justify-center gap-2 hover:text-primary transition-colors"
+        <div 
+          className="inline-flex items-center justify-center gap-2"
         >
             <Globe className="w-5 h-5" />
             <span>
-              توسعه داده شده توسط <span className="font-semibold text-foreground hover:underline">نگار دی پی</span>
+              توسعه داده شده توسط <span className="font-semibold text-foreground hover:underline">حسین طاهری</span>
             </span>
-        </a>
+        </div>
       </footer>
     </div>
   );
