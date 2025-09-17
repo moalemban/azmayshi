@@ -41,7 +41,7 @@ export default function VehiclePlateIdentifier() {
         <div className="w-full max-w-sm mx-auto">
             <div className="bg-white border-2 border-blue-800 rounded-lg flex items-center h-20 shadow-md" dir="ltr">
                 {/* Left section (Flag) */}
-                <div className="bg-blue-800 h-full flex flex-col justify-between items-center p-2 rounded-l-md w-16 text-white">
+                <div className="bg-blue-800 h-full flex flex-col justify-between items-center p-2 rounded-l-md w-16 text-white shrink-0">
                     <div className='w-8'>
                         <div className="h-1.5 bg-green-500"></div>
                         <div className="h-1.5 bg-white"></div>
@@ -51,19 +51,19 @@ export default function VehiclePlateIdentifier() {
                 </div>
 
                 {/* Middle section (Inputs) */}
-                <div className="flex-grow flex items-center justify-between px-2 h-full">
+                <div className="flex-grow flex items-center justify-evenly px-2 h-full">
                     <Input
                         type="text"
                         value={plateNumber}
                         onChange={handlePlateNumberChange}
                         placeholder="11"
-                        className="w-12 h-16 text-2xl text-center font-mono tracking-widest border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="w-12 h-16 text-2xl text-center font-mono tracking-widest border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
                         maxLength={2}
                     />
 
                     <Select value={plateLetter} onValueChange={setPlateLetter}>
-                        <SelectTrigger className="w-24 h-12 text-lg border-2 border-gray-200 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 rounded-md">
-                        <SelectValue placeholder="ب" />
+                        <SelectTrigger className="w-16 h-12 text-lg border-none bg-transparent focus:ring-0 focus:ring-offset-0 font-bold">
+                           <SelectValue placeholder="ب" />
                         </SelectTrigger>
                         <SelectContent className="glass-effect">
                         {plateLetters.map(letter => (
@@ -71,13 +71,12 @@ export default function VehiclePlateIdentifier() {
                         ))}
                         </SelectContent>
                     </Select>
-                     {/* This is a placeholder for the 3-digit part of the plate, not used in this tool */}
-                    <span className="text-2xl font-mono text-gray-400">•••</span>
                 </div>
 
-                {/* Right section (Iran) */}
-                <div className="border-l-2 border-blue-800 h-full flex items-center justify-center px-4">
-                    <span className="text-xl font-bold text-gray-800" style={{fontFamily: 'Vazirmatn'}}>ایران</span>
+                {/* Right section (Iran & placeholder) */}
+                <div className="border-l-2 border-blue-800 h-full flex flex-col items-center justify-center px-2 w-20 shrink-0">
+                    <span className="text-sm font-bold text-gray-800" style={{fontFamily: 'Vazirmatn'}}>ایران</span>
+                     <span className="text-2xl font-mono text-gray-400">•••</span>
                 </div>
             </div>
         </div>
