@@ -19,6 +19,8 @@ const charSets = {
   symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?',
 };
 
+const ambiguousChars = '{}[]()/\\\'"~,;.<>';
+
 export default function PasswordGenerator() {
   const [length, setLength] = useState(16);
   const [password, setPassword] = useState('');
@@ -28,15 +30,29 @@ export default function PasswordGenerator() {
     uppercase: true,
     numbers: true,
     symbols: false,
+    excludeSimilar: true,
+    excludeAmbiguous: true,
   });
   const { toast } = useToast();
 
   const generatePassword = () => {
     let charset = '';
-    if (options.lowercase) charset += charSets.lowercase;
-    if (options.uppercase) charset += charSets.uppercase;
-    if (options.numbers) charset += charSets.numbers;
-    if (options.symbols) charset += charSets.symbols;
+    
+    let localCharsets = { ...charSets };
+
+    if (options.excludeSimilar) {
+        localCharsets.lowercase = localCharsets.lowercase.replace(/[l]/g, '');
+        localCharsets.uppercase = localCharsets.uppercase.replace(/[O]/g, '');
+        localCharsets.numbers = localCharsets.numbers.replace(/[01]/g, '');
+    }
+    if (options.excludeAmbiguous) {
+        localCharsets.symbols = localCharsets.symbols.split('').filter(char => !ambiguousChars.includes(char)).join('');
+    }
+
+    if (options.lowercase) charset += localCharsets.lowercase;
+    if (options.uppercase) charset += localCharsets.uppercase;
+    if (options.numbers) charset += localCharsets.numbers;
+    if (options.symbols) charset += localCharsets.symbols;
 
     if (charset === '') {
       toast({
@@ -49,7 +65,6 @@ export default function PasswordGenerator() {
     }
 
     let newPassword = '';
-    // Use crypto.getRandomValues for better randomness
     const randomValues = new Uint32Array(length);
     window.crypto.getRandomValues(randomValues);
     for (let i = 0; i < length; i++) {
@@ -113,6 +128,15 @@ export default function PasswordGenerator() {
   const handleOptionChange = (key: keyof typeof options) => {
     setOptions(prev => ({ ...prev, [key]: !prev[key] }));
   };
+  
+  const optionLabels: Record<keyof typeof options, string> = {
+      'lowercase': 'حروف کوچک (a-z)',
+      'uppercase': 'حروف بزرگ (A-Z)',
+      'numbers': 'اعداد (0-9)',
+      'symbols': 'نمادها (!@#$)',
+      'excludeSimilar': 'حذف کاراکترهای مشابه (O, 0, l, 1)',
+      'excludeAmbiguous': 'حذف کاراکترهای مبهم ({[]})'
+  }
 
   return (
     <CardContent className="space-y-6">
@@ -155,26 +179,22 @@ export default function PasswordGenerator() {
             </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {Object.keys(options).map(key => (
-          <div key={key} className="flex items-center space-x-2 space-x-reverse">
-            <Checkbox
-              id={key}
-              checked={options[key as keyof typeof options]}
-              onCheckedChange={() => handleOptionChange(key as keyof typeof options)}
-            />
-            <Label htmlFor={key} className="text-base cursor-pointer text-muted-foreground">
-              {
-                  {
-                      'lowercase': 'حروف کوچک',
-                      'uppercase': 'حروف بزرگ',
-                      'numbers': 'اعداد',
-                      'symbols': 'نمادها'
-                  }[key]
-              }
-            </Label>
-          </div>
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+        {Object.keys(options).map(keyStr => {
+            const key = keyStr as keyof typeof options;
+            return (
+              <div key={key} className="flex items-center space-x-2 space-x-reverse">
+                <Checkbox
+                  id={key}
+                  checked={options[key]}
+                  onCheckedChange={() => handleOptionChange(key)}
+                />
+                <Label htmlFor={key} className="text-sm cursor-pointer text-muted-foreground">
+                  {optionLabels[key]}
+                </Label>
+              </div>
+            )
+        })}
       </div>
     </CardContent>
   );
