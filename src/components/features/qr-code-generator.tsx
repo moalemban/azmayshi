@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Download, Text, Link, Wifi, Mail, Phone } from 'lucide-react';
+import { Download, Text, Link, Wifi, Mail, Phone, Droplet } from 'lucide-react';
 
 type QRType = 'text' | 'url' | 'wifi' | 'email' | 'tel';
 
@@ -90,6 +90,11 @@ export default function QrCodeGenerator() {
   const handleDownload = (extension: FileExtension) => {
     qrCode.current?.download({ name: 'qrcode', extension });
   };
+  
+  const removeBackground = () => {
+    setBgColor('#00000000'); // Set background to transparent
+  };
+
 
   const renderInputs = () => {
     switch (type) {
@@ -168,18 +173,21 @@ export default function QrCodeGenerator() {
             </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-4">
             <Button onClick={() => handleDownload('png')} className="h-12 text-base">
                 <Download className="w-5 h-5 ml-2"/> دانلود PNG
             </Button>
             <Button onClick={() => handleDownload('svg')} variant="outline" className="h-12 text-base">
                 <Download className="w-5 h-5 ml-2"/> دانلود SVG
             </Button>
+            <Button onClick={removeBackground} variant="outline" className="h-12 text-base col-span-1 sm:col-span-2 lg:col-span-1">
+                <Droplet className="w-5 h-5 ml-2"/> حذف پس‌زمینه
+            </Button>
         </div>
       </div>
       
       <div className="flex flex-col items-center justify-center gap-4">
-          <div className="p-4 rounded-lg shadow-md bg-card border" style={{ backgroundColor: bgColor }}>
+          <div className="p-4 rounded-lg shadow-md bg-card border" style={{ backgroundColor: bgColor === '#00000000' ? 'transparent' : bgColor }}>
               <div ref={ref} />
           </div>
           <p className='text-sm text-muted-foreground'>پیش‌نمایش زنده</p>
