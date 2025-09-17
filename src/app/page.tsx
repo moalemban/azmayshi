@@ -57,7 +57,7 @@ import {
   User,
   FlaskConical,
   Image,
-  MonitorScreenshot,
+  Monitor,
   BookText,
   BrainCircuit,
 } from 'lucide-react';
@@ -114,7 +114,7 @@ const toolCategories = [
       { id: 'qr-code-reader', title: 'QR Code خوان', icon: <ScanLine className="h-8 w-8 text-green-400" />, component: <QrCodeReader /> },
       { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, component: <IpDetector /> },
       { id: 'image-optimizer', title: 'بهینه‌ساز تصویر', icon: <Image className="h-8 w-8 text-orange-400" />, component: <ImageOptimizer /> },
-      { id: 'website-screenshot', title: 'اسکرین‌شات وب‌سایت', icon: <MonitorScreenshot className="h-8 w-8 text-teal-400" />, component: <WebsiteScreenshot /> },
+      { id: 'website-screenshot', title: 'اسکرین‌شات وب‌سایت', icon: <Monitor className="h-8 w-8 text-teal-400" />, component: <WebsiteScreenshot /> },
     ]
   }
 ];
