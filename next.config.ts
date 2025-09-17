@@ -33,6 +33,13 @@ const nextConfig: NextConfig = {
   experimental: {
     allowedDevOrigins: ['*'],
   },
+  webpack: (config, { isServer }) => {
+    // These packages are required by the server-side screenshot flow,
+    // but are not needed (and cause errors) in the client-side bundle.
+    // This configuration tells Next.js to not bundle them for the client.
+    config.externals = [...config.externals, 'sharp', 'chrome-aws-lambda', 'puppeteer-core'];
+    return config;
+  },
 };
 
 export default nextConfig;
