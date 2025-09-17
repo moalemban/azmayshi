@@ -1,13 +1,25 @@
 diff --git a/node_modules/chrome-aws-lambda/build/index.js b/node_modules/chrome-aws-lambda/build/index.js
-index a4d3c3d..373a758 100644
+index 72534a1..ba27483 100644
 --- a/node_modules/chrome-aws-lambda/build/index.js
 +++ b/node_modules/chrome-aws-lambda/build/index.js
-@@ -21,7 +21,7 @@
-   font: async (input) => {
-     return (0, util_1.getFont)(input);
-   },
--  get puppeteer() {
-+  get puppeteer () {
-     if (process.env.AWS_EXECUTION_ENV !== undefined) {
-       return require(path.join(process.cwd(), 'node_modules', 'puppeteer'));
+@@ -34,7 +34,7 @@ class LambdaChrome {
+      * @returns A `string` with the path to the Puppeteer (`chrome-aws-lambda`) executable.
+      */
+     get puppeteer() {
+-        return require('./puppeteer/lib');
++        return require('puppeteer-core');
      }
+ }
+ exports.LambdaChrome = LambdaChrome;
+diff --git a/node_modules/chrome-aws-lambda/build/index.d.ts b/node_modules/chrome-aws-lambda/build/index.d.ts
+index c6b9112..f65b40b 100644
+--- a/node_modules/chrome-aws-lambda/build/index.d.ts
++++ b/node_modules/chrome-aws-lambda/build/index.d.ts
+@@ -29,6 +29,6 @@ declare class LambdaChrome {
+     /**
+      * A `string` with the path to the Puppeteer (`chrome-aws-lambda`) executable.
+      */
+-    readonly puppeteer: any;
++    readonly puppeteer: typeof import('puppeteer-core');
+ }
+ export {};
