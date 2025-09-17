@@ -33,6 +33,22 @@ const nextConfig: NextConfig = {
   experimental: {
     allowedDevOrigins: ['*'],
   },
+  webpack: (config, { isServer }) => {
+    // These modules are server-side only, so we don't want to bundle them for the client
+    if (!isServer) {
+        config.resolve.fallback = {
+            ...config.resolve.fallback,
+            'sharp': false,
+            'chrome-aws-lambda': false,
+            'puppeteer-core': false,
+        };
+    }
+     config.externals.push('sharp');
+     config.externals.push('chrome-aws-lambda');
+     config.externals.push('puppeteer-core');
+
+    return config;
+  },
 };
 
 export default nextConfig;

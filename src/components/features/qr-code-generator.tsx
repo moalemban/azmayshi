@@ -38,7 +38,7 @@ export default function QrCodeGenerator() {
   // Style options
   const [size, setSize] = useState(300);
   const [fgColor, setFgColor] = useState('#000000');
-  const [bgColor, setBgColor] =useState('#ffffff');
+  const [bgColor, setBgColor] = useState('#ffffff');
 
   const ref = useRef<HTMLDivElement>(null);
   const qrCode = useRef<QRCodeStyling>();
