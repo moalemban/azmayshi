@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, KeyboardEvent } from 'react';
+import React, { useState, useMemo, useRef, KeyboardEvent } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -104,7 +104,7 @@ const cityCodes: { [key: string]: { province: string; city: string } } = {
     "088": { province: "اصفهان", city: "خوانسار" },
     "089": { province: "اصفهان", city: "خور و بیابانک" },
     "090": { province: "اصفهان", city: "دولت آباد" },
-    "091": { province: "اصفهان", city: "سمیرم" },
+    "091": { province: "اصفهan", city: "سمیرم" },
     "092": { province: "اصفهان", city: "سمیرم سفلی (دهاقان)" },
     "093": { province: "اصفهان", city: "شاهین شهر" },
     "094": { province: "اصفهان", city: "شهرضا" },
@@ -690,12 +690,10 @@ export default function NationalIdValidator() {
         const { value } = e.target;
         const newNationalId = [...nationalId];
         
-        // Allow only single digit
         const digit = value.replace(/[^0-9]/g, '').slice(-1);
         newNationalId[index] = digit;
         setNationalId(newNationalId);
 
-        // Move to next input if a digit is entered
         if (digit && index < 9) {
             inputRefs.current[index + 1]?.focus();
         }
@@ -703,17 +701,15 @@ export default function NationalIdValidator() {
     
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
         if (e.key === 'Backspace') {
+             e.preventDefault();
             const newNationalId = [...nationalId];
-            if (!newNationalId[index] && index > 0) {
-                 // If current is empty, move focus to previous and clear it
+            if (newNationalId[index] === '' && index > 0) {
                 inputRefs.current[index - 1]?.focus();
-                newNationalId[index-1] = '';
-
+                newNationalId[index - 1] = '';
             } else {
-                // If current has value, just clear it
                 newNationalId[index] = '';
             }
-             setNationalId(newNationalId);
+            setNationalId(newNationalId);
         } else if (e.key === 'ArrowRight' && index > 0) {
             inputRefs.current[index - 1]?.focus();
         } else if (e.key === 'ArrowLeft' && index < 9) {
