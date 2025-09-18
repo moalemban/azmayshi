@@ -1,20 +1,26 @@
 import { ThemeToggle } from './theme-toggle';
 import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 
 export default function Header() {
+  const logo = PlaceHolderImages.find(p => p.id === 'logo');
+  
   return (
     <header className="glass-effect rounded-b-3xl p-4 mb-8 sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
-            <Image 
-              src="https://uploadkon.ir/uploads/886e18_252fb04e3a-9e9c-44da-8d7e-7a0345be973aa4-copy.png"
-              width={48}
-              height={48}
-              alt="تبدیلا لوگو"
-              className="animate-float"
-            />
+            {logo && (
+              <Image 
+                src={logo.imageUrl}
+                width={48}
+                height={48}
+                alt={logo.description}
+                className="animate-float rounded-lg"
+                data-ai-hint={logo.imageHint}
+              />
+            )}
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-display font-bold gradient-text">تبدیلا</h1>
