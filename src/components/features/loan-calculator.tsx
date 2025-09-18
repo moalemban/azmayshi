@@ -11,7 +11,17 @@ export default function LoanCalculator() {
   const [interestRate, setInterestRate] = useState<string>('');
   const [loanTerm, setLoanTerm] = useState<string>(''); // in months
 
-  const amount = parseFloat(loanAmount);
+  const handleLoanAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    if (value === '') {
+      setLoanAmount('');
+      return;
+    }
+    const numberValue = parseInt(value, 10);
+    setLoanAmount(numberValue.toLocaleString('fa-IR'));
+  };
+  
+  const amount = parseFloat(loanAmount.replace(/,/g, ''));
   const rate = parseFloat(interestRate);
   const term = parseInt(loanTerm);
 
@@ -43,7 +53,7 @@ export default function LoanCalculator() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="loanAmount" className="text-muted-foreground">مبلغ وام (تومان)</Label>
-          <Input id="loanAmount" type="number" value={loanAmount} onChange={(e) => setLoanAmount(e.target.value)} placeholder="۱۰۰,۰۰۰,۰۰۰" className="h-12 text-lg"/>
+          <Input id="loanAmount" type="text" value={loanAmount} onChange={handleLoanAmountChange} placeholder="۱۰۰,۰۰۰,۰۰۰" className="h-12 text-lg text-center" dir="ltr"/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="interestRate" className="text-muted-foreground">نرخ سود سالانه (%)</Label>
