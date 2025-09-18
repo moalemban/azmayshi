@@ -9,6 +9,7 @@ import BmiCalculator from '@/components/features/bmi-calculator';
 import PercentageCalculator from '@/components/features/percentage-calculator';
 import LoanCalculator from '@/components/features/loan-calculator';
 import Stopwatch from '@/components/features/stopwatch';
+import CountdownTimer from '@/components/features/countdown-timer';
 import DepositCalculator from '@/components/features/deposit-calculator';
 import NumberToWordsConverter from '@/components/features/number-to-words-converter';
 import NumberSystemConverter from '@/components/features/number-system-converter';
@@ -65,6 +66,7 @@ import {
   Repeat,
   Copyright,
   CalendarClock,
+  Hourglass,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -107,6 +109,7 @@ const toolCategories = [
       { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulse className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
       { id: 'distance-calculator', title: 'محاسبه مسافت', icon: <Map className="h-8 w-8 text-fuchsia-400" />, component: <DistanceCalculator /> },
       { id: 'stopwatch', title: 'کرونومتر', icon: <Timer className="h-8 w-8 text-indigo-400" />, component: <Stopwatch /> },
+      { id: 'countdown-timer', title: 'تایمر شمارش معکوس', icon: <Hourglass className="h-8 w-8 text-blue-400" />, component: <CountdownTimer /> },
     ]
   },
   {
@@ -219,7 +222,7 @@ export default function Home() {
                         </p>
                     </div>
                 </div>
-                 <a href="https://idpay.ir/example" target="_blank" rel="noopener noreferrer">
+                 <a href="https://idpay.ir/tbdila" target="_blank" rel="noopener noreferrer">
                     <Button className="bg-pink-500 hover:bg-pink-600 text-white font-bold h-12 px-8 text-base shrink-0">
                         حمایت می‌کنم
                         <ArrowLeft className="mr-2 h-5 w-5" />
@@ -234,7 +237,7 @@ export default function Home() {
             <div className="inline-flex items-center justify-center gap-2">
                 <Globe className="w-5 h-5" />
                 <span>
-                  توسعه داده شده توسط <span className="font-semibold text-foreground hover:underline">حسین طاهری</span>
+                  توسعه داده شده توسط <a href="https://tahiry.ir" target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground hover:underline">حسین طاهری</a>
                 </span>
             </div>
              <div className="inline-flex items-center justify-center gap-2">
@@ -244,7 +247,7 @@ export default function Home() {
                 </span>
             </div>
         </div>
-        <div className="inline-flex items-center justify-center gap-2 pt-2 border-t border-border/50 w-full max-w-md mx-auto mt-4">
+        <div className="inline-flex items-center justify-center gap-2 pt-2 border-t border-border/50 w-full max-w-lg mx-auto mt-4">
             <span>
               CopyRight © 2025
             </span>
@@ -254,3 +257,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
