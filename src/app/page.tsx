@@ -26,6 +26,7 @@ import WebsiteScreenshot from '@/components/features/website-screenshot';
 import TextSummarizer from '@/components/features/text-summarizer';
 import RialTomanConverter from '@/components/features/rial-toman-converter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import ScrollToTop from '@/components/layout/scroll-to-top';
 
 
 import {
@@ -218,34 +219,39 @@ export default function Home() {
                         </p>
                     </div>
                 </div>
-                 <Button className="bg-pink-500 hover:bg-pink-600 text-white font-bold h-12 px-8 text-base shrink-0">
-                    حمایت می‌کنم
-                    <ArrowLeft className="mr-2 h-5 w-5" />
-                </Button>
+                 <a href="https://idpay.ir/example" target="_blank" rel="noopener noreferrer">
+                    <Button className="bg-pink-500 hover:bg-pink-600 text-white font-bold h-12 px-8 text-base shrink-0">
+                        حمایت می‌کنم
+                        <ArrowLeft className="mr-2 h-5 w-5" />
+                    </Button>
+                </a>
             </div>
            </div>
         </div>
       </main>
       <footer className="text-center p-6 text-muted-foreground text-sm font-body space-y-4">
-        <div className="inline-flex items-center justify-center gap-2">
-            <Globe className="w-5 h-5" />
-            <span>
-              توسعه داده شده توسط <span className="font-semibold text-foreground hover:underline">حسین طاهری</span>
-            </span>
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            <div className="inline-flex items-center justify-center gap-2">
+                <Globe className="w-5 h-5" />
+                <span>
+                  توسعه داده شده توسط <a href="https://navidak.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground hover:underline">نویدک</a>
+                </span>
+            </div>
+             <div className="inline-flex items-center justify-center gap-2">
+                <CalendarClock className="w-5 h-5" />
+                <span>
+                  آخرین بروزرسانی: مرداد ۱۴۰۳
+                </span>
+            </div>
         </div>
-         <div className="inline-flex items-center justify-center gap-2">
-            <CalendarClock className="w-5 h-5" />
-            <span>
-              آخرین بروزرسانی: مرداد ۱۴۰۳
-            </span>
-        </div>
-        <div className="inline-flex items-center justify-center gap-2 pt-2 border-t border-border/50 w-full max-w-md mx-auto">
+        <div className="inline-flex items-center justify-center gap-2 pt-2 border-t border-border/50 w-full max-w-md mx-auto mt-4">
             <Copyright className="w-5 h-5" />
             <span>
-              کلیه حقوق مادی و معنوی این وب‌سایت محفوظ است و هرگونه کپی‌برداری پیگرد قانونی دارد.
+              کلیه حقوق مادی و معنوی برای نویدک محفوظ می باشد.
             </span>
         </div>
       </footer>
+      <ScrollToTop />
     </div>
   );
 }
