@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -14,6 +14,7 @@ import { Label } from '../ui/label';
 import { numToWords } from '@/lib/utils';
 
 type InputMode = 'shamsi' | 'gregorian';
+type ShamsiField = 'day' | 'month' | 'year';
 
 export default function AgeCalculator() {
   const [inputMode, setInputMode] = useState<InputMode>('shamsi');
@@ -27,6 +28,10 @@ export default function AgeCalculator() {
 
   const [age, setAge] = useState<{ years: number; months: number; days: number } | null>(null);
   const [ageInWords, setAgeInWords] = useState<string | null>(null);
+
+  const dayRef = useRef<HTMLInputElement>(null);
+  const monthRef = useRef<HTMLInputElement>(null);
+  const yearRef = useRef<HTMLInputElement>(null);
 
   const calculateAge = (birthDate: Date) => {
     const now = new Date();
@@ -83,6 +88,28 @@ export default function AgeCalculator() {
       setGregorianPopoverOpen(false);
     }
   };
+  
+  const handleShamsiChange = (field: ShamsiField, value: string) => {
+    const numericValue = value.replace(/[^0-9]/g, '');
+
+    switch (field) {
+        case 'day':
+            setShamsiDay(numericValue);
+            if (numericValue.length >= 2 && monthRef.current) {
+                monthRef.current.focus();
+            }
+            break;
+        case 'month':
+            setShamsiMonth(numericValue);
+            if (numericValue.length >= 2 && yearRef.current) {
+                yearRef.current.focus();
+            }
+            break;
+        case 'year':
+            setShamsiYear(numericValue);
+            break;
+    }
+  };
 
   return (
     <CardContent className="flex flex-col gap-4">
@@ -103,15 +130,15 @@ export default function AgeCalculator() {
           <div className="flex gap-2" dir="ltr">
             <div className="flex-1 space-y-1">
                 <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
-                <Input id="shamsi-day" type="number" placeholder="۲" value={shamsiDay} onChange={e => setShamsiDay(e.target.value)} className="h-12 text-center" max={31} min={1}/>
+                <Input id="shamsi-day" ref={dayRef} type="number" placeholder="۲" value={shamsiDay} onChange={e => handleShamsiChange('day', e.target.value)} className="h-12 text-center" max={31} min={1} maxLength={2}/>
             </div>
             <div className="flex-1 space-y-1">
                 <Label htmlFor="shamsi-month" className="text-xs text-muted-foreground">ماه</Label>
-                <Input id="shamsi-month" type="number" placeholder="۸" value={shamsiMonth} onChange={e => setShamsiMonth(e.target.value)} className="h-12 text-center" max={12} min={1}/>
+                <Input id="shamsi-month" ref={monthRef} type="number" placeholder="۸" value={shamsiMonth} onChange={e => handleShamsiChange('month', e.target.value)} className="h-12 text-center" max={12} min={1} maxLength={2}/>
             </div>
             <div className="flex-1 space-y-1">
                 <Label htmlFor="shamsi-year" className="text-xs text-muted-foreground">سال</Label>
-                <Input id="shamsi-year" type="number" placeholder="۱۳۷۵" value={shamsiYear} onChange={e => setShamsiYear(e.target.value)} className="h-12 text-center" />
+                <Input id="shamsi-year" ref={yearRef} type="number" placeholder="۱۳۷۵" value={shamsiYear} onChange={e => handleShamsiChange('year', e.target.value)} className="h-12 text-center" maxLength={4}/>
             </div>
           </div>
       ) : (
