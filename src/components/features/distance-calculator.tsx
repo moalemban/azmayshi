@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronsUpDown, Check } from 'lucide-react';
+import { ChevronsUpDown, Check, Map } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { provincialCapitals } from '@/lib/constants';
@@ -11,8 +11,8 @@ import { getRoadDistance } from '@/services/distance-service';
 import { cn } from '@/lib/utils';
 
 export default function DistanceCalculator() {
-  const [origin, setOrigin] = useState('تهران');
-  const [destination, setDestination] = useState('شیراز');
+  const [origin, setOrigin] = useState('');
+  const [destination, setDestination] = useState('');
   const [originPopover, setOriginPopover] = useState(false);
   const [destinationPopover, setDestinationPopover] = useState(false);
 
@@ -75,13 +75,17 @@ export default function DistanceCalculator() {
         <CitySelector value={destination} onSelect={setDestination} open={destinationPopover} onOpenChange={setDestinationPopover} title="مقصد" />
       </div>
       
-      {distance !== null && (
+      {distance !== null ? (
         <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner mt-2">
           <p className="text-lg text-muted-foreground">فاصله جاده‌ای</p>
           <div className="text-3xl font-bold text-primary" dir="rtl">
             <span>{distance.toLocaleString('fa-IR', { maximumFractionDigits: 0 })}</span>
             <span className="text-base font-normal mx-1">کیلومتر</span>
           </div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center text-muted-foreground h-24 bg-muted/30 rounded-lg">
+            <p>لطفا مبدأ و مقصد را انتخاب کنید.</p>
         </div>
       )}
     </CardContent>
