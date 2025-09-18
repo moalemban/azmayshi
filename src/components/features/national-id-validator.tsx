@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef, KeyboardEvent } from 'react';
+import { useState, useMemo, useRef, KeyboardEvent } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -694,7 +694,7 @@ export default function NationalIdValidator() {
         newNationalId[index] = digit;
         setNationalId(newNationalId);
 
-        if (digit && index < 9) {
+        if (value && index < 9) {
             inputRefs.current[index + 1]?.focus();
         }
     };
@@ -737,7 +737,7 @@ export default function NationalIdValidator() {
                     onPaste={handlePaste}
                 >
                     {nationalId.map((digit, index) => (
-                        <React.Fragment key={index}>
+                        <>
                             <Input
                                 ref={el => inputRefs.current[index] = el}
                                 type="text"
@@ -752,7 +752,7 @@ export default function NationalIdValidator() {
                                 )}
                             />
                              {(index === 2 || index === 8) && <div className="h-4 w-px bg-border"></div>}
-                        </React.Fragment>
+                        </>
                     ))}
                 </div>
             </div>
