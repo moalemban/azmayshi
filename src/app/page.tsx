@@ -240,7 +240,7 @@ export default function Home() {
              <div className="inline-flex items-center justify-center gap-2">
                 <CalendarClock className="w-5 h-5" />
                 <span>
-                  آخرین بروزرسانی: مرداد ۱۴۰۳
+                  آخرین بروزرسانی: شهریور 1404
                 </span>
             </div>
         </div>
