@@ -24,6 +24,7 @@ import TextAnalyzer from '@/components/features/text-analyzer';
 import ImageOptimizer from '@/components/features/image-optimizer';
 import WebsiteScreenshot from '@/components/features/website-screenshot';
 import TextSummarizer from '@/components/features/text-summarizer';
+import RialTomanConverter from '@/components/features/rial-toman-converter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 
@@ -60,6 +61,7 @@ import {
   Monitor,
   BookText,
   BrainCircuit,
+  Repeat,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -77,6 +79,7 @@ const toolCategories = [
     tools: [
       { id: 'unit-converter', title: 'تبدیل واحد', icon: <Scale className="h-8 w-8 text-blue-400" />, component: <UnitConverter /> },
       { id: 'currency-converter', title: 'تبدیل ارز', icon: <Landmark className="h-8 w-8 text-green-400" />, component: <CurrencyConverter /> },
+      { id: 'rial-toman-converter', title: 'ریال و تومان', icon: <Repeat className="h-8 w-8 text-emerald-400" />, component: <RialTomanConverter /> },
       { id: 'date-converter', title: 'تبدیل تاریخ', icon: <CalendarDays className="h-8 w-8 text-purple-400" />, component: <DateConverter /> },
       { id: 'number-to-words', title: 'عدد به حروف', icon: <SpellCheck className="h-8 w-8 text-amber-400" />, component: <NumberToWordsConverter /> },
       { id: 'number-system', title: 'تبدیل ارقام', icon: <Binary className="h-8 w-8 text-sky-400" />, component: <NumberSystemConverter /> },
