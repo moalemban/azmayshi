@@ -28,33 +28,14 @@ export const mockExchangeRates: { [key: string]: number } = {
   'USD-CNY': 7.25,
 };
 
-export const iranCities: { label: string; value: string }[] = [
-    { label: 'تهران', value: 'Tehran' },
-    { label: 'مشهد', value: 'Mashhad' },
-    { label: 'اصفهان', value: 'Isfahan' },
-    { label: 'کرج', value: 'Karaj' },
-    { label: 'شیراز', value: 'Shiraz' },
-    { label: 'تبریز', value: 'Tabriz' },
-    { label: 'قم', value: 'Qom' },
-    { label: 'اهواز', value: 'Ahvaz' },
-    { label: 'کرمانشاه', value: 'Kermanshah' },
-    { label: 'ارومیه', value: 'Urmia' },
-    { label: 'رشت', value: 'Rasht' },
-    { label: 'زاهدان', value: 'Zahedan' },
-    { label: 'همدان', value: 'Hamadan' },
-    { label: 'کرمان', value: 'Kerman' },
-    { label: 'یزد', value: 'Yazd' },
-    { label: 'اردبیل', value: 'Ardabil' },
-    { label: 'بندرعباس', value: 'Bandar Abbas' },
-    { label: 'اراک', value: 'Arak' },
-    { label: 'اسلامشهر', value: 'Eslamshahr' },
-    { label: 'زنجان', value: 'Zanjan' },
-    { label: 'سنندج', value: 'Sanandaj' },
-    { label: 'قزوین', value: 'Qazvin' },
-    { label: 'خرم‌آباد', value: 'Khorramabad' },
-    { label: 'گرگان', value: 'Gorgan' },
-    { label: 'ساری', value: 'Sari' },
+export const provincialCapitals: string[] = [
+    "تهران", "مشهد", "اصفهان", "کرج", "شیراز", "تبریز", "قم", "اهواز", 
+    "کرمانشاه", "ارومیه", "رشت", "زاهدان", "همدان", "کرمان", "یزد", 
+    "اردبیل", "بندرعباس", "اراک", "زنجان", "سنندج", "قزوین", 
+    "خرم‌آباد", "گرگان", "ساری", "بجنورد", "بیرجند", "بوشهر", 
+    "یاسوج", "شهرکرد", "سمنان", "ایلام"
 ];
+
 
 export const unitCategories: { [key: string]: string[] } = {
   length: ['meter', 'kilometer', 'centimeter', 'millimeter', 'mile', 'yard', 'foot', 'inch'],
@@ -100,7 +81,7 @@ export const unitNames = {
 export const allUnits = Object.values(unitCategories).flat();
 
 export const plateLetters = [
-  'الف', 'ب', 'پ', 'ت', 'ث', 'ج', 'چ', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'ژ', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'گ', 'ل', 'م', 'ن', 'و', 'ه', 'ی'
+  'الف', 'ب', 'پ', 'ت', 'ث', 'ج', 'چ', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'ژ', 'س', 'ш', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'گ', 'ل', 'م', 'ن', 'و', 'ه', 'ی'
 ];
 
 export const plateCodes: { [key: number]: { province: string; cities: { [letter: string]: string } } } = {
