@@ -26,6 +26,7 @@ import ImageOptimizer from '@/components/features/image-optimizer';
 import WebsiteScreenshot from '@/components/features/website-screenshot';
 import TextSummarizer from '@/components/features/text-summarizer';
 import RialTomanConverter from '@/components/features/rial-toman-converter';
+import SavingsCalculator from '@/components/features/savings-calculator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ScrollToTop from '@/components/layout/scroll-to-top';
 
@@ -67,6 +68,7 @@ import {
   Copyright,
   CalendarClock,
   Hourglass,
+  TrendingUp,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -98,6 +100,7 @@ const toolCategories = [
     tools: [
       { id: 'loan-calculator', title: 'اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
       { id: 'deposit-calculator', title: 'سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
+      { id: 'savings-calculator', title: 'محاسبه‌گر پس‌انداز', icon: <TrendingUp className="h-8 w-8 text-lime-400" />, component: <SavingsCalculator /> },
       { id: 'percentage-calculator', title: 'محاسبه درصد', icon: <Percent className="h-8 w-8 text-teal-400" />, component: <PercentageCalculator /> },
     ]
   },
