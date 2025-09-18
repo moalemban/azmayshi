@@ -234,7 +234,7 @@ export default function Home() {
             <div className="inline-flex items-center justify-center gap-2">
                 <Globe className="w-5 h-5" />
                 <span>
-                  توسعه داده شده توسط <a href="https://navidak.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground hover:underline">نویدک</a>
+                  توسعه داده شده توسط <span className="font-semibold text-foreground hover:underline">حسین طاهری</span>
                 </span>
             </div>
              <div className="inline-flex items-center justify-center gap-2">
