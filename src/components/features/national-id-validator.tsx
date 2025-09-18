@@ -1,10 +1,18 @@
 "use client";
 
-import { useState, useMemo, useRef, createRef } from 'react';
+import { useState, useMemo, useRef, createRef, KeyboardEvent, ChangeEvent } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Fingerprint, CheckCircle, XCircle, MapPin, Building } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface ValidationResult {
+  isValid: boolean;
+  message: string;
+  province?: string;
+  city?: string;
+}
 
 const cityCodes: { [key: string]: { province: string; city: string } } = {
     "001": { province: "تهران", city: "تهران" },
@@ -13,8 +21,7 @@ const cityCodes: { [key: string]: { province: string; city: string } } = {
     "004": { province: "تهران", city: "تهران" },
     "005": { province: "تهران", city: "تهران" },
     "006": { province: "تهران", city: "تهران" },
-    "007": { province: "تهران", city: "تهران" },
-    "008": { province: "تهران", city: "حوزه شمیران" },
+    "007": { province: "تهران", city: "حوزه شمیران" },
     "031": { province: "آذربایجان غربی", city: "آذربایجان غربی" },
     "032": { province: "اردبیل", city: "اردبیل" },
     "037": { province: "اصفهان", city: "اصفهان" },
@@ -404,5 +411,134 @@ const cityCodes: { [key: string]: { province: string; city: string } } = {
     "624": { province: "توابع تهران", city: "توابع تهران" },
     "625": { province: "توابع تهران", city: "توابع تهران" }
 };
+export default function NationalIdValidator() {
+    const [idDigits, setIdDigits] = useState<string[]>(Array(10).fill(''));
+    const inputRefs = useRef<Array<React.RefObject<HTMLInputElement>>>(
+        Array.from({ length: 10 }, () => createRef<HTMLInputElement>())
+    );
 
-```
+    const nationalId = useMemo(() => idDigits.join(''), [idDigits]);
+
+    const validateNationalId = (id: string): ValidationResult => {
+        if (!/^\d{10}$/.test(id)) {
+            return { isValid: false, message: 'کد ملی باید ۱۰ رقم باشد.' };
+        }
+        if (/^(\d)\1{9}$/.test(id)) {
+            return { isValid: false, message: 'کد ملی معتبر نیست (ارقام تکراری).' };
+        }
+
+        const check = parseInt(id[9], 10);
+        const sum = id
+            .slice(0, 9)
+            .split('')
+            .reduce((acc, digit, index) => acc + parseInt(digit, 10) * (10 - index), 0);
+
+        const remainder = sum % 11;
+        const isValid = (remainder < 2) ? check === remainder : check === 11 - remainder;
+
+        if (!isValid) {
+            return { isValid: false, message: 'رقم کنترل کد ملی اشتباه است.' };
+        }
+
+        const cityCode = id.substring(0, 3);
+        const location = cityCodes[cityCode] || { province: 'نامشخص', city: 'کد شهرستان تعریف نشده' };
+
+        return {
+            isValid: true,
+            message: 'کد ملی معتبر است.',
+            province: location.province,
+            city: location.city,
+        };
+    };
+
+    const validationResult = useMemo(() => {
+        if (nationalId.length !== 10) {
+            return null;
+        }
+        return validateNationalId(nationalId);
+    }, [nationalId]);
+    
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+        const value = e.target.value.replace(/[^0-9]/g, ''); // Only allow numbers
+        if (value) {
+            const newDigits = [...idDigits];
+            newDigits[index] = value.slice(-1); // Take only the last digit
+            setIdDigits(newDigits);
+            // Move to next input
+            if (index < 9) {
+                inputRefs.current[index + 1].current?.focus();
+            }
+        }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
+        if (e.key === 'Backspace' && !idDigits[index] && index > 0) {
+            inputRefs.current[index - 1].current?.focus();
+        }
+    };
+
+    return (
+        <CardContent className="space-y-6 flex flex-col items-center">
+            <div className="w-full max-w-sm mx-auto">
+                <Label className="text-muted-foreground text-center block mb-2">شماره ملی را وارد کنید</Label>
+                <div 
+                    className="flex items-center justify-between gap-1 p-3 rounded-lg border bg-background" 
+                    dir="ltr"
+                    style={{
+                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.06)',
+                        backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23333' stroke-width='1' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e")`,
+                    }}
+                >
+                    {idDigits.map((digit, index) => (
+                        <Input
+                            key={index}
+                            ref={inputRefs.current[index]}
+                            type="text"
+                            maxLength={1}
+                            value={digit}
+                            onChange={(e) => handleInputChange(e, index)}
+                            onKeyDown={(e) => handleKeyDown(e, index)}
+                            className={cn(
+                                "w-8 h-12 text-center text-2xl font-mono border-0 bg-transparent shadow-none focus-visible:ring-1 focus-visible:ring-primary",
+                                (index === 2 || index === 8) && "mr-2"
+                            )}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {validationResult ? (
+                <div className={cn(
+                    "w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner mt-4 space-y-3 max-w-sm",
+                    validationResult.isValid ? "border-green-500/50" : "border-red-500/50",
+                    "border-2"
+                )}>
+                    <div className={cn(
+                        "flex items-center justify-center gap-2 font-semibold",
+                        validationResult.isValid ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                    )}>
+                        {validationResult.isValid ? <CheckCircle className='w-5 h-5'/> : <XCircle className='w-5 h-5'/>}
+                        <p>{validationResult.message}</p>
+                    </div>
+
+                    {validationResult.isValid && validationResult.province && (
+                        <>
+                            <div className='flex items-center justify-center gap-2 pt-2 border-t border-border mt-2'>
+                                <MapPin className='w-5 h-5 text-primary'/>
+                                <p className="text-lg font-semibold text-primary">{validationResult.province}</p>
+                            </div>
+                            <div className='flex items-center justify-center gap-2'>
+                                <Building className='w-5 h-5 text-muted-foreground'/>
+                                <p className="text-md text-foreground">{validationResult.city}</p>
+                            </div>
+                        </>
+                    )}
+                </div>
+            ) : (
+                <div className="flex items-center justify-center text-muted-foreground h-24 bg-muted/30 rounded-lg w-full max-w-sm">
+                    <p>کد ملی ۱۰ رقمی را برای بررسی وارد کنید.</p>
+                </div>
+            )}
+        </CardContent>
+    );
+}
