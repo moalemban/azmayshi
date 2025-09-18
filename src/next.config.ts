@@ -37,8 +37,9 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    allowedDevOrigins: ['*'],
+    serverComponentsExternalPackages: ['sharp', 'chrome-aws-lambda', 'puppeteer-core']
   },
+  allowedDevOrigins: ['*'],
 };
 
 export default nextConfig;
