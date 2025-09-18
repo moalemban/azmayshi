@@ -245,9 +245,8 @@ export default function Home() {
             </div>
         </div>
         <div className="inline-flex items-center justify-center gap-2 pt-2 border-t border-border/50 w-full max-w-md mx-auto mt-4">
-            <Copyright className="w-5 h-5" />
             <span>
-              کلیه حقوق مادی و معنوی برای نویدک محفوظ می باشد.
+              CopyRight © 2025
             </span>
         </div>
       </footer>
