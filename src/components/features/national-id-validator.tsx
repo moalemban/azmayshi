@@ -56,7 +56,7 @@ const cityCodes: { [key: string]: { province: string; city: string } } = {
     "126": { province: "سمنان", city: "سمنان" },
     "127": { province: "سمنان", city: "حوزه شاهرود" },
     "128": { province: "سمنان", city: "حوزه دامغان" },
-    "129": { province: "سمنان", city: "حوزه گرمسار" },
+    "129": { province: "sمنان", city: "حوزه گرمسار" },
     "136": { province: "سیستان و بلوچستان", city: "زاهدان" },
     "137": { province: "سیستان و بلوچستان", city: "زاهدان" },
     "138": { province: "سیستان و بلوچستان", city: "حوزه ایرانشهر" },
@@ -450,27 +450,80 @@ const validateNationalId = (id: string): ValidationResult => {
 };
 
 export default function NationalIdValidator() {
-  const [nationalId, setNationalId] = useState('');
+  const [digits, setDigits] = useState(Array(10).fill(''));
+  const inputRefs = useRef(Array(10).fill(null).map(() => createRef<HTMLInputElement>()));
+
+  const nationalId = digits.join('');
 
   const result = useMemo(() => {
     if (nationalId.length !== 10) return null;
     return validateNationalId(nationalId);
   }, [nationalId]);
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const { value } = e.target;
+    const newDigits = [...digits];
+    
+    if (/^[0-9]$/.test(value)) {
+      newDigits[index] = value;
+      setDigits(newDigits);
+      if (index < 9 && inputRefs.current[index + 1].current) {
+        inputRefs.current[index + 1].current?.focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === 'Backspace' && !digits[index] && index > 0) {
+      inputRefs.current[index - 1].current?.focus();
+    }
+  };
+  
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+      if (pastedData.length === 10) {
+          setDigits(pastedData.split(''));
+          inputRefs.current[9].current?.focus();
+      }
+  }
+
 
   return (
     <CardContent className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="national-id-input" className="text-muted-foreground">شماره ملی را وارد کنید</Label>
-        <Input
-          id="national-id-input"
-          type="text"
-          value={nationalId}
-          onChange={(e) => setNationalId(e.target.value.replace(/[^0-9]/g, ''))}
-          maxLength={10}
-          placeholder="مثال: ۰۰۱۲۳۴۵۶۷۸"
-          className="h-14 text-lg text-center tracking-[4px] font-mono"
-          dir="ltr"
-        />
+        
+        <div className="relative w-full max-w-sm mx-auto p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-inner" dir="ltr">
+            <div className="absolute top-2 left-3 flex items-center gap-2">
+                <div className="w-8 h-5 bg-white border border-gray-300 rounded-sm flex flex-col justify-around p-0.5">
+                    <div className="h-1 bg-green-500"></div>
+                    <div className="h-1 bg-white"></div>
+                    <div className="h-1 bg-red-500"></div>
+                </div>
+                <p className="text-[8px] font-bold text-gray-500">I.R. IRAN</p>
+            </div>
+            <div className="absolute top-2 right-3">
+                 <Fingerprint className="h-6 w-6 text-gray-400" />
+            </div>
+
+            <div className="flex justify-center items-center gap-1.5 mt-4" onPaste={handlePaste}>
+              {digits.map((digit, index) => (
+                <Input
+                  key={index}
+                  ref={inputRefs.current[index]}
+                  id={`national-id-input-${index}`}
+                  type="text"
+                  value={digit}
+                  onChange={(e) => handleInputChange(e, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  maxLength={1}
+                  className="w-8 h-10 text-center text-lg font-mono bg-white dark:bg-gray-700 focus:bg-blue-50 focus:dark:bg-blue-900/50"
+                />
+              ))}
+            </div>
+            <p className="text-center text-[10px] text-gray-400 mt-2">National ID</p>
+        </div>
       </div>
 
       {result ? (
@@ -480,7 +533,7 @@ export default function NationalIdValidator() {
             : 'bg-red-500/10 border border-red-500/30'
         }`}>
           <div className={`flex items-center justify-center gap-2 font-semibold ${
-            result.isValid ? 'text-green-600' : 'text-red-600'
+            result.isValid ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
           }`}>
             {result.isValid ? <CheckCircle className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
             <span>{result.message}</span>
