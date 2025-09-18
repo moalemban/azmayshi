@@ -127,7 +127,7 @@ export default function AgeCalculator() {
       </div>
 
       {inputMode === 'shamsi' ? (
-          <div className="flex gap-2" dir="ltr">
+          <div className="flex flex-row-reverse gap-2">
             <div className="flex-1 space-y-1">
                 <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
                 <Input id="shamsi-day" ref={dayRef} type="number" placeholder="۲" value={shamsiDay} onChange={e => handleShamsiChange('day', e.target.value)} className="h-12 text-center" max={31} min={1} maxLength={2}/>
