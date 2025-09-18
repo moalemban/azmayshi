@@ -1,33 +1,57 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ArrowRightLeft, Clipboard } from 'lucide-react';
-import { currencies, mockExchangeRates } from '@/lib/constants';
+import { currencies, mockExchangeRates, DEFAULT_USD_RATE } from '@/lib/constants';
 import { Label } from '@/components/ui/label';
 import { numToWords } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '../ui/separator';
+import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 
 export default function CurrencyConverter() {
   const [fromCurrency, setFromCurrency] = useState('USD');
   const [toCurrency, setToCurrency] = useState('IRT');
   const [amount, setAmount] = useState<string>('1');
+  const [liveRates, setLiveRates] = useState({ 'USD-IRR': DEFAULT_USD_RATE });
   const { toast } = useToast();
+
+  useEffect(() => {
+    async function getLiveRates() {
+      try {
+        const prices = await fetchPrices();
+        if (prices.Dollar?.price) {
+          const dollarPrice = parseFloat(prices.Dollar.price);
+          if (!isNaN(dollarPrice)) {
+            setLiveRates(prev => ({ ...prev, 'USD-IRR': dollarPrice }));
+          }
+        }
+      } catch (error) {
+        console.error("Could not fetch live dollar price:", error);
+        // It will use the default mock rate
+      }
+    }
+    getLiveRates();
+  }, []);
 
   const getRate = (from: string, to: string) => {
     if (from === to) return 1;
     if (from === 'IRR' && to === 'IRT') return 0.1;
     if (from === 'IRT' && to === 'IRR') return 10;
     
-    let fromRateUSD = from === 'USD' ? 1 : mockExchangeRates[`USD-${from}`];
-    if (from === 'IRT') fromRateUSD = mockExchangeRates['USD-IRR'] / 10;
+    const allRates = { ...mockExchangeRates, 'USD-IRR': liveRates['USD-IRR'] };
 
-    let toRateUSD = to === 'USD' ? 1 : mockExchangeRates[`USD-${to}`];
-    if (to === 'IRT') toRateUSD = mockExchangeRates['USD-IRR'] / 10;
+    let fromRateUSD = from === 'USD' ? 1 : allRates[`USD-${from}`];
+    if (from === 'IRT') fromRateUSD = allRates['USD-IRR'] / 10;
+    if (from === 'IRR') fromRateUSD = allRates['USD-IRR'];
+
+    let toRateUSD = to === 'USD' ? 1 : allRates[`USD-${to}`];
+    if (to === 'IRT') toRateUSD = allRates['USD-IRR'] / 10;
+    if (to === 'IRR') toRateUSD = allRates['USD-IRR'];
     
     if (fromRateUSD && toRateUSD) {
         return toRateUSD / fromRateUSD;
@@ -42,7 +66,7 @@ export default function CurrencyConverter() {
     const rate = getRate(fromCurrency, toCurrency);
     if(isNaN(rate)) return 0;
     return numericAmount * rate;
-  }, [numericAmount, fromCurrency, toCurrency]);
+  }, [numericAmount, fromCurrency, toCurrency, liveRates]);
 
   const formattedResult = useMemo(() => {
     if (convertedValue === 0 && numericAmount !== 0) return 'نرخ تبدیل موجود نیست';
