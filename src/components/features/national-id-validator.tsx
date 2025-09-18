@@ -1,6 +1,10 @@
 "use client";
 
+<<<<<<< HEAD
 import { useState, useMemo, useRef, KeyboardEvent } from 'react';
+=======
+import React, { useState, useMemo, useRef, createRef } from 'react';
+>>>>>>> d11de67 (می‌خواهید ابزار "بررسی صحت و شهر شماره ملی" را یک بار دیگر بازبینی و بهت)
 import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -640,6 +644,7 @@ const cityCodes: { [key: string]: { province: string; city: string } } = {
     "625": { province: "توابع تهران", city: "توابع تهران" }
 };
 
+<<<<<<< HEAD
 
 export default function NationalIdValidator() {
     const [nationalId, setNationalId] = useState<string[]>(Array(10).fill(''));
@@ -660,6 +665,158 @@ export default function NationalIdValidator() {
             .slice(0, 9)
             .split('')
             .reduce((acc, digit, index) => acc + parseInt(digit, 10) * (10 - index), 0);
+=======
+interface ValidationResult {
+  isValid: boolean;
+  message: string;
+  province?: string;
+  city?: string;
+}
+
+function getCityByCode(code: string): { province: string; city: string } | undefined {
+    return cityCodes[code];
+}
+
+const validateNationalId = (id: string): ValidationResult => {
+    if (!/^\d{10}$/.test(id)) {
+        return { isValid: false, message: 'کد ملی باید ۱۰ رقم و فقط شامل اعداد باشد.' };
+    }
+    
+    if (/^(\d)\1{9}$/.test(id)) {
+        return { isValid: false, message: 'کد ملی با ارقام تکراری نامعتبر است.' };
+    }
+
+    const check = +id[9];
+    const sum = id.slice(0, 9).split('').reduce((acc, digit, index) => {
+        return acc + (+digit * (10 - index));
+    }, 0);
+    
+    const remainder = sum % 11;
+    const expectedCheckDigit = remainder < 2 ? remainder : 11 - remainder;
+
+    const isValid = check === expectedCheckDigit;
+    
+    if (!isValid) {
+        return { isValid: false, message: 'ساختار کد ملی نامعتبر است (رقم کنترل اشتباه است).' };
+    }
+
+    const cityInfo = getCityByCode(id.substring(0, 3));
+
+    return {
+        isValid: true,
+        message: 'کد ملی معتبر است.',
+        province: cityInfo?.province,
+        city: cityInfo?.city
+    };
+};
+
+export default function NationalIdValidator() {
+  const [digits, setDigits] = useState(Array(10).fill(''));
+  const inputRefs = useRef(Array(10).fill(null).map(() => createRef<HTMLInputElement>()));
+
+  const nationalId = digits.join('');
+
+  const result = useMemo(() => {
+    if (nationalId.length !== 10) return null;
+    return validateNationalId(nationalId);
+  }, [nationalId]);
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const { value } = e.target;
+    const newDigits = [...digits];
+
+    // Only allow single numeric digits
+    if (/^[0-9]?$/.test(value)) {
+      newDigits[index] = value;
+      setDigits(newDigits);
+      
+      // Move to next input if a digit is entered
+      if (value && index < 9 && inputRefs.current[index + 1].current) {
+        inputRefs.current[index + 1].current?.focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === 'Backspace') {
+      const newDigits = [...digits];
+      // If current input is empty and we press backspace, move to previous and clear it
+      if (!newDigits[index] && index > 0) {
+        inputRefs.current[index - 1].current?.focus();
+        newDigits[index-1] = '';
+        setDigits(newDigits);
+      } else {
+      // If current input has value, clear it
+        newDigits[index] = '';
+        setDigits(newDigits);
+      }
+    }
+  };
+  
+  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+      if (pastedData.length === 10) {
+          setDigits(pastedData.split(''));
+          inputRefs.current[9].current?.focus();
+      }
+  }
+
+  return (
+    <CardContent className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="national-id-input-0" className="text-muted-foreground">شماره ملی را وارد کنید</Label>
+        
+        <div className="relative w-full max-w-sm mx-auto p-4 bg-gray-100 dark:bg-gray-800/50 rounded-2xl shadow-inner border border-gray-200 dark:border-gray-700" dir="ltr">
+            <div className="absolute top-3 left-4 flex items-center gap-2">
+                <div className="w-8 h-5 bg-white border border-gray-300 rounded-sm flex flex-col justify-around p-0.5">
+                    <div className="h-1 bg-green-500"></div>
+                    <div className="h-1 bg-white"></div>
+                    <div className="h-1 bg-red-500"></div>
+                </div>
+                <p className="text-[9px] font-bold text-gray-500 dark:text-gray-400">I.R. IRAN</p>
+            </div>
+            <div className="absolute top-3 right-4">
+                 <Fingerprint className="h-6 w-6 text-gray-400" />
+            </div>
+
+            <div className="flex justify-center items-center gap-1.5 mt-8" onPaste={handlePaste}>
+              {digits.map((digit, index) => (
+                <React.Fragment key={index}>
+                  <Input
+                    ref={inputRefs.current[index]}
+                    id={`national-id-input-${index}`}
+                    type="text" // Use text to handle single character input better
+                    inputMode='numeric' // Hint for mobile keyboards
+                    pattern="[0-9]*"
+                    value={digit}
+                    onChange={(e) => handleInputChange(e, index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    maxLength={1}
+                    className="w-8 h-10 text-center text-lg font-mono bg-white dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:bg-blue-50 focus:dark:bg-blue-900/50 focus:ring-2 focus:ring-blue-400"
+                  />
+                  {index === 2 && <div className="w-1 h-5" />} 
+                  {index === 8 && <div className="w-1 h-5 bg-gray-300 dark:bg-gray-600 rounded-full" />}
+                </React.Fragment>
+              ))}
+            </div>
+            <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-2 tracking-widest">National ID</p>
+        </div>
+      </div>
+
+      {result ? (
+        <div className={`p-4 rounded-lg shadow-inner text-center space-y-3 ${
+            result.isValid 
+            ? 'bg-green-500/10 border border-green-500/30' 
+            : 'bg-red-500/10 border-red-500/30'
+        }`}>
+          <div className={`flex items-center justify-center gap-2 font-semibold ${
+            result.isValid ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+          }`}>
+            {result.isValid ? <CheckCircle className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
+            <span>{result.message}</span>
+          </div>
+>>>>>>> d11de67 (می‌خواهید ابزار "بررسی صحت و شهر شماره ملی" را یک بار دیگر بازبینی و بهت)
 
         const remainder = sum % 11;
         const isValid = (remainder < 2) ? check === remainder : check === 11 - remainder;
@@ -794,3 +951,5 @@ export default function NationalIdValidator() {
         </CardContent>
     );
 }
+
+    
