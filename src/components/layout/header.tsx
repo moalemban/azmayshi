@@ -1,46 +1,5 @@
 import { ThemeToggle } from './theme-toggle';
-
-const Logo = () => (
-  <svg
-    width="48"
-    height="48"
-    viewBox="0 0 48 48"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="animate-float"
-  >
-    <defs>
-      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="hsl(var(--primary))" />
-        <stop offset="100%" stopColor="hsl(var(--accent))" />
-      </linearGradient>
-      <linearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="hsl(var(--primary) / 0.8)" />
-        <stop offset="100%" stopColor="hsl(var(--accent) / 0.8)" />
-      </linearGradient>
-    </defs>
-    <g className="group/logo" transform="rotate(0 24 24)">
-        <path
-            d="M24 6V24C24 33.9411 15.9411 42 6 42"
-            stroke="url(#grad1)"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="transition-all duration-500 ease-in-out group-hover/logo:rotate-[10deg]"
-            style={{ transformOrigin: '24px 24px' }}
-        />
-        <path
-            d="M42 6C32.0589 6 24 14.0589 24 24V42"
-            stroke="url(#grad2)"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="transition-all duration-500 ease-in-out group-hover/logo:-rotate-[10deg]"
-            style={{ transformOrigin: '24px 24px' }}
-        />
-    </g>
-  </svg>
-);
+import Image from 'next/image';
 
 
 export default function Header() {
@@ -49,7 +8,13 @@ export default function Header() {
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
-            <Logo />
+            <Image 
+              src="https://uploadkon.ir/uploads/886e18_252fb04e3a-9e9c-44da-8d7e-7a0345be973aa4-copy.png"
+              width={48}
+              height={48}
+              alt="تبدیلا لوگو"
+              className="animate-float"
+            />
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-display font-bold gradient-text">تبدیلا</h1>
