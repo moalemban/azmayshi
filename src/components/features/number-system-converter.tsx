@@ -3,11 +3,14 @@
 import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Binary } from 'lucide-react';
+import { Binary, Clipboard } from 'lucide-react';
 import { Label } from '../ui/label';
+import { Button } from '../ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 export default function NumberSystemConverter() {
   const [inputValue, setInputValue] = useState('');
+  const { toast } = useToast();
   
   const toPersian = (str: string) => {
     const persian = { '0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹' };
@@ -21,6 +24,15 @@ export default function NumberSystemConverter() {
 
   const persianOutput = useMemo(() => toPersian(toEnglish(inputValue)), [inputValue]);
   const englishOutput = useMemo(() => toEnglish(inputValue), [inputValue]);
+
+  const copyToClipboard = (text: string) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    toast({
+      title: 'کپی شد!',
+      description: `مقدار "${text}" در کلیپ‌بورد کپی شد.`,
+    });
+  };
 
   return (
     <CardContent className="flex flex-col gap-4">
@@ -37,11 +49,17 @@ export default function NumberSystemConverter() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-          <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
+          <div className="relative p-4 bg-muted/50 rounded-lg shadow-inner">
+              <Button variant="ghost" size="icon" className="absolute top-2 left-2 text-muted-foreground" onClick={() => copyToClipboard(persianOutput)} disabled={!persianOutput}>
+                  <Clipboard className="w-5 h-5"/>
+              </Button>
               <p className="text-sm text-muted-foreground">ارقام فارسی</p>
               <p className="text-2xl font-bold text-primary mt-1 font-mono" dir="rtl">{persianOutput || '۰'}</p>
           </div>
-          <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
+          <div className="relative p-4 bg-muted/50 rounded-lg shadow-inner">
+               <Button variant="ghost" size="icon" className="absolute top-2 left-2 text-muted-foreground" onClick={() => copyToClipboard(englishOutput)} disabled={!englishOutput}>
+                  <Clipboard className="w-5 h-5"/>
+              </Button>
               <p className="text-sm text-muted-foreground">ارقام انگلیسی</p>
               <p className="text-2xl font-bold text-foreground mt-1 font-mono" dir="ltr">{englishOutput || '0'}</p>
           </div>

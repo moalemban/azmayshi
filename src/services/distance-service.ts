@@ -1,5 +1,3 @@
-"use server";
-
 import distances from '@/lib/iran-distances.json';
 
 type DistanceData = {
