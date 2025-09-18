@@ -1,12 +1,10 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, createRef } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Fingerprint, CheckCircle, XCircle, MapPin, Building } from 'lucide-react';
-
-// --- Data and Logic Embedded from user's suggestion ---
 
 const cityCodes: { [key: string]: { province: string; city: string } } = {
     "001": { province: "تهران", city: "تهران" },
