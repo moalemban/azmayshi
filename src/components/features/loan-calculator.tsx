@@ -34,7 +34,19 @@ export default function LoanCalculator() {
     if (isNaN(amount) || isNaN(rate) || isNaN(term) || amount <= 0 || rate < 0 || term <= 0) {
       return { monthlyPayment: 0, totalInterest: 0, totalPayment: 0, hasValues: false };
     }
-    const monthlyRate = (rate / 100) / 12;
+    
+    const monthlyRate = rate / 100 / 12;
+    
+    if (monthlyRate === 0) {
+        const payment = amount / term;
+        return {
+            monthlyPayment: payment,
+            totalInterest: 0,
+            totalPayment: amount,
+            hasValues: true,
+        };
+    }
+    
     const payment = amount * (monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
     const totalPaid = payment * term;
     const interestPaid = totalPaid - amount;
