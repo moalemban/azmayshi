@@ -8,7 +8,6 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { googleAI } from '@genkit-ai/googleai';
 
 const SummarizeTextInputSchema = z.object({
   text: z.string().min(100, { message: 'متن برای خلاصه‌سازی باید حداقل ۱۰۰ کاراکتر باشد.' }).describe('The text to be summarized.'),
@@ -28,7 +27,7 @@ const prompt = ai.definePrompt({
   name: 'summarizeTextPrompt',
   input: { schema: SummarizeTextInputSchema },
   output: { schema: SummarizeTextOutputSchema },
-  model: googleAI('gemini-1.5-flash-latest'),
+  model: 'googleai/gemini-1.5-flash-latest',
   prompt: `You are an expert text summarizer. Your task is to provide a concise and clear summary of the given text in Persian. Focus on the main points and key information.
 
 The user has provided the following text:
