@@ -24,13 +24,14 @@ export default function DepositCalculator() {
     if (isNaN(amount) || isNaN(rate) || isNaN(term) || amount <= 0 || rate < 0 || term <= 0) {
       return { totalInterest: 0, totalValue: 0, hasValues: false };
     }
-    const yearlyInterest = amount * (rate / 100);
-    const monthlyInterest = yearlyInterest / 12;
-    const interest = monthlyInterest * term;
+    
+    const monthlyRate = rate / 100 / 12;
+    const finalAmount = amount * Math.pow(1 + monthlyRate, term);
+    const profit = finalAmount - amount;
     
     return {
-      totalInterest: interest,
-      totalValue: amount + interest,
+      totalInterest: profit,
+      totalValue: finalAmount,
       hasValues: true
     };
   }, [amount, rate, term]);
