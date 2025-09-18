@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { summarizeText } from '@/ai/flows/summarize-text-flow';
-import { Loader2, Wand2, ArrowDown } from 'lucide-react';
+import { Loader2, Wand2, Trash2, Copy } from 'lucide-react';
 import { ZodError } from 'zod';
 
 export default function TextSummarizer() {
@@ -41,12 +41,37 @@ export default function TextSummarizer() {
     }
   };
 
+  const handleClear = () => {
+    setOriginalText('');
+    setSummary('');
+  };
+
+  const handleCopy = () => {
+    if (!summary) return;
+    navigator.clipboard.writeText(summary);
+    toast({
+      title: 'کپی شد!',
+      description: 'متن خلاصه شده با موفقیت در کلیپ‌بورد کپی شد.',
+    });
+  };
+
   return (
     <CardContent className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="original-text" className="text-muted-foreground">
-          متن اصلی
-        </Label>
+        <div className="flex justify-between items-center">
+          <Label htmlFor="original-text" className="text-muted-foreground">
+            متن اصلی
+          </Label>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleClear}
+            disabled={!originalText}
+            className="text-muted-foreground hover:text-destructive"
+          >
+            <Trash2 className="h-5 w-5" />
+          </Button>
+        </div>
         <Textarea
           id="original-text"
           value={originalText}
@@ -76,9 +101,20 @@ export default function TextSummarizer() {
       </div>
 
       <div className="space-y-2">
-         <Label htmlFor="summary-text" className="text-muted-foreground">
-          متن خلاصه‌شده
-        </Label>
+        <div className="flex justify-between items-center">
+          <Label htmlFor="summary-text" className="text-muted-foreground">
+            متن خلاصه‌شده
+          </Label>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleCopy}
+            disabled={!summary || loading}
+            className="text-muted-foreground hover:text-primary"
+          >
+            <Copy className="h-5 w-5" />
+          </Button>
+        </div>
         <div className="relative">
              <Textarea
                 id="summary-text"
