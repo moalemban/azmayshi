@@ -11,7 +11,17 @@ export default function DepositCalculator() {
   const [interestRate, setInterestRate] = useState<string>('');
   const [duration, setDuration] = useState<string>(''); // in months
 
-  const amount = parseFloat(principal);
+  const handlePrincipalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    if (value === '') {
+      setPrincipal('');
+      return;
+    }
+    const numberValue = parseInt(value, 10);
+    setPrincipal(numberValue.toLocaleString('en-US'));
+  };
+
+  const amount = parseFloat(principal.replace(/,/g, ''));
   const rate = parseFloat(interestRate);
   const term = parseInt(duration);
 
@@ -41,7 +51,7 @@ export default function DepositCalculator() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="principalAmount" className="text-muted-foreground">مبلغ سپرده (تومان)</Label>
-          <Input id="principalAmount" type="number" value={principal} onChange={(e) => setPrincipal(e.target.value)} placeholder="۱۰,۰۰۰,۰۰۰" className="h-12 text-lg"/>
+          <Input id="principalAmount" type="text" value={principal} onChange={handlePrincipalChange} placeholder="۱۰,۰۰۰,۰۰۰" className="h-12 text-lg text-center" dir="ltr"/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="depositInterestRate" className="text-muted-foreground">نرخ سود سالانه (%)</Label>

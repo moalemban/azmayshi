@@ -18,7 +18,7 @@ export default function LoanCalculator() {
       return;
     }
     const numberValue = parseInt(value, 10);
-    setLoanAmount(numberValue.toLocaleString('fa-IR'));
+    setLoanAmount(numberValue.toLocaleString('en-US'));
   };
   
   const amount = parseFloat(loanAmount.replace(/,/g, ''));
