@@ -62,6 +62,8 @@ import {
   BookText,
   BrainCircuit,
   Repeat,
+  Copyright,
+  CalendarClock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -224,13 +226,23 @@ export default function Home() {
            </div>
         </div>
       </main>
-      <footer className="text-center p-6 text-muted-foreground text-sm font-body">
-        <div 
-          className="inline-flex items-center justify-center gap-2"
-        >
+      <footer className="text-center p-6 text-muted-foreground text-sm font-body space-y-4">
+        <div className="inline-flex items-center justify-center gap-2">
             <Globe className="w-5 h-5" />
             <span>
               توسعه داده شده توسط <span className="font-semibold text-foreground hover:underline">حسین طاهری</span>
+            </span>
+        </div>
+         <div className="inline-flex items-center justify-center gap-2">
+            <CalendarClock className="w-5 h-5" />
+            <span>
+              آخرین بروزرسانی: مرداد ۱۴۰۳
+            </span>
+        </div>
+        <div className="inline-flex items-center justify-center gap-2 pt-2 border-t border-border/50 w-full max-w-md mx-auto">
+            <Copyright className="w-5 h-5" />
+            <span>
+              کلیه حقوق مادی و معنوی این وب‌سایت محفوظ است و هرگونه کپی‌برداری پیگرد قانونی دارد.
             </span>
         </div>
       </footer>
