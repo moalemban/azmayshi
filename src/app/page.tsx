@@ -263,9 +263,9 @@ export default function Home() {
             </div>
         </div>
         <div className="inline-flex items-center justify-center gap-2 pt-2 border-t border-border/50 w-full max-w-lg mx-auto mt-4">
-            <span>
-              CopyRight © 2025
-            </span>
+            <p>
+              تمام حقوق مادی و معنوی این وبسایت متعلق به مجموعه تبدیلا است.
+            </p>
         </div>
       </footer>
       <ScrollToTop />
@@ -279,3 +279,6 @@ export default function Home() {
 
 
 
+
+
+    
