@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer, Globe, Scale, Gem, CircleDollarSign, Coins, Bot } from 'lucide-react';
+import Image from 'next/image';
+import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer, Globe, Scale, Gem, Coins, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -62,12 +63,22 @@ const PriceCardSkeleton = () => (
   </div>
 );
 
+const dollarIcon = (
+    <Image 
+        src="https://png.pngtree.com/png-vector/20241009/ourmid/pngtree-3d-realistic-dollar-icon-on-a-transparent-background-png-image_14037686.png"
+        alt="Dollar Icon"
+        width={24}
+        height={24}
+        className="w-6 h-6"
+    />
+);
+
 const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
     GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: <Globe /> },
     MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: <Scale /> },
     Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: <Gem /> },
     EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: <Coins /> },
-    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: <CircleDollarSign /> },
+    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: dollarIcon },
     USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: <Bot /> },
 };
 
