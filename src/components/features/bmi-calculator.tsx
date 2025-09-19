@@ -7,8 +7,8 @@ import { Label } from '@/components/ui/label';
 import { HeartPulse } from 'lucide-react';
 
 export default function BmiCalculator() {
-  const [height, setHeight] = useState<string>('');
-  const [weight, setWeight] = useState<string>('');
+  const [height, setHeight] = useState<string>('175');
+  const [weight, setWeight] = useState<string>('70');
   const [bmi, setBmi] = useState<{ value: string; category: string; color: string } | null>(null);
 
   const calculateBmi = () => {
@@ -45,6 +45,7 @@ export default function BmiCalculator() {
   
   useEffect(() => {
     calculateBmi();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, weight]);
 
   return (

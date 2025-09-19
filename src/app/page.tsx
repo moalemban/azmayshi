@@ -28,6 +28,7 @@ import TextSummarizer from '@/components/features/text-summarizer';
 import RialTomanConverter from '@/components/features/rial-toman-converter';
 import SavingsCalculator from '@/components/features/savings-calculator';
 import NationalIdValidator from '@/components/features/national-id-validator';
+import WorkoutTimer from '@/components/features/workout-timer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ScrollToTop from '@/components/layout/scroll-to-top';
 
@@ -71,6 +72,7 @@ import {
   Hourglass,
   TrendingUp,
   Fingerprint,
+  Dumbbell,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -116,9 +118,10 @@ const toolCategories = [
     ]
   },
   {
-    title: 'سلامت و روزمره',
-    icon: <Activity className="h-6 w-6 text-primary-foreground" />,
+    title: 'ورزش و سلامت',
+    icon: <HeartPulse className="h-6 w-6 text-primary-foreground" />,
     tools: [
+      { id: 'workout-timer', title: 'زمان‌سنج تمرین', icon: <Dumbbell className="h-8 w-8 text-orange-400" />, component: <WorkoutTimer /> },
       { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulse className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
       { id: 'distance-calculator', title: 'محاسبه مسافت', icon: <Map className="h-8 w-8 text-fuchsia-400" />, component: <DistanceCalculator /> },
     ]
@@ -271,6 +274,7 @@ export default function Home() {
 }
 
     
+
 
 
 
