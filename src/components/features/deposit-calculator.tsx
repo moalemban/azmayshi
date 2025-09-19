@@ -5,11 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PiggyBank } from 'lucide-react';
+import { Button } from '../ui/button';
+
+type InterestType = 'compound' | 'simple';
 
 export default function DepositCalculator() {
   const [principal, setPrincipal] = useState<string>('');
   const [interestRate, setInterestRate] = useState<string>('');
   const [duration, setDuration] = useState<string>(''); // in months
+  const [interestType, setInterestType] = useState<InterestType>('compound');
+
 
   const handlePrincipalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
@@ -30,21 +35,32 @@ export default function DepositCalculator() {
     return Math.round(num).toLocaleString('fa-IR');
   };
 
-  const { totalInterest, totalValue, hasValues } = useMemo(() => {
+  const { totalInterest, totalValue, monthlyInterest, hasValues } = useMemo(() => {
     if (isNaN(amount) || isNaN(rate) || isNaN(term) || amount <= 0 || rate < 0 || term <= 0) {
-      return { totalInterest: 0, totalValue: 0, hasValues: false };
+      return { totalInterest: 0, totalValue: 0, monthlyInterest: 0, hasValues: false };
     }
     
-    const monthlyRate = rate / 100 / 12;
-    const finalAmount = amount * Math.pow(1 + monthlyRate, term);
-    const profit = finalAmount - amount;
+    let profit = 0;
+    let finalAmount = 0;
     
+    if (interestType === 'compound') {
+      const monthlyRate = rate / 100 / 12;
+      finalAmount = amount * Math.pow(1 + monthlyRate, term);
+      profit = finalAmount - amount;
+    } else { // simple interest
+      profit = amount * (rate / 100) * (term / 12);
+      finalAmount = amount + profit;
+    }
+    
+    const monthlyProfit = profit / term;
+
     return {
       totalInterest: profit,
       totalValue: finalAmount,
+      monthlyInterest: monthlyProfit,
       hasValues: true
     };
-  }, [amount, rate, term]);
+  }, [amount, rate, term, interestType]);
 
   return (
     <CardContent className="flex flex-col gap-6">
@@ -62,9 +78,27 @@ export default function DepositCalculator() {
           <Input id="depositDuration" type="number" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="۱۲" className="h-12 text-lg" />
         </div>
       </div>
+      
+        <div className="flex items-center justify-center p-1 bg-muted rounded-lg w-full max-w-sm mx-auto">
+            {(['compound', 'simple'] as InterestType[]).map((type) => (
+            <Button 
+                key={type}
+                onClick={() => setInterestType(type)} 
+                variant={interestType === type ? 'default' : 'ghost'}
+                className={`w-full ${interestType === type ? '' : 'text-muted-foreground'}`}
+            >
+                {type === 'compound' ? 'سود مرکب' : 'سود ساده'}
+            </Button>
+            ))}
+        </div>
 
       {hasValues ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+              <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
+                  <p className="text-sm text-muted-foreground">سود ماهانه</p>
+                  <p className="text-2xl font-bold text-primary mt-1">{formatNumber(monthlyInterest)}</p>
+                  <p className="text-xs text-muted-foreground">تومان</p>
+              </div>
               <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
                   <p className="text-sm text-muted-foreground">سود کل</p>
                   <p className="text-2xl font-bold text-primary mt-1">{formatNumber(totalInterest)}</p>

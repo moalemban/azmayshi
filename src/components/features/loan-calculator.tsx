@@ -5,11 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Banknote } from 'lucide-react';
+import { Button } from '../ui/button';
+
+type InterestType = 'compound' | 'simple';
 
 export default function LoanCalculator() {
   const [loanAmount, setLoanAmount] = useState<string>('');
   const [interestRate, setInterestRate] = useState<string>('');
   const [loanTerm, setLoanTerm] = useState<string>(''); // in months
+  const [interestType, setInterestType] = useState<InterestType>('compound');
+
 
   const handleLoanAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
@@ -35,21 +40,25 @@ export default function LoanCalculator() {
       return { monthlyPayment: 0, totalInterest: 0, totalPayment: 0, hasValues: false };
     }
     
-    const monthlyRate = rate / 100 / 12;
-    
-    if (monthlyRate === 0) {
-        const payment = amount / term;
-        return {
-            monthlyPayment: payment,
-            totalInterest: 0,
-            totalPayment: amount,
-            hasValues: true,
-        };
+    let payment = 0;
+    let interestPaid = 0;
+    let totalPaid = 0;
+
+    if (interestType === 'compound') {
+        const monthlyRate = rate / 100 / 12;
+        if (monthlyRate === 0) {
+            payment = amount / term;
+        } else {
+            payment = amount * (monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
+        }
+        totalPaid = payment * term;
+        interestPaid = totalPaid - amount;
+    } else { // simple interest
+        interestPaid = amount * (rate / 100) * (term / 12);
+        totalPaid = amount + interestPaid;
+        payment = totalPaid / term;
     }
-    
-    const payment = amount * (monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
-    const totalPaid = payment * term;
-    const interestPaid = totalPaid - amount;
+
 
     return {
       monthlyPayment: payment,
@@ -57,7 +66,7 @@ export default function LoanCalculator() {
       totalPayment: totalPaid,
       hasValues: true
     };
-  }, [amount, rate, term]);
+  }, [amount, rate, term, interestType]);
 
 
   return (
@@ -76,6 +85,19 @@ export default function LoanCalculator() {
           <Input id="loanTerm" type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="۳۶" className="h-12 text-lg" />
         </div>
       </div>
+      
+        <div className="flex items-center justify-center p-1 bg-muted rounded-lg w-full max-w-sm mx-auto">
+            {(['compound', 'simple'] as InterestType[]).map((type) => (
+            <Button 
+                key={type}
+                onClick={() => setInterestType(type)} 
+                variant={interestType === type ? 'default' : 'ghost'}
+                className={`w-full ${interestType === type ? '' : 'text-muted-foreground'}`}
+            >
+                {type === 'compound' ? 'سود مرکب' : 'سود ساده'}
+            </Button>
+            ))}
+        </div>
 
       {hasValues ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
