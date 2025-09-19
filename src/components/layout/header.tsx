@@ -1,5 +1,6 @@
 import { ThemeToggle } from './theme-toggle';
 import Image from 'next/image';
+import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 
@@ -9,7 +10,7 @@ export default function Header() {
   return (
     <header className="glass-effect rounded-b-3xl p-4 mb-8 sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
             {logo && (
               <Image 
@@ -26,7 +27,7 @@ export default function Header() {
             <h1 className="text-2xl sm:text-3xl font-display font-bold gradient-text">تبدیلا</h1>
             <p className="text-muted-foreground text-sm font-body hidden sm:block">دستیار هوشمند شما ✨</p>
           </div>
-        </div>
+        </Link>
         <div className="flex items-center gap-2">
             <div className="hidden md:flex items-center space-x-2 space-x-reverse bg-background/50 rounded-full px-4 py-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
