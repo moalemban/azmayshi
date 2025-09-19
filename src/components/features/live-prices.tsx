@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer, Globe, Scale, Gem, Coins, Bot } from 'lucide-react';
+import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer, Scale, Gem, Coins, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -73,8 +73,18 @@ const dollarIcon = (
     />
 );
 
+const goldOunceIcon = (
+    <Image 
+        src="https://cdn3d.iconscout.com/3d/premium/thumb/gold-3d-icon-png-download-4060918.png"
+        alt="Gold Ounce Icon"
+        width={28}
+        height={28}
+        className="w-7 h-7"
+    />
+);
+
 const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: <Globe /> },
+    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: goldOunceIcon },
     MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: <Scale /> },
     Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: <Gem /> },
     EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: <Coins /> },

@@ -39,6 +39,12 @@ const nextConfig: NextConfig = {
         hostname: 'png.pngtree.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn3d.iconscout.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
