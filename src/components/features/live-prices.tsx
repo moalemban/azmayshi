@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer, Scale, Gem, Coins, Bot } from 'lucide-react';
+import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer, Scale, Gem, Coins, Bot, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -63,43 +63,13 @@ const PriceCardSkeleton = () => (
   </div>
 );
 
-const dollarIcon = (
-    <Image 
-        src="https://png.pngtree.com/png-vector/20241009/ourmid/pngtree-3d-realistic-dollar-icon-on-a-transparent-background-png-image_14037686.png"
-        alt="Dollar Icon"
-        width={28}
-        height={28}
-        className="w-7 h-7"
-    />
-);
-
-const goldOunceIcon = (
-    <Image 
-        src="https://cdn3d.iconscout.com/3d/premium/thumb/gold-3d-icon-png-download-4060918.png"
-        alt="Gold Ounce Icon"
-        width={28}
-        height={28}
-        className="w-7 h-7"
-    />
-);
-
-const emamiCoinIcon = (
-    <Image 
-        src="https://ice.ir/assets/images/home/section/coin.webp"
-        alt="Emami Coin Icon"
-        width={28}
-        height={28}
-        className="w-7 h-7"
-    />
-);
-
 
 const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: goldOunceIcon },
+    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: <Globe /> },
     MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: <Scale /> },
     Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: <Gem /> },
-    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: emamiCoinIcon },
-    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: dollarIcon },
+    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: <Coins /> },
+    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: <Coins /> },
     USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: <Bot /> },
 };
 
