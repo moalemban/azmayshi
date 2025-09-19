@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "logo",
-      "description": "The main logo for the Tabdila application.",
-      "imageUrl": "https://picsum.photos/seed/tabdila-logo/100/100",
-      "imageHint": "abstract logo"
+      "description": "The main logo for the Tabdila application, an icon of a toolbox.",
+      "imageUrl": "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/79/x/toolbox-clipart-md.png",
+      "imageHint": "toolbox icon"
     }
   ]
 }

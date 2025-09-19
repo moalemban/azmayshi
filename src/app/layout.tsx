@@ -1,18 +1,19 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Vazirmatn } from 'next/font/google';
 
 const vazirmatn = Vazirmatn({ subsets: ['latin', 'arabic'], variable: '--font-vazirmatn' });
 
-
-const logo = PlaceHolderImages.find(p => p.id === 'logo');
-
 export const metadata: Metadata = {
   title: 'تبدیلا | دستیار هوشمند شما',
   description: 'دستیار هوشمند شما برای انواع محاسبات و تبدیل واحدها',
+  manifest: '/manifest.json',
+};
+
+export const viewport: Viewport = {
+  themeColor: '#2a0e5c',
 };
 
 export default function RootLayout({

@@ -11,14 +11,14 @@ export default function Header() {
     <header className="glass-effect rounded-b-3xl p-4 mb-8 sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-primary/10 rounded-full p-2">
             {logo && (
               <Image 
                 src={logo.imageUrl}
                 width={48}
                 height={48}
                 alt={logo.description}
-                className="animate-float rounded-lg"
+                className="animate-float"
                 data-ai-hint={logo.imageHint}
               />
             )}

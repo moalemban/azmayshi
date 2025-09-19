@@ -1,8 +1,14 @@
-// This file is deprecated. Please use next.config.mjs instead.
-import type {NextConfig} from 'next';
+/** @type {import('next').NextConfig} */
+import withPWA from '@ducanh2912/next-pwa';
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const pwa = withPWA({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
+
+const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -53,7 +59,7 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-       {
+      {
         protocol: 'https',
         hostname: 'creazilla-store.fra1.digitaloceanspaces.com',
         port: '',
@@ -67,4 +73,4 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ['*'],
 };
 
-export default nextConfig;
+export default pwa(nextConfig);
