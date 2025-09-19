@@ -3,6 +3,10 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Vazirmatn } from 'next/font/google';
+
+const vazirmatn = Vazirmatn({ subsets: ['latin', 'arabic'], variable: '--font-vazirmatn' });
+
 
 const logo = PlaceHolderImages.find(p => p.id === 'logo');
 
@@ -19,14 +23,9 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" />
       </head>
-      <body>
+      <body className={vazirmatn.variable}>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"

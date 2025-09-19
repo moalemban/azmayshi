@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer, Scale, Gem, Coins, Bot, Globe } from 'lucide-react';
+import { CandlestickChart, ArrowUp, ArrowDown, RefreshCw, Timer } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -30,8 +30,12 @@ const PriceChangeIndicator = ({ change }: { change: string | null }) => {
 const PriceCard = ({ item }: { item: LivePrice }) => (
     <div className="glass-effect rounded-2xl p-3 card-hover w-full flex-shrink-0">
         <div className="flex items-center gap-2">
-            <div className="text-primary w-8 h-8 flex items-center justify-center">
-                {React.isValidElement(item.icon) ? React.cloneElement(item.icon, { className: 'w-7 h-7' }) : item.icon}
+            <div className="w-8 h-8 flex items-center justify-center">
+                {typeof item.icon === 'string' ? (
+                     <Image src={item.icon} alt={`${item.name} icon`} width={28} height={28} className='object-contain'/>
+                ) : (
+                    React.isValidElement(item.icon) ? React.cloneElement(item.icon, { className: 'w-7 h-7 text-primary' }) : item.icon
+                )}
             </div>
             <div className="flex-grow text-right">
                 <h3 className="text-foreground font-display font-semibold text-sm truncate">{item.name}</h3>
@@ -65,12 +69,12 @@ const PriceCardSkeleton = () => (
 
 
 const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: <Globe /> },
-    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: <Scale /> },
-    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: <Gem /> },
-    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: <Coins /> },
-    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: <Coins /> },
-    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: <Bot /> },
+    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-3d-icon-png-download-4060918.png' },
+    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-coin-5645226-4702196.png' },
+    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bar-4060920-3363673.png' },
+    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: 'https://ice.ir/assets/images/home/section/coin.webp' },
+    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: 'https://png.pngtree.com/png-vector/20241009/ourmid/pngtree-3d-realistic-dollar-icon-on-a-transparent-background-png-image_14037686.png' },
+    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/tether-usdt-5334659-4468691.png' },
 };
 
 
