@@ -5,7 +5,7 @@ import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Settings, Play, Pause, Redo, Plus, Minus, Repeat, History, BarChart } from 'lucide-react';
+import { Settings, Play, Pause, Redo, Plus, Minus, Repeat, History, BarChart, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
@@ -210,7 +210,7 @@ export default function WorkoutTimer() {
             <div className='flex gap-2 justify-center'>
                 <StatDisplay icon={<Repeat className="w-6 h-6 text-blue-400"/>} label="تعداد ست" value={history.length}/>
                 <StatDisplay icon={<Plus className="w-6 h-6 text-green-400"/>} label="کل حرکات" value={totalReps}/>
-                <StatDisplay icon={<Timer className="w-6 h-6 text-orange-400"/>} label="زمان تمرین" value={formatSeconds(totalWorkoutTime)}/>
+                <StatDisplay icon={<Clock className="w-6 h-6 text-orange-400"/>} label="زمان تمرین" value={formatSeconds(totalWorkoutTime)}/>
                 <StatDisplay icon={<Pause className="w-6 h-6 text-yellow-400"/>} label="زمان استراحت" value={formatSeconds(totalRestTime)}/>
             </div>
             <Button onClick={handleStart} size="lg" className="w-full h-12 mt-4">شروع تمرین جدید</Button>
@@ -273,3 +273,5 @@ export default function WorkoutTimer() {
     </CardContent>
   );
 }
+
+    
