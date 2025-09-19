@@ -64,16 +64,20 @@ export default function WorkoutTimer() {
   const { toast } = useToast();
 
   useEffect(() => {
+    // This should only run on the client
     audioRef.current = new Audio('https://cdn.pixabay.com/audio/2021/08/04/audio_12b0c142c5.mp3');
   }, []);
 
   const playSound = useCallback(() => {
-    audioRef.current?.play().catch(e => console.log("Audio play failed:", e));
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(e => console.log("Audio play failed:", e));
+    }
   }, []);
   
   const totalWorkoutTime = history.reduce((acc, h) => acc + h.duration, 0);
   const totalReps = history.reduce((acc, h) => acc + h.reps, 0);
-  const totalRestTime = (history.length -1) * restTime;
+  const totalRestTime = history.length * restTime;
 
 
   const handleStart = () => {
@@ -82,7 +86,8 @@ export default function WorkoutTimer() {
     setTimeLeft(workoutTime);
     setReps(0);
     setHistory([]);
-    toast({ title: "شروع تمرین!", description: `ست ۱ از ${sets} شروع شد.` });
+    toast({ title: "تمرین شروع شد!", description: `ست ۱ از ${sets} آغاز شد.` });
+    playSound();
   };
   
   const handlePause = () => {
@@ -106,7 +111,9 @@ export default function WorkoutTimer() {
   };
 
   const finishSet = () => {
-      const newHistory: SetHistory = { set: currentSet, reps: reps, duration: workoutTime };
+      // Use the actual time spent if it was paused
+      const duration = (phase === 'paused' && pausedFrom === 'workout') ? workoutTime - timeLeft : workoutTime;
+      const newHistory: SetHistory = { set: currentSet, reps: reps, duration: duration };
       setHistory(prev => [...prev, newHistory]);
       playSound();
 
@@ -117,7 +124,7 @@ export default function WorkoutTimer() {
           toast({ title: `پایان ست ${currentSet}`, description: `زمان استراحت (${restTime} ثانیه) شروع شد.` });
         } else {
            setPhase('paused');
-           setPausedFrom('rest'); // So resume goes to rest
+           setPausedFrom('rest');
            toast({ title: `پایان ست ${currentSet}`, description: 'برای شروع استراحت، دکمه پلی را بزنید.' });
         }
       } else {
@@ -134,25 +141,27 @@ export default function WorkoutTimer() {
       setReps(0);
       toast({ title: `شروع ست ${currentSet + 1}` });
   }
+  
+  const skipRest = () => {
+    if (phase === 'rest' || (phase === 'paused' && pausedFrom === 'rest')) {
+       finishRest();
+    }
+  }
 
   useEffect(() => {
-    if (phase === 'workout' || phase === 'rest') {
+    if ((phase === 'workout' || phase === 'rest') && timeLeft > 0) {
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => prev - 1);
       }, 1000);
+    } else if (timeLeft <= 0) {
+       if (phase === 'workout') finishSet();
+       if (phase === 'rest') finishRest();
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
     }
     return () => { if(timerRef.current) clearInterval(timerRef.current) };
-  }, [phase]);
-
-  useEffect(() => {
-    if (timeLeft <= 0 && (phase === 'workout' || phase === 'rest')) {
-       if (phase === 'workout') finishSet();
-       if (phase === 'rest') finishRest();
-    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, phase]);
+  }, [phase, timeLeft]);
 
   const isRunning = phase === 'workout' || phase === 'rest';
 
@@ -163,7 +172,7 @@ export default function WorkoutTimer() {
   }
   
   const StatDisplay = ({ icon, label, value }: { icon: React.ReactNode, label: string, value: string | number }) => (
-    <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-background/50 flex-1 min-w-[80px]">
+    <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-background/50 flex-1 min-w-[80px] text-center">
         {icon}
         <span className="text-sm font-semibold text-muted-foreground mt-1">{label}</span>
         <span className="text-lg font-bold text-foreground">{value}</span>
@@ -193,7 +202,7 @@ export default function WorkoutTimer() {
                 </div>
             </div>
              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                <Label htmlFor="timer-mode" className="text-muted-foreground">حالت خودکار (تمرین » استراحت » ست بعدی)</Label>
+                <Label htmlFor="timer-mode" className="text-muted-foreground cursor-pointer">حالت خودکار (تمرین » استراحت » ست بعدی)</Label>
                 <Switch id="timer-mode" checked={timerMode === 'auto'} onCheckedChange={(checked) => setTimerMode(checked ? 'auto' : 'manual')} />
             </div>
         </div>
@@ -207,41 +216,59 @@ export default function WorkoutTimer() {
                 <BarChart className='w-6 h-6 text-primary'/>
                 <h3 className="text-xl font-semibold text-primary">خلاصه تمرین امروز</h3>
             </div>
-            <div className='flex gap-2 justify-center'>
+            <div className='grid grid-cols-2 gap-3 mt-4'>
                 <StatDisplay icon={<Repeat className="w-6 h-6 text-blue-400"/>} label="تعداد ست" value={history.length}/>
-                <StatDisplay icon={<Plus className="w-6 h-6 text-green-400"/>} label="کل حرکات" value={totalReps}/>
+                <StatDisplay icon={<Plus className="w-6 h-6 text-green-400"/>} label="کل حرکات" value={totalReps.toLocaleString('fa-IR')}/>
                 <StatDisplay icon={<Clock className="w-6 h-6 text-orange-400"/>} label="زمان تمرین" value={formatSeconds(totalWorkoutTime)}/>
                 <StatDisplay icon={<Pause className="w-6 h-6 text-yellow-400"/>} label="زمان استراحت" value={formatSeconds(totalRestTime)}/>
             </div>
+             <Separator className="my-4" />
+             <div className='space-y-2 text-right'>
+                <h4 className='font-semibold flex items-center gap-2'><History className='w-5 h-5'/> تاریخچه ست‌ها</h4>
+                 <div className='max-h-40 overflow-y-auto space-y-1 pr-2'>
+                     {history.map(h => (
+                         <div key={h.set} className='flex justify-between items-center bg-muted/30 p-2 rounded-md text-sm'>
+                             <span className='font-bold'>ست {h.set}</span>
+                             <div className='flex gap-4 font-mono'>
+                                 <span>{h.reps} حرکت</span>
+                                 <span>{formatSeconds(h.duration)}</span>
+                             </div>
+                         </div>
+                     ))}
+                 </div>
+             </div>
             <Button onClick={handleStart} size="lg" className="w-full h-12 mt-4">شروع تمرین جدید</Button>
          </div>
        )
     }
     
-    const totalDuration = phase === 'workout' || (phase === 'paused' && pausedFrom === 'workout') ? workoutTime : restTime;
+    const totalDuration = (phase === 'workout' || (phase === 'paused' && pausedFrom === 'workout')) ? workoutTime : restTime;
     const percentage = totalDuration > 0 ? (timeLeft / totalDuration) * 100 : 0;
     
     return (
       <div className="flex flex-col items-center gap-4">
         <CircularProgress 
             percentage={percentage} 
-            colorClass={phase === 'workout' ? 'text-green-500' : 'text-yellow-500'}
+            colorClass={phase === 'workout' || pausedFrom === 'workout' ? 'text-green-500' : 'text-yellow-500'}
         >
-          <p className="text-xl font-semibold">{phase === 'workout' ? `ست ${currentSet}` : (phase === 'rest' ? 'استراحت' : 'متوقف شده')}</p>
+          <p className="text-xl font-semibold">{phase === 'workout' ? `ست ${currentSet}` : (phase === 'rest' ? 'استراحت' : (pausedFrom === 'rest' ? 'شروع استراحت؟' : 'متوقف شده'))}</p>
           <p className="text-6xl font-mono">{formatSeconds(timeLeft)}</p>
           <p className="text-lg text-muted-foreground">از {sets} ست</p>
         </CircularProgress>
         
         { (phase === 'workout' || (phase === 'paused' && pausedFrom === 'workout')) && (
-          <div className='flex flex-col items-center gap-2'>
+          <div className='flex flex-col items-center gap-2 w-full'>
             <p className='text-muted-foreground'>تعداد حرکت</p>
             <div className="flex items-center gap-4">
               <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))} disabled={isRunning}><Minus/></Button>
               <span className="text-4xl font-bold w-20 text-center">{reps}</span>
               <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)} disabled={isRunning}><Plus/></Button>
             </div>
-            <Button className='w-full mt-2' onClick={() => setReps(r => r + 1)} disabled={!isRunning}><Repeat className='w-4 h-4 ml-2'/> ثبت حرکت</Button>
           </div>
+        )}
+
+        {(phase === 'rest' || (phase === 'paused' && pausedFrom === 'rest')) && (
+            <Button onClick={skipRest} variant="secondary" className='w-full'>رد کردن استراحت</Button>
         )}
       </div>
     );
@@ -266,12 +293,17 @@ export default function WorkoutTimer() {
                 >
                     {isRunning ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
                 </Button>
-                <div className='w-16'></div>
+                
+                { (phase === 'workout' || (phase === 'paused' && pausedFrom === 'workout')) ? (
+                    <Button onClick={finishSet} variant="secondary" className='h-16 w-16 rounded-full p-0 flex flex-col leading-tight text-xs' disabled={isRunning}>
+                        <span>پایان</span>
+                        <span>ست</span>
+                    </Button>
+                ) : <div className='w-16'></div> }
+
             </div>
         )}
 
     </CardContent>
   );
 }
-
-    
