@@ -45,6 +45,12 @@ const nextConfig: NextConfig = {
         hostname: 'cdn3d.iconscout.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ice.ir',
+        port: '',
+        pathname: '/**',
       }
     ],
   },

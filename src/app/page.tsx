@@ -90,18 +90,17 @@ const toolCategories = [
     tools: [
       { id: 'unit-converter', title: 'تبدیل واحد', icon: <Scale className="h-8 w-8 text-blue-400" />, component: <UnitConverter /> },
       { id: 'currency-converter', title: 'تبدیل ارز', icon: <Landmark className="h-8 w-8 text-green-400" />, component: <CurrencyConverter /> },
+      { id: 'date-converter', title: 'تبدیل تاریخ', icon: <CalendarDays className="h-8 w-8 text-purple-400" />, component: <DateConverter /> },
       { id: 'rial-toman-converter', title: 'ریال و تومان', icon: <Repeat className="h-8 w-8 text-emerald-400" />, component: <RialTomanConverter /> },
       { id: 'number-to-words', title: 'عدد به حروف', icon: <SpellCheck className="h-8 w-8 text-amber-400" />, component: <NumberToWordsConverter /> },
       { id: 'number-system', title: 'تبدیل ارقام', icon: <Binary className="h-8 w-8 text-sky-400" />, component: <NumberSystemConverter /> },
       { id: 'binary-converter', title: 'متن و باینری', icon: <Binary className="h-8 w-8 text-cyan-400" />, component: <BinaryConverter /> },
-      { id: 'text-analyzer', title: 'تحلیلگر متن', icon: <FileText className="h-8 w-8 text-yellow-400" />, component: <TextAnalyzer /> },
     ]
   },
   {
     title: 'ابزارهای زمان و تاریخ',
     icon: <CalendarClock className="h-6 w-6 text-primary-foreground" />,
     tools: [
-      { id: 'date-converter', title: 'تبدیل تاریخ', icon: <CalendarDays className="h-8 w-8 text-purple-400" />, component: <DateConverter /> },
       { id: 'age-calculator', title: 'محاسبه سن', icon: <Gift className="h-8 w-8 text-pink-400" />, component: <AgeCalculator /> },
       { id: 'stopwatch', title: 'کرونومتر', icon: <Timer className="h-8 w-8 text-indigo-400" />, component: <Stopwatch /> },
       { id: 'countdown-timer', title: 'تایمر شمارش معکوس', icon: <Hourglass className="h-8 w-8 text-blue-400" />, component: <CountdownTimer /> },
@@ -139,6 +138,7 @@ const toolCategories = [
       { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, component: <IpDetector /> },
       { id: 'image-optimizer', title: 'بهینه‌ساز تصویر', icon: <Image className="h-8 w-8 text-orange-400" />, component: <ImageOptimizer /> },
       { id: 'website-screenshot', title: 'اسکرین‌شات وب‌سایت', icon: <Monitor className="h-8 w-8 text-teal-400" />, component: <WebsiteScreenshot /> },
+      { id: 'text-analyzer', title: 'تحلیلگر متن', icon: <FileText className="h-8 w-8 text-yellow-400" />, component: <TextAnalyzer /> },
     ]
   }
 ];
@@ -274,6 +274,7 @@ export default function Home() {
 }
 
     
+
 
 
 

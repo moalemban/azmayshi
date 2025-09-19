@@ -83,11 +83,22 @@ const goldOunceIcon = (
     />
 );
 
+const emamiCoinIcon = (
+    <Image 
+        src="https://ice.ir/assets/images/home/section/coin.webp"
+        alt="Emami Coin Icon"
+        width={28}
+        height={28}
+        className="w-7 h-7"
+    />
+);
+
+
 const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
     GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: goldOunceIcon },
     MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: <Scale /> },
     Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: <Gem /> },
-    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: <Coins /> },
+    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: emamiCoinIcon },
     Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: dollarIcon },
     USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: <Bot /> },
 };
