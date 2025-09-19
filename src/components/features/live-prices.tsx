@@ -31,7 +31,7 @@ const PriceCard = ({ item }: { item: LivePrice }) => (
     <div className="glass-effect rounded-2xl p-3 card-hover w-full flex-shrink-0">
         <div className="flex items-center gap-2">
             <div className="text-primary w-8 h-8 flex items-center justify-center">
-                {React.isValidElement(item.icon) ? React.cloneElement(item.icon, { className: 'w-6 h-6' }) : item.icon}
+                {React.isValidElement(item.icon) ? React.cloneElement(item.icon, { className: 'w-7 h-7' }) : item.icon}
             </div>
             <div className="flex-grow text-right">
                 <h3 className="text-foreground font-display font-semibold text-sm truncate">{item.name}</h3>
@@ -67,9 +67,9 @@ const dollarIcon = (
     <Image 
         src="https://png.pngtree.com/png-vector/20241009/ourmid/pngtree-3d-realistic-dollar-icon-on-a-transparent-background-png-image_14037686.png"
         alt="Dollar Icon"
-        width={24}
-        height={24}
-        className="w-6 h-6"
+        width={28}
+        height={28}
+        className="w-7 h-7"
     />
 );
 
