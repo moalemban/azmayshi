@@ -9,9 +9,6 @@ const logo = PlaceHolderImages.find(p => p.id === 'logo');
 export const metadata: Metadata = {
   title: 'تبدیلا | دستیار هوشمند شما',
   description: 'دستیار هوشمند شما برای انواع محاسبات و تبدیل واحدها',
-  icons: {
-    icon: logo?.imageUrl || '',
-  },
 };
 
 export default function RootLayout({
