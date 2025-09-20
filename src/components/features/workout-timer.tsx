@@ -86,7 +86,7 @@ export default function WorkoutTimer() {
     setTimeLeft(workoutTime);
     setReps(0);
     setHistory([]);
-    toast({ title: "تمرین شروع شد!", description: `ست ۱ از ${sets} آغاز شد.` });
+    toast({ title: "تمرین شروع شد!", description: `ست ۱ از ${sets.toLocaleString('fa-IR')} آغاز شد.` });
     playSound();
   };
   
@@ -101,6 +101,10 @@ export default function WorkoutTimer() {
       // Manually starting the rest period
       setTimeLeft(restTime - 1);
       setTimeout(() => setTimeLeft(restTime), 0);
+    }
+    if(pausedFrom === 'workout' && timerMode === 'manual' && timeLeft === workoutTime) {
+        setTimeLeft(workoutTime -1);
+        setTimeout(() => setTimeLeft(workoutTime), 0);
     }
     if(pausedFrom) setPhase(pausedFrom);
     setPausedFrom(null);
@@ -127,12 +131,12 @@ export default function WorkoutTimer() {
         if (timerMode === 'auto') {
           setPhase('rest');
           setTimeLeft(restTime);
-          toast({ title: `پایان ست ${currentSet}`, description: `زمان استراحت (${restTime} ثانیه) شروع شد.` });
+          toast({ title: `پایان ست ${currentSet.toLocaleString('fa-IR')}`, description: `زمان استراحت (${restTime.toLocaleString('fa-IR')} ثانیه) شروع شد.` });
         } else {
            setPhase('paused');
            setPausedFrom('rest');
            setTimeLeft(restTime);
-           toast({ title: `پایان ست ${currentSet}`, description: 'برای شروع استراحت، دکمه پلی را بزنید.' });
+           toast({ title: `پایان ست ${currentSet.toLocaleString('fa-IR')}`, description: 'برای شروع استراحت، دکمه پلی را بزنید.' });
         }
       } else {
         setPhase('finished');
@@ -148,13 +152,13 @@ export default function WorkoutTimer() {
         setPhase('workout');
         setTimeLeft(workoutTime);
         setReps(0);
-        toast({ title: `شروع ست ${currentSet + 1}` });
+        toast({ title: `شروع ست ${(currentSet + 1).toLocaleString('fa-IR')}` });
       } else {
         setPhase('paused');
         setPausedFrom('workout');
         setTimeLeft(workoutTime);
         setReps(0);
-        toast({ title: `پایان استراحت`, description: `برای شروع ست ${currentSet + 1} دکمه پلی را بزنید.` });
+        toast({ title: `پایان استراحت`, description: `برای شروع ست ${(currentSet + 1).toLocaleString('fa-IR')} دکمه پلی را بزنید.` });
       }
   }
   
@@ -281,7 +285,7 @@ export default function WorkoutTimer() {
             percentage={percentage} 
             colorClass={phase === 'workout' || pausedFrom === 'workout' ? 'text-green-500' : 'text-yellow-500'}
         >
-          <p className="text-xl font-semibold font-display">{phase === 'workout' ? `ست ${currentSet.toLocaleString('fa-IR')}` : (phase === 'rest' ? 'استراحت' : (pausedFrom === 'rest' ? 'شروع استراحت؟' : 'متوقف شده'))}</p>
+          <p className="text-xl font-semibold font-display">{phase === 'workout' || pausedFrom === 'workout' ? `ست ${currentSet.toLocaleString('fa-IR')}` : (phase === 'rest' ? 'استراحت' : (pausedFrom === 'rest' ? 'شروع استراحت؟' : 'متوقف شده'))}</p>
           <p className="text-6xl font-display text-glow">{formatSeconds(timeLeft)}</p>
           <p className="text-lg text-muted-foreground font-display">از {sets.toLocaleString('fa-IR')} ست</p>
         </CircularProgress>
@@ -290,11 +294,11 @@ export default function WorkoutTimer() {
           <div className='flex flex-col items-center gap-2 w-full'>
             <p className='text-muted-foreground'>تعداد حرکت</p>
             <div className="flex items-center gap-4">
-              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))} disabled={isRunning}><Minus/></Button>
+              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))}><Minus/></Button>
               <span className="text-4xl font-bold w-20 text-center font-display">{reps.toLocaleString('fa-IR')}</span>
-              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)} disabled={isRunning}><Plus/></Button>
+              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)}><Plus/></Button>
             </div>
-             <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2" disabled={isRunning}>
+             <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2">
                 <Plus className="w-4 h-4 ml-2"/> ثبت حرکت
             </Button>
           </div>
