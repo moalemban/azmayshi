@@ -55,9 +55,9 @@ const toEnglishDigits = (str: string): string => {
 
 export default function WorkoutTimer() {
   // Settings
-  const [sets, setSets] = useState(4);
-  const [workoutTime, setWorkoutTime] = useState(45);
-  const [restTime, setRestTime] = useState(15);
+  const [sets, setSets] = useState('');
+  const [workoutTime, setWorkoutTime] = useState('');
+  const [restTime, setRestTime] = useState('');
   const [timerMode, setTimerMode] = useState<TimerMode>('auto');
   
   // State
@@ -73,7 +73,6 @@ export default function WorkoutTimer() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // This should only run on the client
     audioRef.current = new Audio('https://cdn.pixabay.com/audio/2021/08/04/audio_12b0c142c5.mp3');
   }, []);
 
@@ -86,16 +85,28 @@ export default function WorkoutTimer() {
   
   const totalWorkoutTime = history.reduce((acc, h) => acc + h.duration, 0);
   const totalReps = history.reduce((acc, h) => acc + h.reps, 0);
-  const totalRestTime = history.length > 0 ? (history.length -1) * restTime : 0;
+  const totalRestTime = history.length > 0 ? (history.length -1) * (parseInt(restTime) || 0) : 0;
 
 
   const handleStart = () => {
+    const numSets = parseInt(toEnglishDigits(sets), 10);
+    const numWorkoutTime = parseInt(toEnglishDigits(workoutTime), 10);
+
+    if (isNaN(numSets) || numSets <= 0) {
+      toast({ title: "خطا", description: "تعداد ست‌ها باید یک عدد بزرگتر از صفر باشد.", variant: "destructive" });
+      return;
+    }
+     if (isNaN(numWorkoutTime) || numWorkoutTime <= 0) {
+      toast({ title: "خطا", description: "زمان تمرین باید بزرگتر از صفر باشد.", variant: "destructive" });
+      return;
+    }
+    
     setCurrentSet(1);
     setPhase('workout');
-    setTimeLeft(workoutTime);
+    setTimeLeft(numWorkoutTime);
     setReps(0);
     setHistory([]);
-    toast({ title: "تمرین شروع شد!", description: `ست ${toPersianDigits(currentSet)} از ${toPersianDigits(sets)} آغاز شد.` });
+    toast({ title: "تمرین شروع شد!", description: `ست ${toPersianDigits(1)} از ${toPersianDigits(numSets)} آغاز شد.` });
     playSound();
   };
   
@@ -123,21 +134,25 @@ export default function WorkoutTimer() {
   };
 
   const finishSet = () => {
-      const duration = (phase === 'workout' ? workoutTime - timeLeft : workoutTime);
+      const numWorkoutTime = parseInt(toEnglishDigits(workoutTime), 10);
+      const duration = (phase === 'workout' ? numWorkoutTime - timeLeft : numWorkoutTime);
       const newHistory: SetHistory = { set: currentSet, reps: reps, duration: duration };
       setHistory(prev => [...prev, newHistory]);
       playSound();
 
-      if (currentSet < sets) {
-        if (timerMode === 'auto') {
+      const numSets = parseInt(toEnglishDigits(sets), 10);
+      const numRestTime = parseInt(toEnglishDigits(restTime) || '0', 10);
+
+      if (currentSet < numSets) {
+        if (timerMode === 'auto' && numRestTime > 0) {
           setPhase('rest');
-          setTimeLeft(restTime);
-          toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: `زمان استراحت (${toPersianDigits(restTime)} ثانیه) شروع شد.` });
+          setTimeLeft(numRestTime);
+          toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: `زمان استراحت (${toPersianDigits(numRestTime)} ثانیه) شروع شد.` });
         } else {
            setPhase('paused');
            setPausedFrom('rest');
-           setTimeLeft(restTime);
-           toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: 'برای شروع استراحت، دکمه پلی را بزنید.' });
+           setTimeLeft(numRestTime);
+           toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: numRestTime > 0 ? 'برای شروع استراحت، دکمه پلی را بزنید.' : 'برای شروع ست بعدی، دکمه پلی را بزنید.' });
         }
       } else {
         setPhase('finished');
@@ -150,16 +165,17 @@ export default function WorkoutTimer() {
       playSound();
       setCurrentSet(prev => prev + 1);
       const nextSet = currentSet + 1;
+      const numWorkoutTime = parseInt(toEnglishDigits(workoutTime), 10);
       
       if (timerMode === 'auto') {
         setPhase('workout');
-        setTimeLeft(workoutTime);
+        setTimeLeft(numWorkoutTime);
         setReps(0);
         toast({ title: `شروع ست ${toPersianDigits(nextSet)}` });
       } else {
         setPhase('paused');
         setPausedFrom('workout');
-        setTimeLeft(workoutTime);
+        setTimeLeft(numWorkoutTime);
         setReps(0);
         toast({ title: `پایان استراحت`, description: `برای شروع ست ${toPersianDigits(nextSet)} دکمه پلی را بزنید.` });
       }
@@ -201,27 +217,10 @@ export default function WorkoutTimer() {
     </div>
   );
   
-  const NumberInput = ({ id, value, onChange }: { id: string, value: number, onChange: (val: number) => void}) => {
-    const [displayValue, setDisplayValue] = useState(toPersianDigits(value));
-    
-    useEffect(() => {
-        setDisplayValue(toPersianDigits(value));
-    }, [value]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const persianVal = e.target.value.replace(/[^۰-۹]/g, '');
-        setDisplayValue(persianVal);
-        const englishVal = toEnglishDigits(persianVal);
-        const num = parseInt(englishVal, 10);
-        if (!isNaN(num)) {
-            onChange(num);
-        } else if (englishVal === '') {
-            onChange(0);
-        }
-    };
-
-    return <Input id={id} value={displayValue} onChange={handleChange} className="h-14 text-2xl text-center font-display" />;
-  }
+  const handleSettingChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
+    const englishValue = toEnglishDigits(value);
+    setter(englishValue.replace(/[^0-9]/g, ''));
+  };
 
 
   const renderContent = () => {
@@ -234,12 +233,12 @@ export default function WorkoutTimer() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <Label htmlFor="sets">تعداد ست</Label>
-              <NumberInput id="sets" value={sets} onChange={(val) => setSets(Math.max(1, val))} />
+              <Label htmlFor="sets">تعداد ست (ضروری)</Label>
+              <Input id="sets" value={toPersianDigits(sets)} onChange={(e) => handleSettingChange(setSets, e.target.value)} placeholder="۴" className="h-14 text-2xl text-center font-display" />
             </div>
             <div className="space-y-1">
               <Label htmlFor="workout-time">زمان تمرین (ثانیه)</Label>
-              <NumberInput id="workout-time" value={workoutTime} onChange={(val) => setWorkoutTime(Math.max(1, val))} />
+              <Input id="workout-time" value={toPersianDigits(workoutTime)} onChange={(e) => handleSettingChange(setWorkoutTime, e.target.value)} placeholder="۴۵" className="h-14 text-2xl text-center font-display" />
             </div>
           </div>
           <div className="space-y-2">
@@ -261,7 +260,7 @@ export default function WorkoutTimer() {
           {timerMode === 'auto' && (
              <div className="space-y-1">
                 <Label htmlFor="rest-time">زمان استراحت (ثانیه)</Label>
-                <NumberInput id="rest-time" value={restTime} onChange={e => setRestTime(Math.max(0, e))} />
+                 <Input id="rest-time" value={toPersianDigits(restTime)} onChange={(e) => handleSettingChange(setRestTime, e.target.value)} placeholder="۱۵" className="h-14 text-2xl text-center font-display" />
             </div>
           )}
         </div>
@@ -296,12 +295,14 @@ export default function WorkoutTimer() {
                      ))}
                  </div>
              </div>
-            <Button onClick={handleStart} size="lg" className="w-full h-12 mt-4">شروع تمرین جدید</Button>
+            <Button onClick={handleReset} size="lg" className="w-full h-12 mt-4">تنظیم تمرین جدید</Button>
          </div>
        )
     }
     
-    const totalDuration = (phase === 'workout' || pausedFrom === 'workout') ? workoutTime : restTime;
+    const numWorkoutTime = parseInt(toEnglishDigits(workoutTime), 10) || 0;
+    const numRestTime = parseInt(toEnglishDigits(restTime), 10) || 0;
+    const totalDuration = (phase === 'workout' || pausedFrom === 'workout') ? numWorkoutTime : numRestTime;
     const percentage = totalDuration > 0 ? (timeLeft / totalDuration) * 100 : 0;
     
     return (
@@ -374,3 +375,5 @@ export default function WorkoutTimer() {
     </CardContent>
   );
 }
+
+    
