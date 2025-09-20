@@ -11,8 +11,9 @@ import { Slider } from '@/components/ui/slider';
 import { Download, Text, Link, Wifi, Mail, Phone, Palette, Settings, Droplet, Checkbox as CheckboxIcon } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
 import { cn } from '@/lib/utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Checkbox } from '../ui/checkbox';
+import { Separator } from '../ui/separator';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
 
 type QRType = 'text' | 'url' | 'wifi' | 'email' | 'tel';
@@ -134,71 +135,81 @@ export default function QrCodeGenerator() {
 
   return (
     <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-      <div className="md:col-span-2 space-y-4">
+      <div className="md:col-span-2 space-y-6">
         
-        <Tabs defaultValue="content">
-            <TabsList className="grid w-full grid-cols-2 h-12">
-                <TabsTrigger value="content" className="h-10 text-base"><Text className="w-5 h-5 ml-2"/>محتوا</TabsTrigger>
-                <TabsTrigger value="design" className="h-10 text-base"><Palette className="w-5 h-5 ml-2"/>طراحی</TabsTrigger>
-            </TabsList>
-            <TabsContent value="content" className="space-y-4 pt-4">
-                <div>
-                    <Label className="text-muted-foreground">نوع محتوای QR</Label>
-                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-2">
-                        {qrTypes.map(({ value, label, icon }) => (
-                        <Button 
-                            key={value} 
-                            variant={type === value ? "default" : "outline"} 
-                            onClick={() => setType(value)}
-                            className="flex flex-col h-16 sm:h-20 gap-1 text-xs"
-                        >
-                            {icon}
-                            {label}
-                        </Button>
-                        ))}
-                    </div>
+        {/* Content Section */}
+        <div className="space-y-4">
+            <Alert>
+                <Text className="h-4 w-4" />
+                <AlertTitle>محتوای QR Code</AlertTitle>
+                <AlertDescription>نوع محتوایی که می‌خواهید در کد QR قرار دهید را انتخاب و اطلاعات آن را وارد کنید.</AlertDescription>
+            </Alert>
+
+            <div>
+                <Label className="text-muted-foreground">نوع محتوا</Label>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-2">
+                    {qrTypes.map(({ value, label, icon }) => (
+                    <Button 
+                        key={value} 
+                        variant={type === value ? "default" : "outline"} 
+                        onClick={() => setType(value)}
+                        className="flex flex-col h-16 sm:h-20 gap-1 text-xs"
+                    >
+                        {icon}
+                        {label}
+                    </Button>
+                    ))}
                 </div>
-                <div>
-                    <Label className="text-muted-foreground">داده‌ها</Label>
-                    <div className="mt-2">{renderInputs()}</div>
+            </div>
+            <div>
+                <Label className="text-muted-foreground">داده‌ها</Label>
+                <div className="mt-2">{renderInputs()}</div>
+            </div>
+        </div>
+
+        <Separator />
+
+        {/* Design Section */}
+         <div className="space-y-6">
+             <Alert>
+                <Palette className="h-4 w-4" />
+                <AlertTitle>طراحی QR Code</AlertTitle>
+                <AlertDescription>ظاهر کد QR خود را شخصی‌سازی کنید.</AlertDescription>
+            </Alert>
+            <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                     <Label className="text-muted-foreground">اندازه</Label>
+                     <span className="text-sm font-mono text-primary">{size}px</span>
                 </div>
-            </TabsContent>
-            <TabsContent value="design" className="space-y-6 pt-4">
+                <Slider value={[size]} onValueChange={(v) => setSize(v[0])} min={128} max={1024} step={16} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                         <Label className="text-muted-foreground">اندازه</Label>
-                         <span className="text-sm font-mono text-primary">{size}px</span>
-                    </div>
-                    <Slider value={[size]} onValueChange={(v) => setSize(v[0])} min={128} max={1024} step={16} />
+                    <Label className="text-muted-foreground">رنگ QR</Label>
+                    <Input type="color" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="h-12 p-1" />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label className="text-muted-foreground">رنگ QR</Label>
-                        <Input type="color" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="h-12 p-1" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label className="text-muted-foreground">رنگ پس‌زمینه</Label>
-                        <Input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="h-12 p-1" />
-                    </div>
+                <div className="space-y-2">
+                    <Label className="text-muted-foreground">رنگ پس‌زمینه</Label>
+                    <Input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="h-12 p-1" />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label>شکل نقاط</Label>
-                        <Select value={dotType} onValueChange={(v) => setDotType(v as any)}>
-                            <SelectTrigger className="h-12"><SelectValue/></SelectTrigger>
-                            <SelectContent>{dotTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
-                        </Select>
-                    </div>
-                    <div className="space-y-2">
-                        <Label>شکل گوشه‌ها</Label>
-                        <Select value={cornerSquareType} onValueChange={(v) => setCornerSquareType(v as any)}>
-                            <SelectTrigger className="h-12"><SelectValue/></SelectTrigger>
-                            <SelectContent>{cornerSquareTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
-                        </Select>
-                    </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label>شکل نقاط</Label>
+                    <Select value={dotType} onValueChange={(v) => setDotType(v as any)}>
+                        <SelectTrigger className="h-12"><SelectValue/></SelectTrigger>
+                        <SelectContent>{dotTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                    </Select>
                 </div>
-            </TabsContent>
-        </Tabs>
+                <div className="space-y-2">
+                    <Label>شکل گوشه‌ها</Label>
+                    <Select value={cornerSquareType} onValueChange={(v) => setCornerSquareType(v as any)}>
+                        <SelectTrigger className="h-12"><SelectValue/></SelectTrigger>
+                        <SelectContent>{cornerSquareTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                    </Select>
+                </div>
+            </div>
+        </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-4">
             <Button onClick={() => handleDownload('png')} className="h-12 text-base">
