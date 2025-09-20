@@ -109,6 +109,7 @@ const toolCategories = [
 
 
 export default async function Home() {
+  const initialPrices = await fetchPrices();
     
   return (
     <div className="min-h-screen">
@@ -116,7 +117,7 @@ export default async function Home() {
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-screen-2xl">
 
-          <AdvancedLivePrices />
+          <AdvancedLivePrices initialData={initialPrices} />
 
 
           {/* Toolbox Shortcuts */}

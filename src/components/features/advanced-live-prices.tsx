@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, Gem, CircleDollarSign, BarChart3, Banknote } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { LivePrice, PriceData } from '@/lib/types';
+import type { LivePrice, PriceData, PriceDataItem } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { fetchPrices as fetchPricesFlow } from '@/ai/flows/fetch-prices-flow';
@@ -66,10 +66,14 @@ const priceConfig: { [key in keyof Omit<PriceData, 'cryptos'>]: Omit<LivePrice, 
     USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: <CircleDollarSign /> },
 };
 
-export default function AdvancedLivePrices() {
-  const [prices, setPrices] = useState<LivePrice[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+type AdvancedLivePricesProps = {
+  initialData: Omit<PriceData, 'cryptos'>;
+};
+
+export default function AdvancedLivePrices({ initialData }: AdvancedLivePricesProps) {
+  const [data, setData] = useState(initialData);
+  const [loading, setLoading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(new Date());
   
   const [isCooldown, setIsCooldown] = useState(false);
   const [cooldownTime, setCooldownTime] = useState(0);
@@ -77,38 +81,38 @@ export default function AdvancedLivePrices() {
   
   const COOLDOWN_SECONDS = 30;
 
+  const prices: LivePrice[] = useMemo(() => {
+    return Object.entries(data)
+      .map(([key, value]) => {
+        if (key === 'cryptos' || !value) return null;
+        const configKey = key as keyof Omit<PriceData, 'cryptos'>;
+        const config = priceConfig[configKey];
+        
+        if (!config || !value?.price) return null;
+        
+        const priceNumber = Number(value.price);
+
+        return {
+          ...config,
+          price: priceNumber.toLocaleString('fa-IR'),
+          change: value.change,
+        };
+      })
+      .filter((p): p is LivePrice => p !== null);
+  }, [data]);
+
   const fetchPrices = async () => {
     setLoading(true);
     setIsCooldown(true);
     setCooldownTime(COOLDOWN_SECONDS);
 
     try {
-      const data = await fetchPricesFlow();
-      if (!data) throw new Error("No data returned from flow");
-
-      const newPrices: LivePrice[] = Object.entries(data)
-        .map(([key, value]) => {
-          if (key === 'cryptos' || !value) return null;
-          const configKey = key as keyof Omit<PriceData, 'cryptos'>;
-          const config = priceConfig[configKey];
-          
-          if (!config || !value?.price) return null;
-          
-          const priceNumber = Number(value.price);
-
-          return {
-            ...config,
-            price: priceNumber.toLocaleString('fa-IR'),
-            change: value.change,
-          };
-        })
-        .filter((p): p is LivePrice => p !== null);
-
-      setPrices(newPrices);
+      const fetchedData = await fetchPricesFlow();
+      if (!fetchedData) throw new Error("No data returned from flow");
+      setData(fetchedData);
       setLastUpdated(new Date());
     } catch (error) {
       console.error("Failed to fetch prices:", error);
-      setPrices([]);
     } finally {
       setLoading(false);
       cooldownIntervalRef.current = setInterval(() => {
@@ -124,8 +128,6 @@ export default function AdvancedLivePrices() {
   };
 
   useEffect(() => {
-    fetchPrices();
-    
     return () => {
       if (cooldownIntervalRef.current) {
         clearInterval(cooldownIntervalRef.current);
