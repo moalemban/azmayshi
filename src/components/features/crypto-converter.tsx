@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import type { CryptoPrice } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { fetchPrices as fetchPricesFlow } from '@/ai/flows/fetch-prices-flow';
+import { fetchCryptoPrices } from '@/ai/flows/fetch-crypto-flow';
 import {
   Table,
   TableBody,
@@ -54,10 +54,10 @@ export default function CryptoConverter() {
     setCooldownTime(COOLDOWN_SECONDS);
 
     try {
-      const data = await fetchPricesFlow();
-      if (!data?.cryptos) throw new Error("No crypto data returned from flow");
+      const cryptoData = await fetchCryptoPrices();
+      if (!cryptoData?.cryptos) throw new Error("No crypto data returned from flow");
       
-      setPrices(data.cryptos);
+      setPrices(cryptoData.cryptos);
       setLastUpdated(new Date());
     } catch (error) {
       console.error("Failed to fetch crypto prices:", error);
