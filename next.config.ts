@@ -55,9 +55,7 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ['sharp', 'chrome-aws-lambda', 'puppeteer-core']
-  },
+  serverExternalPackages: ['sharp', 'chrome-aws-lambda', 'puppeteer-core'],
   allowedDevOrigins: ['*'],
 };
 
