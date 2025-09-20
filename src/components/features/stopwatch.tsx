@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Timer, Play, Pause, History, Redo } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function Stopwatch() {
   const [time, setTime] = useState(0);
@@ -62,30 +63,29 @@ export default function Stopwatch() {
   const { minutes, seconds, milliseconds } = formatTime(time);
 
   return (
-    <CardContent className="flex flex-col gap-4">
-      <div className="text-center bg-muted/50 p-4 rounded-lg shadow-inner font-display" dir="ltr">
+    <CardContent className="flex flex-col gap-6 items-center">
+      <div className="text-center bg-muted/50 p-6 rounded-full shadow-inner font-display aspect-square w-64 h-64 flex flex-col justify-center items-center" dir="ltr">
           <p className="text-6xl font-bold text-primary tracking-wider text-glow-strong">
             {minutes}:{seconds}
-            <span className="text-3xl text-primary/70 align-baseline">.{milliseconds}</span>
           </p>
+          <p className="text-3xl text-primary/70 tracking-widest text-glow-strong">.{milliseconds}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-          <Button onClick={handleStartPause} size="lg" className={`h-14 text-lg ${isRunning ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-50' : 'bg-green-500 hover:bg-green-600 text-green-50'}`}>
-            {isRunning ? <Pause className="ml-2" /> : <Play className="ml-2" />}
-            {isRunning ? 'توقف' : 'شروع'}
+      <div className="flex justify-center items-center gap-4 w-full max-w-sm">
+         <Button onClick={handleReset} variant="outline" size="icon" className="h-16 w-16 rounded-full" disabled={isRunning}>
+              <Redo className="h-7 w-7"/>
           </Button>
-          <Button onClick={handleLap} size="lg" variant="secondary" className="h-14 text-lg" disabled={!isRunning}>
-            <History className="ml-2" />
-            دور
+          <Button onClick={handleStartPause} size="lg" className={cn('h-20 w-20 rounded-full text-lg shadow-lg', 
+             isRunning ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-50' : 'bg-green-500 hover:bg-green-600 text-green-50'
+          )}>
+            {isRunning ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
           </Button>
-            <Button onClick={handleReset} variant="destructive" className="h-14 text-lg col-span-2">
-              <Redo className="ml-2"/>
-              ریست
+          <Button onClick={handleLap} variant="secondary" size="icon" className="h-16 w-16 rounded-full" disabled={!isRunning}>
+            <History className="h-7 w-7" />
           </Button>
       </div>
       
-      <ScrollArea className="h-32 mt-2 bg-muted/50 rounded-lg shadow-inner">
+      <ScrollArea className="h-32 mt-2 bg-muted/30 rounded-lg shadow-inner w-full max-w-sm">
           <div className="p-2">
           {laps.length === 0 ? (
                 <div className="flex items-center justify-center h-full text-muted-foreground py-12">
