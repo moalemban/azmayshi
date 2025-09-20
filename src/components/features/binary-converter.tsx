@@ -18,9 +18,9 @@ const binaryToText = (binary: string): string => {
   if (cleanBinary === '') return '';
 
   try {
-    const bytes = cleanBinary.split(/\s+/);
+    const bytes = cleanBinary.split(/\s+/).filter(b => b.length === 8);
+    if(bytes.length === 0) return 'کد باینری معتبر نیست.';
     const textChars = bytes.map(byte => {
-      if (byte.length !== 8) throw new Error('بایت نامعتبر');
       return String.fromCharCode(parseInt(byte, 2));
     });
     return textChars.join('');
