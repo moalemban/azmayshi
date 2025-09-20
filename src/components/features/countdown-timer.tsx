@@ -74,7 +74,7 @@ const CircularProgress = ({
           style={{ filter: `blur(20px)`, opacity: 0.3 }}
         />
       </svg>
-      <div className="absolute flex flex-col items-center justify-center text-background">
+      <div className="absolute flex flex-col items-center justify-center">
         <span className={cn("text-7xl font-display font-bold tracking-tighter text-glow-strong", colorClass)}>
           {timeLeftFormatted}
         </span>
@@ -183,7 +183,6 @@ export default function CountdownTimer() {
   };
 
   const { hours, minutes, seconds } = formatTime(timeLeft);
-  const { hours: initialH, minutes: initialM, seconds: initialS } = formatTime(initialTotalSeconds);
   
   const formatInputTime = (timeInSeconds: number) => {
     const hours = String(Math.floor(timeInSeconds / 3600)).padStart(2, '0');

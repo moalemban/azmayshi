@@ -1,5 +1,7 @@
 import { banks } from "./banks";
 
+export * from './banks';
+
 /**
  * Validates an IBAN using the ISO 13616 standard (mod-97).
  */
@@ -69,4 +71,40 @@ export function shebaToAccountNumber(sheba: string): ShebaInfo {
     accountNumber,
     possibleCardNumber
   };
+}
+
+/**
+ * Converts an account number to a SHEBA (IBAN).
+ */
+export function accountNumberToSheba(accountNumber: string, bankCode: string): string {
+    const bank = banks[bankCode];
+    if (!bank) throw new Error(`بانک با کد ${bankCode} پشتیبانی نمی‌شود.`);
+
+    const cleanAccountNumber = accountNumber.replace(/\D/g, ''); // Remove non-digits
+    
+    // Pad the account number based on bank's format length
+    const paddedAccountNumber = cleanAccountNumber.padStart(bank.shebaFormatLength || 19, '0');
+
+    if (paddedAccountNumber.length > (bank.shebaFormatLength || 19)) {
+        throw new Error(`طول شماره حساب برای این بانک (${bank.name}) نامعتبر است.`);
+    }
+    
+    // Construct the preliminary IBAN: Bank Code + Padded Account Number + IR00
+    const preliminaryIBAN = `${bankCode}${paddedAccountNumber}182700`; // 18=I, 27=R
+
+    // Calculate check digits
+    let remainder = preliminaryIBAN;
+    let block;
+    let temp = "";
+
+    while (remainder.length > 0) {
+      block = temp + remainder.substring(0, 9);
+      remainder = remainder.substring(9);
+      temp = (parseInt(block, 10) % 97).toString();
+    }
+
+    const checkDigits = 98 - parseInt(temp, 10);
+    const finalCheckDigits = String(checkDigits).padStart(2, '0');
+
+    return `IR${finalCheckDigits}${bankCode}${paddedAccountNumber}`;
 }
