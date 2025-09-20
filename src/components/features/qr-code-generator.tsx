@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Palette, Upload, Link, Text, Wifi, Mail, Phone } from 'lucide-react';
+import { Download, Palette, Upload, Link, Text, Wifi, Mail, Phone, ChevronDown } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
@@ -173,122 +173,123 @@ export default function QrCodeGenerator() {
 
         {/* Options Section */}
         <div className="space-y-4 w-full max-w-2xl">
-            <Tabs defaultValue="content">
-                <TabsList className="grid w-full grid-cols-2 h-12">
-                    <TabsTrigger value="content" className="h-10 text-base"><Text className="w-5 h-5 ml-2"/>محتوا</TabsTrigger>
-                    <TabsTrigger value="design" className="h-10 text-base"><Palette className="w-5 h-5 ml-2"/>طراحی</TabsTrigger>
-                </TabsList>
-                
-                {/* Content Tab */}
-                <TabsContent value="content" className="space-y-4 pt-4">
-                     <Tabs defaultValue={qrType} onValueChange={(val) => setQrType(val as QrContentType)}>
-                        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto">
-                            {contentTabs.map(tab => (
-                                <TabsTrigger key={tab.type} value={tab.type} className="h-12 gap-2 text-base">
-                                    {tab.icon} {tab.label}
-                                </TabsTrigger>
-                            ))}
-                        </TabsList>
-                        <TabsContent value="link" className="pt-4">
-                            <Label htmlFor="qr-link" className="text-muted-foreground">آدرس اینترنتی (URL)</Label>
-                            <Input id="qr-link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://example.com" dir="ltr" className="h-12 text-lg text-center" />
-                        </TabsContent>
-                        <TabsContent value="text" className="pt-4">
-                             <Label htmlFor="qr-text" className="text-muted-foreground">متن</Label>
-                            <Textarea id="qr-text" value={text} onChange={(e) => setText(e.target.value)} placeholder="متن خود را وارد کنید..."/>
-                        </TabsContent>
-                        <TabsContent value="wifi" className="pt-4 space-y-4">
-                             <div className="space-y-2">
-                                <Label htmlFor="wifi-ssid">نام شبکه (SSID)</Label>
-                                <Input id="wifi-ssid" value={wifi.ssid} onChange={e => setWifi(w => ({ ...w, ssid: e.target.value }))} dir="ltr" />
-                             </div>
-                             <div className="space-y-2">
-                                <Label htmlFor="wifi-pass">رمز عبور</Label>
-                                <Input id="wifi-pass" type="password" value={wifi.password} onChange={e => setWifi(w => ({ ...w, password: e.target.value }))} dir="ltr" />
-                             </div>
-                             <div className="space-y-2">
-                                <Label>نوع رمزنگاری</Label>
-                                <Select value={wifi.encryption} onValueChange={(val) => setWifi(w => ({...w, encryption: val}))}>
+            {/* Content Section */}
+             <div className="space-y-4 pt-4">
+                <div className="flex items-center gap-2">
+                    <Text className="w-6 h-6 text-primary"/>
+                    <h3 className="text-xl font-semibold font-display text-foreground">محتوای QR Code</h3>
+                </div>
+                 <Tabs defaultValue={qrType} onValueChange={(val) => setQrType(val as QrContentType)}>
+                    <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto">
+                        {contentTabs.map(tab => (
+                            <TabsTrigger key={tab.type} value={tab.type} className="h-12 gap-2 text-base">
+                                {tab.icon} {tab.label}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                    <TabsContent value="link" className="pt-4">
+                        <Label htmlFor="qr-link" className="text-muted-foreground">آدرس اینترنتی (URL)</Label>
+                        <Input id="qr-link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://example.com" dir="ltr" className="h-12 text-lg text-center" />
+                    </TabsContent>
+                    <TabsContent value="text" className="pt-4">
+                         <Label htmlFor="qr-text" className="text-muted-foreground">متن</Label>
+                        <Textarea id="qr-text" value={text} onChange={(e) => setText(e.target.value)} placeholder="متن خود را وارد کنید..."/>
+                    </TabsContent>
+                    <TabsContent value="wifi" className="pt-4 space-y-4">
+                         <div className="space-y-2">
+                            <Label htmlFor="wifi-ssid">نام شبکه (SSID)</Label>
+                            <Input id="wifi-ssid" value={wifi.ssid} onChange={e => setWifi(w => ({ ...w, ssid: e.target.value }))} dir="ltr" />
+                         </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="wifi-pass">رمز عبور</Label>
+                            <Input id="wifi-pass" type="password" value={wifi.password} onChange={e => setWifi(w => ({ ...w, password: e.target.value }))} dir="ltr" />
+                         </div>
+                         <div className="space-y-2">
+                            <Label>نوع رمزنگاری</Label>
+                            <Select value={wifi.encryption} onValueChange={(val) => setWifi(w => ({...w, encryption: val}))}>
+                                <SelectTrigger><SelectValue/></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="WPA">WPA/WPA2</SelectItem>
+                                    <SelectItem value="WEP">WEP</SelectItem>
+                                    <SelectItem value="nopass">None</SelectItem>
+                                </SelectContent>
+                            </Select>
+                         </div>
+                    </TabsContent>
+                    <TabsContent value="email" className="pt-4 space-y-4">
+                         <div className="space-y-2">
+                            <Label htmlFor="email-to">گیرنده (To)</Label>
+                            <Input id="email-to" type="email" value={email.to} onChange={e => setEmail(em => ({...em, to: e.target.value}))} placeholder="address@example.com" dir="ltr" />
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="email-subject">موضوع</Label>
+                            <Input id="email-subject" value={email.subject} onChange={e => setEmail(em => ({...em, subject: e.target.value}))} />
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="email-body">متن ایمیل</Label>
+                            <Textarea id="email-body" value={email.body} onChange={e => setEmail(em => ({...em, body: e.target.value}))} />
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="phone" className="pt-4">
+                        <Label htmlFor="qr-phone" className="text-muted-foreground">شماره تلفن</Label>
+                        <Input id="qr-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+989123456789" dir="ltr" className="h-12 text-lg text-center" />
+                    </TabsContent>
+                 </Tabs>
+            </div>
+
+            {/* Design Section */}
+            <div className="space-y-2 pt-6 border-t">
+                <div className="flex items-center gap-2">
+                    <Palette className="w-6 h-6 text-primary"/>
+                    <h3 className="text-xl font-semibold font-display text-foreground">طراحی QR Code</h3>
+                </div>
+                <Accordion type="single" collapsible className="w-full" defaultValue='item-1'>
+                    <AccordionItem value="item-1">
+                        <AccordionTrigger>رنگ&zwnj;ها</AccordionTrigger>
+                        <AccordionContent className='space-y-4'>
+                            <ColorPicker label="رنگ نقاط QR" value={options.dotsOptions?.color || '#000000'} onChange={color => handleUpdate({ dotsOptions: { ...options.dotsOptions, color }})} />
+                            <ColorPicker label="رنگ گوشه&zwnj;ها" value={options.cornersSquareOptions?.color || '#000000'} onChange={color => handleUpdate({ cornersSquareOptions: { ...options.cornersSquareOptions, color }})} />
+                            <ColorPicker label="رنگ پس&zwnj;زمینه" value={options.backgroundOptions?.color || '#FFFFFF'} onChange={color => handleUpdate({ backgroundOptions: { ...options.backgroundOptions, color }})} />
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-2">
+                        <AccordionTrigger>شکل&zwnj;ها</AccordionTrigger>
+                        <AccordionContent className='space-y-4'>
+                             <div className='space-y-2'>
+                                <Label>شکل نقاط</Label>
+                                <Select value={options.dotsOptions?.type} onValueChange={(type: DotType) => handleUpdate({ dotsOptions: { ...options.dotsOptions, type }})}>
                                     <SelectTrigger><SelectValue/></SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="WPA">WPA/WPA2</SelectItem>
-                                        <SelectItem value="WEP">WEP</SelectItem>
-                                        <SelectItem value="nopass">None</SelectItem>
-                                    </SelectContent>
+                                    <SelectContent>{dotTypes.map(d => <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>)}</SelectContent>
                                 </Select>
                              </div>
-                        </TabsContent>
-                        <TabsContent value="email" className="pt-4 space-y-4">
+                              <div className='space-y-2'>
+                                <Label>شکل گوشه‌ها</Label>
+                                <Select value={options.cornersSquareOptions?.type} onValueChange={(type: CornerSquareType) => handleUpdate({ cornersSquareOptions: { ...options.cornersSquareOptions, type }})}>
+                                    <SelectTrigger><SelectValue/></SelectTrigger>
+                                    <SelectContent>{cornerTypes.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}</SelectContent>
+                                </Select>
+                             </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-3">
+                        <AccordionTrigger>لوگو</AccordionTrigger>
+                        <AccordionContent className='space-y-4'>
                              <div className="space-y-2">
-                                <Label htmlFor="email-to">گیرنده (To)</Label>
-                                <Input id="email-to" type="email" value={email.to} onChange={e => setEmail(em => ({...em, to: e.target.value}))} placeholder="address@example.com" dir="ltr" />
+                                <Label>آپلود لوگو</Label>
+                                <Button variant="outline" className="w-full" onClick={() => fileInputRef.current?.click()}>
+                                    <Upload className="w-4 h-4 ml-2"/> انتخاب فایل
+                                </Button>
+                                <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept="image/png, image/jpeg, image/svg+xml" />
                             </div>
-                             <div className="space-y-2">
-                                <Label htmlFor="email-subject">موضوع</Label>
-                                <Input id="email-subject" value={email.subject} onChange={e => setEmail(em => ({...em, subject: e.target.value}))} />
+                            <div className="space-y-2">
+                                <Label htmlFor="logo-url">یا آدرس URL لوگو</Label>
+                                <Input id="logo-url" value={options.image} onChange={(e) => handleUpdate({ image: e.target.value })} placeholder="http://.../logo.png" dir="ltr"/>
+                                <p className='text-xs text-muted-foreground'>برای حذف لوگو، آدرس را پاک کنید.</p>
                             </div>
-                             <div className="space-y-2">
-                                <Label htmlFor="email-body">متن ایمیل</Label>
-                                <Textarea id="email-body" value={email.body} onChange={e => setEmail(em => ({...em, body: e.target.value}))} />
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="phone" className="pt-4">
-                            <Label htmlFor="qr-phone" className="text-muted-foreground">شماره تلفن</Label>
-                            <Input id="qr-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+989123456789" dir="ltr" className="h-12 text-lg text-center" />
-                        </TabsContent>
-                     </Tabs>
-                </TabsContent>
-
-                {/* Design Tab */}
-                <TabsContent value="design" className="space-y-2 pt-4">
-                    <Accordion type="single" collapsible className="w-full" defaultValue='item-1'>
-                        <AccordionItem value="item-1">
-                            <AccordionTrigger>رنگ&zwnj;ها</AccordionTrigger>
-                            <AccordionContent className='space-y-4'>
-                                <ColorPicker label="رنگ نقاط QR" value={options.dotsOptions?.color || '#000000'} onChange={color => handleUpdate({ dotsOptions: { ...options.dotsOptions, color }})} />
-                                <ColorPicker label="رنگ گوشه&zwnj;ها" value={options.cornersSquareOptions?.color || '#000000'} onChange={color => handleUpdate({ cornersSquareOptions: { ...options.cornersSquareOptions, color }})} />
-                                <ColorPicker label="رنگ پس&zwnj;زمینه" value={options.backgroundOptions?.color || '#FFFFFF'} onChange={color => handleUpdate({ backgroundOptions: { ...options.backgroundOptions, color }})} />
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-2">
-                            <AccordionTrigger>شکل&zwnj;ها</AccordionTrigger>
-                            <AccordionContent className='space-y-4'>
-                                 <div className='space-y-2'>
-                                    <Label>شکل نقاط</Label>
-                                    <Select value={options.dotsOptions?.type} onValueChange={(type: DotType) => handleUpdate({ dotsOptions: { ...options.dotsOptions, type }})}>
-                                        <SelectTrigger><SelectValue/></SelectTrigger>
-                                        <SelectContent>{dotTypes.map(d => <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>)}</SelectContent>
-                                    </Select>
-                                 </div>
-                                  <div className='space-y-2'>
-                                    <Label>شکل گوشه‌ها</Label>
-                                    <Select value={options.cornersSquareOptions?.type} onValueChange={(type: CornerSquareType) => handleUpdate({ cornersSquareOptions: { ...options.cornersSquareOptions, type }})}>
-                                        <SelectTrigger><SelectValue/></SelectTrigger>
-                                        <SelectContent>{cornerTypes.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}</SelectContent>
-                                    </Select>
-                                 </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-3">
-                            <AccordionTrigger>لوگو</AccordionTrigger>
-                            <AccordionContent className='space-y-4'>
-                                 <div className="space-y-2">
-                                    <Label>آپلود لوگو</Label>
-                                    <Button variant="outline" className="w-full" onClick={() => fileInputRef.current?.click()}>
-                                        <Upload className="w-4 h-4 ml-2"/> انتخاب فایل
-                                    </Button>
-                                    <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept="image/png, image/jpeg, image/svg+xml" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="logo-url">یا آدرس URL لوگو</Label>
-                                    <Input id="logo-url" value={options.image} onChange={(e) => handleUpdate({ image: e.target.value })} placeholder="http://.../logo.png" dir="ltr"/>
-                                    <p className='text-xs text-muted-foreground'>برای حذف لوگو، آدرس را پاک کنید.</p>
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </TabsContent>
-            </Tabs>
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+            </div>
         </div>
     </CardContent>
   );
