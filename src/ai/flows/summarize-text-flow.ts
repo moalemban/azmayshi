@@ -52,7 +52,7 @@ const summarizeTextFlow = ai.defineFlow(
   },
   async (input) => {
     // Rate limiting logic
-    const headersList = headers();
+    const headersList = await headers();
     const ip = headersList.get('x-forwarded-for') || '127.0.0.1';
     const now = Date.now();
 
