@@ -16,22 +16,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Badge } from '../ui/badge';
+
 
 const PriceChangeIndicator = ({ change }: { change: number }) => {
   if (change === 0) {
-    return <div className="text-muted-foreground">۰.۰۰٪</div>;
+    return <div className="text-muted-foreground text-sm font-mono">۰.۰۰٪</div>;
   }
   const isPositive = change > 0;
   const color = isPositive ? 'text-green-500' : 'text-red-500';
   const Icon = isPositive ? ArrowUp : ArrowDown;
 
   return (
-    <div className={cn("flex items-center gap-1 font-mono", color)}>
-      <Icon className="w-3.5 h-3.5" />
+    <div className={cn("flex items-center justify-center gap-1 font-mono text-sm", color)}>
+      <Icon className="w-3 h-3" />
       <span>{change.toFixed(2)}%</span>
     </div>
   );
 };
+
 
 const formatNumber = (num: number, maximumFractionDigits = 0) => {
     return num.toLocaleString('fa-IR', { maximumFractionDigits });
@@ -132,7 +135,17 @@ export default function CryptoConverter() {
                             </TableRow>
                         ))
                     ) : (
-                        prices.map((crypto, index) => (
+                        prices.map((crypto, index) => {
+                            const isPositive = crypto.change_percent > 0;
+                            const isNegative = crypto.change_percent < 0;
+                            const badgeVariant = isPositive ? "default" : isNegative ? "destructive" : "secondary";
+                            const badgeClass = isPositive 
+                                ? "bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20"
+                                : isNegative 
+                                ? "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20" 
+                                : "bg-muted text-muted-foreground";
+
+                            return (
                             <TableRow key={`${crypto.symbol}-${index}`}>
                                 <TableCell className="font-mono text-muted-foreground">{index + 1}</TableCell>
                                 <TableCell className="font-medium">
@@ -151,9 +164,15 @@ export default function CryptoConverter() {
                                     </div>
                                 </TableCell>
                                 <TableCell className="text-center font-display font-bold text-xl text-primary text-glow">{formatNumber(crypto.price_irr / 10)}</TableCell>
-                                <TableCell className="text-center font-mono">{formatNumber(crypto.price_usdt, 2)} $</TableCell>
+                                <TableCell className="text-center font-mono">
+                                    <Badge variant={badgeVariant} className={cn("inline-flex flex-col items-center justify-center h-auto px-3 py-1.5 gap-1 w-32", badgeClass)}>
+                                        <span className="font-bold text-base">{formatNumber(crypto.price_usdt, 2)} $</span>
+                                        <PriceChangeIndicator change={crypto.change_percent} />
+                                    </Badge>
+                                </TableCell>
                             </TableRow>
-                        ))
+                            )
+                        })
                     )}
                 </TableBody>
             </Table>
