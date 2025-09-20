@@ -17,6 +17,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from '../ui/badge';
+import { Card, CardContent } from '../ui/card';
+import { Separator } from '../ui/separator';
 
 
 const PriceChangeIndicator = ({ change }: { change: number }) => {
@@ -89,6 +91,22 @@ export default function CryptoConverter() {
     };
   }, []);
 
+  const PriceBadge = ({ crypto }: { crypto: CryptoPrice }) => {
+    const isPositive = crypto.change_percent > 0;
+    const isNegative = crypto.change_percent < 0;
+    const badgeClass = isPositive 
+        ? "bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20"
+        : isNegative 
+        ? "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20" 
+        : "bg-muted text-muted-foreground";
+    return (
+         <div className={cn("inline-flex flex-col items-center justify-center h-auto px-3 py-1.5 gap-1 w-32 rounded-2xl border", badgeClass)}>
+            <span className="font-display font-bold text-base">{formatNumber(crypto.price_usdt, 2)} $</span>
+            <PriceChangeIndicator change={crypto.change_percent} />
+        </div>
+    )
+  }
+
   return (
     <div id="crypto-prices" className="p-0 md:p-0">
         <div className="flex flex-wrap items-center justify-between gap-y-2 mb-4 px-4 md:px-0">
@@ -114,11 +132,12 @@ export default function CryptoConverter() {
                 )}
             </div>
         </div>
-        <div className="overflow-x-auto horizontal-scrollbar">
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto horizontal-scrollbar">
             <Table className="w-full min-w-max">
                 <TableHeader>
                     <TableRow>
-                    <TableHead className="text-right">ردیف</TableHead>
+                    <TableHead className="text-right w-[50px]">ردیف</TableHead>
                     <TableHead className="text-right">ارز دیجیتال</TableHead>
                     <TableHead className="text-center">قیمت (تومان)</TableHead>
                     <TableHead className="text-center">قیمت (دلار)</TableHead>
@@ -135,22 +154,13 @@ export default function CryptoConverter() {
                             </TableRow>
                         ))
                     ) : (
-                        prices.map((crypto, index) => {
-                            const isPositive = crypto.change_percent > 0;
-                            const isNegative = crypto.change_percent < 0;
-                            const badgeClass = isPositive 
-                                ? "bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20"
-                                : isNegative 
-                                ? "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20" 
-                                : "bg-muted text-muted-foreground";
-
-                            return (
+                        prices.map((crypto, index) => (
                             <TableRow key={`${crypto.symbol}-${index}`}>
                                 <TableCell className="font-mono text-muted-foreground">{index + 1}</TableCell>
                                 <TableCell className="font-medium">
                                     <div className="flex items-center gap-3">
                                         {crypto.icon ? (
-                                            <Image src={crypto.icon} alt={crypto.name_en} width={28} height={28} className="rounded-full" />
+                                            <Image src={crypto.icon} alt={crypto.name_en} width={28} height={28} className="rounded-full" unoptimized/>
                                         ) : (
                                             <div className="w-7 h-7 flex items-center justify-center bg-muted rounded-full">
                                                 <Bitcoin className="w-4 h-4 text-muted-foreground" />
@@ -164,17 +174,51 @@ export default function CryptoConverter() {
                                 </TableCell>
                                 <TableCell className="text-center font-display font-bold text-xl text-primary text-glow">{formatNumber(crypto.price_irr / 10)}</TableCell>
                                 <TableCell className="text-center">
-                                    <div className={cn("inline-flex flex-col items-center justify-center h-auto px-3 py-1.5 gap-1 w-32 rounded-2xl border", badgeClass)}>
-                                        <span className="font-display font-bold text-base">{formatNumber(crypto.price_usdt, 2)} $</span>
-                                        <PriceChangeIndicator change={crypto.change_percent} />
-                                    </div>
+                                    <PriceBadge crypto={crypto} />
                                 </TableCell>
                             </TableRow>
-                            )
-                        })
+                        ))
                     )}
                 </TableBody>
             </Table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden space-y-3 px-4">
+             {loading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                    <Card key={i}><CardContent className='p-4'><Skeleton className="h-20 w-full" /></CardContent></Card>
+                ))
+            ) : (
+                prices.map((crypto, index) => (
+                    <Card key={`${crypto.symbol}-mob-${index}`} className="glass-effect">
+                        <CardContent className="p-3">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <span className="font-mono text-muted-foreground text-lg">{index + 1}</span>
+                                     {crypto.icon ? (
+                                        <Image src={crypto.icon} alt={crypto.name_en} width={32} height={32} className="rounded-full" unoptimized/>
+                                    ) : (
+                                        <div className="w-8 h-8 flex items-center justify-center bg-muted rounded-full">
+                                            <Bitcoin className="w-5 h-5 text-muted-foreground" />
+                                        </div>
+                                    )}
+                                    <div>
+                                        <div className="font-bold text-base">{crypto.name_en}</div>
+                                        <div className="text-sm text-muted-foreground">{crypto.name_fa} ({crypto.symbol})</div>
+                                    </div>
+                                </div>
+                                 <PriceBadge crypto={crypto} />
+                            </div>
+                            <Separator className="my-2" />
+                            <div className="flex justify-between items-center text-center">
+                                <span className='text-sm text-muted-foreground'>قیمت تومان</span>
+                                <span className="font-display font-bold text-lg text-primary text-glow">{formatNumber(crypto.price_irr / 10)}</span>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))
+            )}
         </div>
     </div>
   );
