@@ -9,7 +9,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import type { PriceData, CryptoPrice } from '@/lib/types';
+import type { PriceData, CryptoPrice, PriceDataItem } from '@/lib/types';
 
 
 const URL = "https://www.tgju.org/";
@@ -87,7 +87,7 @@ const fetchPricesFlow = ai.defineFlow(
                 if (element.length) {
                     const priceText = element.find(".info-price").text().trim().replace(/,/g, "");
                     const changeText = element.find(".info-change").text().trim().replace(/,/g, "");
-                    prices[typedKey as keyof PriceData] = {
+                    prices[typedKey as keyof Omit<PriceData, 'cryptos'>] = {
                         price: priceText,
                         change: changeText || null,
                     };
