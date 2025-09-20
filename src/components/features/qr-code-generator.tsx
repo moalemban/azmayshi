@@ -88,13 +88,6 @@ const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi
                     </div>
                 </AccordionTrigger>
                 <AccordionContent className='space-y-4 pt-4'>
-                    <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                            <Label className="text-muted-foreground">اندازه</Label>
-                            <span className="text-sm font-mono text-primary">{size}px</span>
-                        </div>
-                        <Slider value={[size]} onValueChange={(val) => setSize(val[0])} min={128} max={1024} step={16} />
-                    </div>
                     <Select defaultValue={qrType} onValueChange={(val) => setQrType(val as QrContentType)}>
                         <SelectTrigger className="h-12 text-base">
                              <SelectValue placeholder="نوع محتوا را انتخاب کنید" />
@@ -110,10 +103,17 @@ const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi
                         </SelectContent>
                     </Select>
                     
-                    {qrType === 'link' && <>
+                    {qrType === 'link' && <div className="space-y-4">
                         <Label htmlFor="qr-link" className="text-muted-foreground">آدرس اینترنتی (URL)</Label>
                         <Input id="qr-link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://example.com" dir="ltr" className="h-12 text-lg text-center" />
-                    </>}
+                        <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                                <Label className="text-muted-foreground">اندازه</Label>
+                                <span className="text-sm font-mono text-primary">{size}px</span>
+                            </div>
+                            <Slider value={[size]} onValueChange={(val) => setSize(val[0])} min={128} max={1024} step={16} />
+                        </div>
+                    </div>}
                     {qrType === 'text' && <>
                          <Label htmlFor="qr-text" className="text-muted-foreground">متن</Label>
                         <Textarea id="qr-text" value={text} onChange={(e) => setText(e.target.value)} placeholder="متن خود را وارد کنید..."/>

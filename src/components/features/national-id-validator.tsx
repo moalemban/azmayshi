@@ -756,7 +756,7 @@ export default function NationalIdValidator() {
                     onChange={(e) => handleInputChange(e, index)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
                     maxLength={1}
-                    className="w-8 h-12 text-center text-xl font-body bg-white dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:bg-blue-50 focus:dark:bg-blue-900/50 focus:ring-2 focus:ring-blue-400"
+                    className="w-8 h-12 text-center text-xl font-display bg-white dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:bg-blue-50 focus:dark:bg-blue-900/50 focus:ring-2 focus:ring-blue-400"
                   />
                   {index === 2 && <div className="w-1 h-5" />} 
                   {index === 8 && <div className="w-1 h-5 bg-gray-300 dark:bg-gray-600 rounded-full" />}

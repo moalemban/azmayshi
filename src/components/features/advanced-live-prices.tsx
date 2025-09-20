@@ -73,7 +73,7 @@ const PriceCardSkeleton = () => (
   </div>
 );
 
-const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
+const priceConfig: { [key in keyof Omit<PriceData, 'cryptos'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
     GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bullion-5645229-4702199.png' },
     MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-coin-stack-5645228-4702198.png' },
     Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bar-9734349-7815330.png' },
@@ -104,7 +104,7 @@ export default function AdvancedLivePrices() {
 
       const newPrices: LivePrice[] = Object.entries(data)
         .map(([key, priceData]) => {
-          const configKey = key as keyof Omit<PriceData, 'Bourse' | 'BrentOil'>;
+          const configKey = key as keyof Omit<PriceData, 'cryptos'>;
           const config = priceConfig[configKey];
           
           if (!config || !priceData?.price) return null;

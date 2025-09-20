@@ -75,7 +75,7 @@ const CircularProgress = ({
         />
       </svg>
       <div className="absolute flex flex-col items-center justify-center text-background">
-        <span className={cn("text-7xl font-mono tracking-tighter text-glow-strong", colorClass)}>
+        <span className={cn("text-7xl font-display font-bold tracking-tighter text-glow-strong", colorClass)}>
           {timeLeftFormatted}
         </span>
       </div>
@@ -176,15 +176,23 @@ export default function CountdownTimer() {
     const minutes = Math.floor((timeInSeconds % 3600) / 60);
     const seconds = timeInSeconds % 60;
     return {
-      hours: String(hours).padStart(2, '0'),
-      minutes: String(minutes).padStart(2, '0'),
-      seconds: String(seconds).padStart(2, '0'),
+      hours: hours.toLocaleString('fa-IR', { minimumIntegerDigits: 2 }),
+      minutes: minutes.toLocaleString('fa-IR', { minimumIntegerDigits: 2 }),
+      seconds: seconds.toLocaleString('fa-IR', { minimumIntegerDigits: 2 }),
     };
   };
 
   const { hours, minutes, seconds } = formatTime(timeLeft);
   const { hours: initialH, minutes: initialM, seconds: initialS } = formatTime(initialTotalSeconds);
   
+  const formatInputTime = (timeInSeconds: number) => {
+    const hours = String(Math.floor(timeInSeconds / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((timeInSeconds % 3600) / 60)).padStart(2, '0');
+    const seconds = String(timeInSeconds % 60).padStart(2, '0');
+    return { hours, minutes, seconds };
+  };
+  const { hours: iH, minutes: iM, seconds: iS } = formatInputTime(initialTotalSeconds);
+
   return (
     <CardContent className="flex flex-col gap-6 p-4 items-center justify-center min-h-[450px]">
       
@@ -200,17 +208,17 @@ export default function CountdownTimer() {
             <CardContent>
                 <div className="flex flex-row-reverse gap-2 items-end p-4">
                     <div className="flex-1 space-y-1 text-center">
-                        <Input id="hours-input" type="number" placeholder="00" value={initialH} onChange={e => handleInputChange('hours', e.target.value)} className="h-16 w-full text-4xl text-center font-mono" min={0}/>
+                        <Input id="hours-input" type="number" placeholder="00" value={iH} onChange={e => handleInputChange('hours', e.target.value)} className="h-16 w-full text-4xl text-center font-display" min={0}/>
                         <Label htmlFor="hours-input" className="text-xs text-muted-foreground">ساعت</Label>
                     </div>
-                    <span className='text-4xl font-mono text-muted-foreground pb-8'>:</span>
+                    <span className='text-4xl font-display text-muted-foreground pb-8'>:</span>
                     <div className="flex-1 space-y-1 text-center">
-                        <Input id="minutes-input" type="number" placeholder="01" value={initialM} onChange={e => handleInputChange('minutes', e.target.value)} className="h-16 w-full text-4xl text-center font-mono" max={59} min={0}/>
+                        <Input id="minutes-input" type="number" placeholder="01" value={iM} onChange={e => handleInputChange('minutes', e.target.value)} className="h-16 w-full text-4xl text-center font-display" max={59} min={0}/>
                         <Label htmlFor="minutes-input" className="text-xs text-muted-foreground">دقیقه</Label>
                     </div>
-                    <span className='text-4xl font-mono text-muted-foreground pb-8'>:</span>
+                    <span className='text-4xl font-display text-muted-foreground pb-8'>:</span>
                     <div className="flex-1 space-y-1 text-center">
-                        <Input id="seconds-input" type="number" placeholder="00" value={initialS} onChange={e => handleInputChange('seconds', e.target.value)} className="h-16 w-full text-4xl text-center font-mono" max={59} min={0}/>
+                        <Input id="seconds-input" type="number" placeholder="00" value={iS} onChange={e => handleInputChange('seconds', e.target.value)} className="h-16 w-full text-4xl text-center font-display" max={59} min={0}/>
                         <Label htmlFor="seconds-input" className="text-xs text-muted-foreground">ثانیه</Label>
                     </div>
                 </div>

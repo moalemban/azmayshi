@@ -14,11 +14,16 @@ export default function Stopwatch() {
   const lastLapTimeRef = useRef(0);
 
   const formatTime = (timeInMs: number) => {
-    const milliseconds = `00${timeInMs % 1000}`.slice(-3);
+    const milliseconds = Math.floor(timeInMs % 1000 / 10);
     const totalSeconds = Math.floor(timeInMs / 1000);
-    const seconds = `0${totalSeconds % 60}`.slice(-2);
-    const minutes = `0${Math.floor(totalSeconds / 60) % 60}`.slice(-2);
-    return { minutes, seconds, milliseconds: milliseconds.slice(0, 2) };
+    const seconds = totalSeconds % 60;
+    const minutes = Math.floor(totalSeconds / 60) % 60;
+    
+    return { 
+        minutes: minutes.toLocaleString('fa-IR', {minimumIntegerDigits: 2}), 
+        seconds: seconds.toLocaleString('fa-IR', {minimumIntegerDigits: 2}), 
+        milliseconds: milliseconds.toLocaleString('fa-IR', {minimumIntegerDigits: 2})
+    };
   };
 
   const handleStartPause = () => setIsRunning(!isRunning);
@@ -59,7 +64,7 @@ export default function Stopwatch() {
   return (
     <CardContent className="flex flex-col gap-4">
       <div className="text-center bg-muted/50 p-4 rounded-lg shadow-inner" dir="ltr">
-          <p className="text-6xl font-mono text-primary tracking-wider text-glow">
+          <p className="text-6xl font-display font-bold text-primary tracking-wider text-glow-strong">
             {minutes}:{seconds}
             <span className="text-3xl text-primary/70 align-baseline">.{milliseconds}</span>
           </p>
@@ -92,7 +97,7 @@ export default function Stopwatch() {
                       const { minutes, seconds, milliseconds } = formatTime(lapTime);
                       return (
                           <li key={index} className="flex justify-between items-center text-sm p-2 rounded-md bg-background/50 font-mono text-muted-foreground" dir="ltr">
-                              <span className='text-foreground/80'>
+                              <span className='text-foreground/80 font-sans'>
                                 دور {laps.length - index}
                               </span>
                               <span>{minutes}:{seconds}.{milliseconds}</span>
