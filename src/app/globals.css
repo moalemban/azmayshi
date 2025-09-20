@@ -122,6 +122,9 @@
   .text-glow {
     text-shadow: 0 0 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.3);
   }
+  .text-glow-strong {
+    text-shadow: 0 0 8px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
+  }
   .dark .text-glow {
     text-shadow: 0 0 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.3);
   }
@@ -163,5 +166,12 @@
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+  }
+   @keyframes pulse-slow {
+      50% { opacity: 0.8; }
+   }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }
