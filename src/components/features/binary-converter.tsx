@@ -18,8 +18,8 @@ const binaryToText = (binary: string): string => {
   if (cleanBinary === '') return '';
 
   try {
-    const bytes = cleanBinary.split(/\s+/).filter(b => b.length === 8);
-    if(bytes.length === 0) return 'کد باینری معتبر نیست.';
+    const bytes = cleanBinary.split(/\s+/).filter(b => b); // filter out empty strings
+    if(bytes.some(b => !/^[01]{8}$/.test(b))) return 'کد باینری معتبر نیست (باید شامل بایت‌های ۸ بیتی باشد).';
     const textChars = bytes.map(byte => {
       return String.fromCharCode(parseInt(byte, 2));
     });
