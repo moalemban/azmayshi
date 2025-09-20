@@ -3,7 +3,6 @@ import Header from '@/components/layout/header';
 import UnitConverter from '@/components/features/unit-converter';
 import CurrencyConverter from '@/components/features/currency-converter';
 import DateConverter from '@/components/features/date-converter';
-import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import CryptoConverter from '@/components/features/crypto-converter';
 import AgeCalculator from '@/components/features/age-calculator';
 import BmiCalculator from '@/components/features/bmi-calculator';
@@ -33,53 +32,12 @@ import WorkoutTimer from '@/components/features/workout-timer';
 import ShebaConverter from '@/components/features/sheba-converter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ScrollToTop from '@/components/layout/scroll-to-top';
-
-
-import {
-  Scale,
-  Landmark,
-  CalendarDays,
-  Banknote,
-  PiggyBank,
-  SpellCheck,
-  Binary,
-  Percent,
-  Gift,
-  HeartPulse,
-  Dices,
-  KeyRound,
-  QrCode,
-  ScanLine,
-  LocateFixed,
-  Info,
-  HeartHandshake,
-  ArrowLeft,
-  Globe,
-  Wrench,
-  Map,
-  RectangleEllipsis,
-  FileText,
-  Wallet,
-  Activity,
-  User,
-  FlaskConical,
-  Image,
-  Monitor,
-  BookText,
-  BrainCircuit,
-  Repeat,
-  Copyright,
-  CalendarClock,
-  Hourglass,
-  TrendingUp,
-  Fingerprint,
-  Dumbbell,
-  CandlestickChart,
-  Clock,
-  Bitcoin,
-  ShieldCheck,
-} from 'lucide-react';
+import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
+import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
+import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart } from 'lucide-react';
+import ImageNext from 'next/image';
+
 
 const toolCategories = [
   {
@@ -127,7 +85,7 @@ const toolCategories = [
     icon: <HeartPulse className="h-6 w-6 text-primary-foreground" />,
     tools: [
       { id: 'workout-timer', title: 'زمان‌سنج تمرین', icon: <Dumbbell className="h-8 w-8 text-orange-400" />, component: <WorkoutTimer /> },
-      { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulse className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
+      { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulseIcon className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
     ]
   },
   {
@@ -151,14 +109,24 @@ const toolCategories = [
 ];
 
 
-export default function Home() {
+export default async function Home() {
+    
   return (
     <div className="min-h-screen">
       <Header />
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-screen-2xl">
 
-          <AdvancedLivePrices />
+         <div id="live-prices-main" className="glass-effect rounded-3xl p-4 md:p-8 mb-10 scroll-mt-24">
+              <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground flex items-center text-glow mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center ml-3 animate-pulse">
+                      <CandlestickChart className="w-6 h-6 text-white"/>
+                  </div>
+                  قیمت‌های لحظه‌ای
+              </h2>
+             <p className='text-muted-foreground -mt-2 mb-4'>ابزار تبدیل ارز در بخش مبدل ها قرار دارد</p>
+          </div>
+
 
           {/* Toolbox Shortcuts */}
           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
@@ -181,7 +149,7 @@ export default function Home() {
                     {category.tools.map((tool) => (
                       <a href={`#${tool.id}`} key={`shortcut-${tool.id}`} className="block">
                         <div className="glass-effect rounded-2xl p-4 card-hover w-full h-full flex flex-col items-center justify-center text-center gap-3">
-                          {React.cloneElement(tool.icon, { className: "h-8 w-8" })}
+                          {tool.icon}
                           <span className="font-semibold text-sm text-foreground">{tool.title}</span>
                         </div>
                       </a>
