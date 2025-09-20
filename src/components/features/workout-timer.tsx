@@ -86,7 +86,7 @@ export default function WorkoutTimer() {
   
   const totalWorkoutTime = history.reduce((acc, h) => acc + h.duration, 0);
   const totalReps = history.reduce((acc, h) => acc + h.reps, 0);
-  const totalRestTime = history.length * restTime;
+  const totalRestTime = history.length > 0 ? (history.length -1) * restTime : 0;
 
 
   const handleStart = () => {
