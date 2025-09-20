@@ -39,8 +39,8 @@ const RectangularProgress = ({
            style={{ width: `${percentage}%` }}
       />
       
-      {/* The text */}
-      <div className="relative flex flex-col items-center justify-center">
+      {/* Text container with semi-transparent background */}
+      <div className="relative flex flex-col items-center justify-center bg-black/40 p-4 rounded-lg">
         <span className="text-6xl font-display text-cyan-300 drop-shadow-glow tracking-widest text-glow-strong">
           {timeLeftFormatted}
         </span>
