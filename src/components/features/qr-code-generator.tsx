@@ -14,8 +14,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Slider } from '@/components/ui/slider';
 
 const defaultOptions: QRCodeOptions = {
-  width: 300,
-  height: 300,
+  width: 180,
+  height: 180,
   type: 'svg',
   data: 'https://tabdila.com',
   image: '',
@@ -168,7 +168,7 @@ export default function QrCodeGenerator() {
   const [options, setOptions] = useState<QRCodeOptions>(defaultOptions);
   const [qrCode, setQrCode] = useState<QRCodeStyling | null>(null);
   const [qrType, setQrType] = useState<QrContentType>('link');
-  const [size, setSize] = useState(300);
+  const [size, setSize] = useState(180);
   
   // State for different content types
   const [link, setLink] = useState('https://tabdila.com');
