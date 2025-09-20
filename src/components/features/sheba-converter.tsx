@@ -7,12 +7,11 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { shebaToAccountNumber, accountNumberToSheba, type ShebaInfo, banks as bankData } from '@/lib/sheba-utils';
-import { ShieldCheck, XCircle, Copy, Banknote, CreditCard, AlertCircle, ArrowRightLeft, ChevronsUpDown } from 'lucide-react';
+import { ShieldCheck, XCircle, Copy, Banknote, CreditCard, ArrowRightLeft, ChevronsUpDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 const formatShebaInput = (value: string): string => {
   const clean = value.replace(/[^0-9]/gi, '').toUpperCase();
@@ -29,7 +28,7 @@ const ResultCard = ({ icon, title, value, onCopy }: { icon: React.ReactNode, tit
             {icon}
             <div>
                 <p className="text-sm text-muted-foreground">{title}</p>
-                <p className="text-lg font-semibold text-primary font-display tracking-wider" dir="ltr">{value.toLocaleString('fa-IR')}</p>
+                <p className="text-lg font-semibold text-primary font-display tracking-wider" dir="ltr">{value}</p>
             </div>
         </div>
         <Button variant="ghost" size="icon" className="absolute top-2 left-2 text-muted-foreground" onClick={onCopy} title={`کپی کردن ${title}`}>
@@ -56,6 +55,16 @@ export default function ShebaConverter() {
   
   const [bankSelectOpen, setBankSelectOpen] = useState(false);
   const { toast } = useToast();
+
+  const resetAllStates = () => {
+      setSheba('');
+      setShebaResult(null);
+      setShebaError(null);
+      setAccountNumber('');
+      setSelectedBankCode('');
+      setAccountResult(null);
+      setAccountError(null);
+  }
 
   const handleShebaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/^IR/i, '').replace(/\s/g, '');
@@ -95,10 +104,11 @@ export default function ShebaConverter() {
   
   const copyToClipboard = (text: string, label: string) => {
     if (!text) return;
-    navigator.clipboard.writeText(text.replace(/\s/g, ''));
+    const cleanText = text.replace(/\s/g, '');
+    navigator.clipboard.writeText(cleanText);
     toast({
         title: 'کپی شد!',
-        description: `${label} با موفقیت در کلیپ‌بورد کپی شد.`,
+        description: `${label} (${cleanText}) با موفقیت کپی شد.`,
     });
   }
 
@@ -115,7 +125,7 @@ export default function ShebaConverter() {
             {(['sheba-to-account', 'account-to-sheba'] as ConversionMode[]).map((m) => (
             <Button 
                 key={m}
-                onClick={() => setMode(m)} 
+                onClick={() => { setMode(m); resetAllStates(); }} 
                 variant={mode === m ? 'default' : 'ghost'}
                 className={`w-full h-10 ${mode === m ? '' : 'text-muted-foreground'}`}
             >
@@ -187,7 +197,7 @@ export default function ShebaConverter() {
                 </div>
             )}
             
-            { !shebaError && !shebaResult && sheba.length < 29 && (
+            { !shebaError && !shebaResult && sheba.replace(/\s/g, '').length < 24 && (
                 <div className="flex items-center justify-center text-muted-foreground h-32 bg-muted/30 rounded-lg">
                     <p>برای تبدیل، شماره شبا ۲۴ رقمی خود را وارد کنید.</p>
                 </div>
@@ -242,7 +252,7 @@ export default function ShebaConverter() {
                 <Input 
                     id="account-number-input"
                     value={accountNumber}
-                    onChange={(e) => setAccountNumber(e.target.value)}
+                    onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ''))}
                     className="h-14 text-2xl tracking-wider font-display text-center"
                     dir="ltr"
                     placeholder='شماره حساب را وارد کنید'

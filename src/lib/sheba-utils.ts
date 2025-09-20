@@ -15,18 +15,13 @@ export function validateIBAN(iban: string): boolean {
   // Replace letters with numbers (A=10, B=11, ..., Z=35)
   const expanded = rearranged.replace(/[A-Z]/g, ch => (ch.charCodeAt(0) - 55).toString());
 
-  // Perform mod-97 check
-  let remainder = expanded;
-  let block;
-  let temp = "";
-
-  while (remainder.length > 0) {
-    block = temp + remainder.substring(0, 9);
-    remainder = remainder.substring(9);
-    temp = (parseInt(block, 10) % 97).toString();
-  }
+  // Perform mod-97 check on the potentially very large number
+    let remainder = 0;
+    for (let i = 0; i < expanded.length; i++) {
+        remainder = (remainder * 10 + parseInt(expanded[i], 10)) % 97;
+    }
   
-  return parseInt(temp, 10) === 1;
+  return remainder === 1;
 }
 
 
@@ -89,21 +84,16 @@ export function accountNumberToSheba(accountNumber: string, bankCode: string): s
         throw new Error(`طول شماره حساب برای این بانک (${bank.name}) نامعتبر است.`);
     }
     
-    // Construct the preliminary IBAN: Bank Code + Padded Account Number + IR00
-    const preliminaryIBAN = `${bankCode}${paddedAccountNumber}182700`; // 18=I, 27=R
+    // Construct the preliminary IBAN: Bank Code + Padded Account Number + IR00 (I=18, R=27)
+    const preliminaryIBAN = `${bankCode}${paddedAccountNumber}182700`;
 
-    // Calculate check digits
-    let remainder = preliminaryIBAN;
-    let block;
-    let temp = "";
-
-    while (remainder.length > 0) {
-      block = temp + remainder.substring(0, 9);
-      remainder = remainder.substring(9);
-      temp = (parseInt(block, 10) % 97).toString();
+    // Calculate check digits using mod-97 on the large number
+    let remainder = 0;
+    for (let i = 0; i < preliminaryIBAN.length; i++) {
+        remainder = (remainder * 10 + parseInt(preliminaryIBAN[i], 10)) % 97;
     }
-
-    const checkDigits = 98 - parseInt(temp, 10);
+    
+    const checkDigits = 98 - remainder;
     const finalCheckDigits = String(checkDigits).padStart(2, '0');
 
     return `IR${finalCheckDigits}${bankCode}${paddedAccountNumber}`;
