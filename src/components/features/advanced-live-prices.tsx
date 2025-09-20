@@ -2,16 +2,22 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ArrowUp, ArrowDown, RefreshCw, Timer } from 'lucide-react';
+import { ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { fetchPrices as fetchPricesFlow } from '@/ai/flows/fetch-prices-flow';
-import { CardContent } from '@/components/ui/card';
 
 const PriceChangeIndicator = ({ change }: { change: string | null }) => {
-  if (!change || change === "0" || change === "۰") return <div className="h-5" />;
+  if (!change || change === "0" || change === "۰") {
+     const isZero = change === "0" || change === "۰";
+     return (
+        <div className={cn("flex items-center text-xs font-mono", isZero ? "text-muted-foreground" : "text-green-500")}>
+            <span>{isZero ? "0" : change}</span>
+        </div>
+     )
+  }
 
   const isPositive = !change.startsWith('-');
   const isNegative = change.startsWith('-');
@@ -26,7 +32,6 @@ const PriceChangeIndicator = ({ change }: { change: string | null }) => {
     </div>
   );
 };
-
 
 const PriceCard = ({ item }: { item: LivePrice }) => (
     <div className="glass-effect rounded-2xl p-3 card-hover w-full flex-shrink-0">
@@ -68,16 +73,14 @@ const PriceCardSkeleton = () => (
   </div>
 );
 
-
 const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: 'https://uploadkon.ir/uploads/cd2519_25gold-ingots-gold-bars-3d-icon-png.png' },
-    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/e41319_25gold-coin-3d-icon-illustration-png.png' },
-    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/a48119_25gold-bar-3d-icon-png.png' },
-    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/e69719_25coin-3d-icon-illustration-png.png' },
-    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/049c19_25dollar-3d-icon-illustration-png.png' },
-    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/d82219_25tether-usdt-3d-icon-illustration-png.png' },
+    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-3d-icon-png-download-4060918.png' },
+    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-coin-5645226-4702196.png' },
+    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bar-4060920-3363673.png' },
+    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: 'https://ice.ir/assets/images/home/section/coin.webp' },
+    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: 'https://png.pngtree.com/png-vector/20241009/ourmid/pngtree-3d-realistic-dollar-icon-on-a-transparent-background-png-image_14037686.png' },
+    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/tether-usdt-5334659-4468691.png' },
 };
-
 
 export default function AdvancedLivePrices() {
   const [prices, setPrices] = useState<LivePrice[]>([]);
@@ -146,8 +149,14 @@ export default function AdvancedLivePrices() {
   }, []);
 
   return (
-    <CardContent>
+    <div id="live-prices-main" className="glass-effect rounded-3xl p-4 md:p-8 mb-10 scroll-mt-24">
         <div className="flex flex-wrap items-center justify-between gap-y-2 mb-4">
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground flex items-center text-glow">
+              <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center ml-3 animate-pulse">
+                  <CandlestickChart className="w-6 h-6 text-white"/>
+              </div>
+              قیمت‌های لحظه‌ای
+            </h2>
             <div className="flex items-center space-x-2 space-x-reverse">
                 <Button variant="ghost" size="sm" onClick={fetchPrices} disabled={loading || isCooldown} className="text-muted-foreground w-28">
                     {loading ? <RefreshCw className={cn("h-5 w-5 animate-spin")} /> 
@@ -177,6 +186,6 @@ export default function AdvancedLivePrices() {
             prices.map((item) => item ? <PriceCard key={item.id} item={item} /> : null)
             )}
         </div>
-    </CardContent>
+    </div>
   );
 }
