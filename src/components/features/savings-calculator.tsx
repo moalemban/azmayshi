@@ -20,27 +20,24 @@ const unformatNumber = (value: string): number => {
 
 
 export default function SavingsCalculator() {
-  const [targetAmount, setTargetAmount] = useState('1,000,000,000');
-  const [monthlySaving, setMonthlySaving] = useState('10,000,000');
+  const [targetAmount, setTargetAmount] = useState('');
+  const [monthlySaving, setMonthlySaving] = useState('');
   const [increaseRate, setIncreaseRate] = useState(10); // Percentage
-  const [isInitial, setIsInitial] = useState(true);
 
   const handleTargetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsInitial(false);
     setTargetAmount(formatNumberWithCommas(e.target.value));
   };
   
   const handleMonthlySavingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsInitial(false);
     setMonthlySaving(formatNumberWithCommas(e.target.value));
   };
   
   const calculationResult = useMemo(() => {
-    const target = unformatNumber(targetAmount);
-    const initialMonthly = unformatNumber(monthlySaving);
+    const target = unformatNumber(targetAmount || '0');
+    const initialMonthly = unformatNumber(monthlySaving || '0');
     const rate = increaseRate / 100;
 
-    if (isNaN(target) || isNaN(initialMonthly) || target <= 0 || initialMonthly <= 0) {
+    if (target <= 0 || initialMonthly <= 0) {
       return null;
     }
 
@@ -51,7 +48,7 @@ export default function SavingsCalculator() {
     while (total < target) {
       total += currentMonthly;
       months++;
-      if (months % 12 === 0) {
+      if (months > 0 && months % 12 === 0) {
         currentMonthly *= (1 + rate);
       }
     }
@@ -103,14 +100,14 @@ export default function SavingsCalculator() {
           <Slider
             id="increaseRate"
             value={[increaseRate]}
-            onValueChange={(val) => {setIncreaseRate(val[0]); setIsInitial(false);}}
+            onValueChange={(val) => setIncreaseRate(val[0])}
             min={0}
             max={50}
             step={1}
           />
       </div>
 
-      {calculationResult && !isInitial ? (
+      {calculationResult ? (
           <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner mt-2 space-y-3">
               <div>
                   <p className="text-lg text-muted-foreground">زمان لازم برای رسیدن به هدف</p>
