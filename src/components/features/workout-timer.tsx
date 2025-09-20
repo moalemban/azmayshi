@@ -369,8 +369,8 @@ export default function WorkoutTimer() {
        )
     }
     
-    const numWorkoutTime = parseInt(toEnglishDigits(workoutTime), 10) || 0;
-    const numRestTime = parseInt(toEnglishDigits(restTime) || 0);
+    const numWorkoutTime = parseInt(toEnglishDigits(workoutTime || '0'), 10);
+    const numRestTime = parseInt(toEnglishDigits(restTime || '0'), 10);
     const totalDuration = (phase === 'workout' || pausedFrom === 'workout') ? numWorkoutTime : numRestTime;
     const percentage = totalDuration > 0 ? (timeLeft / totalDuration) * 100 : 0;
     
