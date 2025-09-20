@@ -13,8 +13,6 @@ import { Textarea } from '../ui/textarea';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '../ui/checkbox';
 import { Separator } from '../ui/separator';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-
 
 type QRType = 'text' | 'url' | 'wifi' | 'email' | 'tel';
 
@@ -73,7 +71,7 @@ export default function QrCodeGenerator() {
 
   const getQrData = (): string => {
     switch (type) {
-      case 'url': return text.startsWith('http') ? text : `https://''' + text;
+      case 'url': return text.startsWith('http') ? text : `https://${text}`;
       case 'text': return text;
       case 'email': return `mailto:${email}`;
       case 'tel': return `tel:${phone}`;
