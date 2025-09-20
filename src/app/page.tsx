@@ -28,6 +28,8 @@ import SavingsCalculator from '@/components/features/savings-calculator';
 import NationalIdValidator from '@/components/features/national-id-validator';
 import WorkoutTimer from '@/components/features/workout-timer';
 import ShebaConverter from '@/components/features/sheba-converter';
+import QrCodeGenerator from '@/components/features/qr-code-generator';
+import QrCodeReader from '@/components/features/qr-code-reader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ScrollToTop from '@/components/layout/scroll-to-top';
 import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
@@ -96,6 +98,8 @@ const toolCategories = [
       { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
       { id: 'random-number', title: 'عدد تصادفی', icon: <Dices className="h-8 w-8 text-orange-400" />, component: <RandomNumberGenerator /> },
       { id: 'password-generator', title: 'تولید رمز عبور', icon: <KeyRound className="h-8 w-8 text-violet-400" />, component: <PasswordGenerator /> },
+      { id: 'qr-code-generator', title: 'QR Code ساز', icon: <QrCode className="h-8 w-8 text-emerald-400" />, component: <QrCodeGenerator /> },
+      { id: 'qr-code-reader', title: 'QR Code خوان', icon: <ScanLine className="h-8 w-8 text-blue-400" />, component: <QrCodeReader /> },
       { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, component: <IpDetector /> },
       { id: 'image-optimizer', title: 'بهینه‌ساز تصویر', icon: <Image className="h-8 w-8 text-orange-400" />, component: <ImageOptimizer /> },
       { id: 'website-screenshot', title: 'اسکرین‌شات وب‌سایت', icon: <Monitor className="h-8 w-8 text-teal-400" />, component: <WebsiteScreenshot /> },
