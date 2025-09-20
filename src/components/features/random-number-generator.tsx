@@ -25,13 +25,16 @@ export default function RandomNumberGenerator() {
   const [count, setCount] = useState('1');
   const [unique, setUnique] = useState(true);
   const [results, setResults] = useState<number[]>([]);
+  const [isInitial, setIsInitial] = useState(true);
   const { toast } = useToast();
 
   const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
     setter(toEnglishDigits(value));
+    setIsInitial(false);
   };
 
   const generateNumbers = () => {
+    setIsInitial(false);
     const minValue = parseInt(min, 10);
     const maxValue = parseInt(max, 10);
     const numCount = parseInt(count, 10);
@@ -104,7 +107,7 @@ export default function RandomNumberGenerator() {
       </div>
       
       <div className="flex items-center space-x-2 space-x-reverse">
-          <Checkbox id="unique-numbers" checked={unique} onCheckedChange={(checked) => setUnique(Boolean(checked))} />
+          <Checkbox id="unique-numbers" checked={unique} onCheckedChange={(checked) => { setUnique(Boolean(checked)); setIsInitial(false); }} />
           <Label htmlFor="unique-numbers" className="cursor-pointer text-muted-foreground">
               اعداد منحصر به فرد باشند
           </Label>
@@ -123,7 +126,7 @@ export default function RandomNumberGenerator() {
               </Button>
           </div>
           <ScrollArea className="h-32 bg-muted/50 rounded-lg shadow-inner">
-              {results.length > 0 ? (
+              {results.length > 0 && !isInitial ? (
                   <div className="p-4 flex flex-wrap gap-x-4 gap-y-2 justify-center font-mono text-lg text-primary tracking-wider">
                   {results.map((num, index) => (
                       <span key={index}>{num.toLocaleString('fa-IR')}</span>
