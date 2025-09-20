@@ -152,6 +152,10 @@
   .horizontal-scrollbar::-webkit-scrollbar-thumb:hover {
       background: hsl(var(--primary));
   }
+  
+  .neon-btn:hover {
+    box-shadow: 0 0 12px hsl(var(--primary) / 0.6), 0 0 24px hsl(var(--accent) / 0.6);
+  }
 
 
   @keyframes gradientShift {
@@ -168,7 +172,7 @@
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-   @keyframes pulse-slow {
+  @keyframes pulse-slow {
       50% { opacity: 0.8; }
    }
 

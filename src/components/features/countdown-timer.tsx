@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Play, Pause, Redo, Settings } from 'lucide-react';
+import { Play, Pause, Redo, Settings, Hourglass } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import {
@@ -37,15 +37,24 @@ const CircularProgress = ({
   
   return (
     <div className="relative flex items-center justify-center w-72 h-72">
+      {/* Background Glow */}
+      <div className={cn("absolute w-64 h-64 rounded-full blur-2xl animate-pulse-slow", colorClass)} style={{ opacity: 0.3 }}/>
+
       <svg
         height={radius * 2}
         width={radius * 2}
         className="transform -rotate-90"
       >
+        <defs>
+            <linearGradient id="countdownGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="hsl(var(--primary))" />
+              <stop offset="100%" stopColor="hsl(var(--accent))" />
+            </linearGradient>
+        </defs>
         {/* Background Circle */}
         <circle
-          stroke="hsl(var(--muted) / 0.2)"
-          fill="hsl(var(--background) / 0.3)"
+          stroke="hsl(var(--muted) / 0.15)"
+          fill="hsl(var(--card) / 0.3)"
           strokeWidth={stroke}
           r={normalizedRadius}
           cx={radius}
@@ -53,8 +62,8 @@ const CircularProgress = ({
         />
         {/* Foreground Circle (Progress) */}
         <circle
-          className={cn("transition-all duration-300", colorClass)}
-          stroke="currentColor"
+          className="transition-all duration-500"
+          stroke="url(#countdownGradient)"
           fill="transparent"
           strokeWidth={stroke}
           strokeDasharray={circumference + ' ' + circumference}
@@ -64,18 +73,9 @@ const CircularProgress = ({
           cx={radius}
           cy={radius}
         />
-         {/* Inner Glow */}
-        <circle
-          className={cn("transition-colors duration-300", colorClass)}
-          fill="currentColor"
-          r={normalizedRadius - stroke}
-          cx={radius}
-          cy={radius}
-          style={{ filter: `blur(20px)`, opacity: 0.3 }}
-        />
       </svg>
       <div className="absolute flex flex-col items-center justify-center">
-        <span className={cn("text-7xl font-display font-bold tracking-tighter text-glow-strong", colorClass)}>
+        <span className="text-7xl font-display text-cyan-300 drop-shadow-glow tracking-widest text-glow-strong">
           {timeLeftFormatted}
         </span>
       </div>
@@ -209,8 +209,8 @@ export default function CountdownTimer() {
       { isConfiguring ? (
         <Card className="w-full max-w-sm glass-effect">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <Settings className="w-6 h-6 text-primary"/>
+                <CardTitle className="flex items-center gap-2 text-cyan-400 neon-text">
+                    <Hourglass className="w-6 h-6" />
                     تنظیم زمان
                 </CardTitle>
                 <CardDescription>زمان مورد نظر خود را برای شروع شمارش معکوس وارد کنید.</CardDescription>
@@ -244,18 +244,18 @@ export default function CountdownTimer() {
 
       <div className="flex justify-center items-center gap-4 w-full max-w-sm mt-4">
         {isConfiguring ? (
-            <Button onClick={handleStartPause} size="lg" className="w-full h-14 text-lg bg-green-500 hover:bg-green-600 text-green-50">
+            <Button onClick={handleStartPause} size="lg" className="w-full h-14 text-lg neon-btn bg-green-500 hover:bg-green-500/90 text-white shadow-green-500/30 hover:shadow-green-500/50">
                 <Play className="ml-2 h-6 w-6"/>
                 شروع شمارش
             </Button>
         ) : (
           <div className="flex w-full items-center justify-around gap-2">
-            <Button onClick={handleReset} variant="outline" className="h-14 flex-1" disabled={isRunning}>
+            <Button onClick={handleReset} variant="outline" className="h-14 flex-1 glass-btn" disabled={isRunning}>
               <Redo className="h-5 w-5 ml-2" />
               ریست
             </Button>
-            <Button onClick={handleStartPause} size="lg" className={cn('h-14 flex-1 text-lg shadow-lg', 
-                isRunning ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-50 animate-pulse-slow' : 'bg-green-500 hover:bg-green-600 text-green-50'
+            <Button onClick={handleStartPause} size="lg" className={cn('h-14 flex-1 text-lg neon-btn', 
+                isRunning ? 'bg-yellow-500 hover:bg-yellow-500/90 text-white shadow-yellow-500/30 hover:shadow-yellow-500/50' : 'bg-green-500 hover:bg-green-500/90 text-white shadow-green-500/30 hover:shadow-green-500/50'
             )} disabled={isFinished}>
               {isRunning ? <><Pause className="h-6 w-6 ml-2" /> توقف</> : <><Play className="h-6 w-6 ml-2" /> ادامه</>}
             </Button>
