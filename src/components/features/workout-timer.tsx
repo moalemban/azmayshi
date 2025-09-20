@@ -251,7 +251,7 @@ export default function WorkoutTimer() {
     
     return () => { if(timerRef.current) clearInterval(timerRef.current) };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, timeLeft]);
+  }, [phase, timeLeft, playSound]);
 
   const isRunning = phase === 'workout' || phase === 'rest';
 
