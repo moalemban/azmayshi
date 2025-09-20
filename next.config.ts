@@ -52,12 +52,6 @@ const nextConfig: NextConfig = {
         hostname: 'ice.ir',
         port: '',
         pathname: '/**',
-      },
-       {
-        protocol: 'https',
-        hostname: 'creazilla-store.fra1.digitaloceanspaces.com',
-        port: '',
-        pathname: '/**',
       }
     ],
   },

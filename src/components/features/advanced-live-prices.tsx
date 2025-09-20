@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Bitcoin, ArrowUp, ArrowDown, RefreshCw, Timer } from 'lucide-react';
+import { ArrowUp, ArrowDown, RefreshCw, Timer } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
