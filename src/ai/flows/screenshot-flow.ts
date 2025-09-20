@@ -55,6 +55,10 @@ const takeScreenshotFlow = ai.defineFlow(
           type: 'png',
           fullPage: true 
       });
+
+      if (!screenshotBuffer || typeof screenshotBuffer === 'string') {
+        throw new Error('Failed to capture screenshot buffer.');
+      }
       
       return { screenshotBase64: `data:image/png;base64,${screenshotBuffer.toString('base64')}` };
     } catch (e: any) {
