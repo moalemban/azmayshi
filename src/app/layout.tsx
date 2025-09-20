@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <head>
-         <link rel="icon" href="https://uploadkon.ir/uploads/980b19_25858.png" />
+         <link rel="icon" href="https://uploadkon.ir/uploads/59c320_252fb04e3a-9e9c-44da-8d7e-7a0345be973aa4-copy.png" />
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" />
       </head>
       <body className={vazirmatn.variable}>
