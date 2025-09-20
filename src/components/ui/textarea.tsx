@@ -4,7 +4,15 @@ import * as React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import {cn} from '@/lib/utils';
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<'textarea'>>(
+// Define the props by omitting the conflicting 'style' prop and adding our own.
+export type TextareaProps = Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  'style'
+> & {
+  style?: { height?: number };
+};
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({className, ...props}, ref) => {
     return (
       <TextareaAutosize
