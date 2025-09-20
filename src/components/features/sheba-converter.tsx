@@ -56,16 +56,6 @@ export default function ShebaConverter() {
   const [bankSelectOpen, setBankSelectOpen] = useState(false);
   const { toast } = useToast();
 
-  const resetAllStates = () => {
-      setSheba('');
-      setShebaResult(null);
-      setShebaError(null);
-      setAccountNumber('');
-      setSelectedBankCode('');
-      setAccountResult(null);
-      setAccountError(null);
-  }
-
   const handleShebaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/^IR/i, '').replace(/\s/g, '');
     const formatted = formatShebaInput(rawValue);
@@ -125,7 +115,7 @@ export default function ShebaConverter() {
             {(['sheba-to-account', 'account-to-sheba'] as ConversionMode[]).map((m) => (
             <Button 
                 key={m}
-                onClick={() => { setMode(m); resetAllStates(); }} 
+                onClick={() => setMode(m)} 
                 variant={mode === m ? 'default' : 'ghost'}
                 className={`w-full h-10 ${mode === m ? '' : 'text-muted-foreground'}`}
             >
