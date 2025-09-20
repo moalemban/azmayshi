@@ -77,14 +77,14 @@ const fetchPricesFlow = ai.defineFlow(
             const allIds = {...IDS, ...CRYPTO_IDS};
 
             for (const key in allIds) {
-                const typedKey = key as keyof PriceData;
+                const typedKey = key as keyof typeof allIds;
                 const elem_id = allIds[typedKey];
                 const element = $(`li#${elem_id}`);
 
                 if (element.length) {
                     const priceText = element.find(".info-price").text().trim().replace(/,/g, "");
                     const changeText = element.find(".info-change").text().trim().replace(/,/g, "");
-                    prices[typedKey] = {
+                    prices[typedKey as keyof PriceData] = {
                         price: priceText,
                         change: changeText || null,
                     };
