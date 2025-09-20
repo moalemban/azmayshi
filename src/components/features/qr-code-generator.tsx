@@ -8,9 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Link, Palette, Settings, Type, Image as ImageIcon, Upload, Text } from 'lucide-react';
+import { Download, Palette, Upload, Link, Text, Wifi, Mail, Phone } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
@@ -60,13 +59,46 @@ const cornerTypes: { value: CornerSquareType; label: string }[] = [
     { value: "square", label: "مربعی" },
 ];
 
+type QrContentType = 'link' | 'text' | 'wifi' | 'email' | 'phone';
 
 export default function QrCodeGenerator() {
   const [options, setOptions] = useState<QRCodeOptions>(defaultOptions);
   const [qrCode, setQrCode] = useState<QRCodeStyling | null>(null);
+  const [qrType, setQrType] = useState<QrContentType>('link');
+
+  // State for different content types
+  const [link, setLink] = useState('https://tabdila.com');
+  const [text, setText] = useState('سلام از طرف تبدیلا!');
+  const [wifi, setWifi] = useState({ ssid: '', password: '', encryption: 'WPA' });
+  const [email, setEmail] = useState({ to: '', subject: '', body: '' });
+  const [phone, setPhone] = useState('');
+
   const ref = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    let data = '';
+    switch (qrType) {
+      case 'link':
+        data = link;
+        break;
+      case 'text':
+        data = text;
+        break;
+      case 'wifi':
+        data = `WIFI:T:${wifi.encryption};S:${wifi.ssid};P:${wifi.password};;`;
+        break;
+      case 'email':
+        data = `mailto:${email.to}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}`;
+        break;
+      case 'phone':
+        data = `tel:${phone}`;
+        break;
+    }
+    handleUpdate({ data });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qrType, link, text, wifi, email, phone]);
 
   useEffect(() => {
     if (!qrCode) {
@@ -116,9 +148,17 @@ export default function QrCodeGenerator() {
     </div>
   )
 
+  const contentTabs: { type: QrContentType, icon: React.ReactNode, label: string }[] = [
+      { type: 'link', icon: <Link className="w-5 h-5" />, label: 'لینک' },
+      { type: 'text', icon: <Text className="w-5 h-5" />, label: 'متن' },
+      { type: 'wifi', icon: <Wifi className="w-5 h-5" />, label: 'WiFi' },
+      { type: 'email', icon: <Mail className="w-5 h-5" />, label: 'ایمیل' },
+      { type: 'phone', icon: <Phone className="w-5 h-5" />, label: 'تلفن' },
+  ]
+
   return (
-    <CardContent className="grid grid-cols-1 gap-8 items-start">
-        {/* === Preview Section === */}
+    <CardContent className="flex flex-col gap-8 items-center">
+        {/* Preview Section */}
         <div className="flex flex-col items-center justify-start gap-4">
             <div className="p-4 rounded-lg shadow-md border bg-white">
                 <div ref={ref} />
@@ -131,8 +171,8 @@ export default function QrCodeGenerator() {
             </div>
         </div>
 
-        {/* === Options Section === */}
-        <div className="space-y-4">
+        {/* Options Section */}
+        <div className="space-y-4 w-full max-w-2xl">
             <Tabs defaultValue="content">
                 <TabsList className="grid w-full grid-cols-2 h-12">
                     <TabsTrigger value="content" className="h-10 text-base"><Text className="w-5 h-5 ml-2"/>محتوا</TabsTrigger>
@@ -141,10 +181,62 @@ export default function QrCodeGenerator() {
                 
                 {/* Content Tab */}
                 <TabsContent value="content" className="space-y-4 pt-4">
-                     <div className="space-y-2">
-                        <Label htmlFor="qr-data-text" className="text-muted-foreground">متن یا آدرس اینترنتی (URL)</Label>
-                        <Textarea id="qr-data-text" value={options.data} onChange={(e) => handleUpdate({ data: e.target.value })} placeholder="متن یا آدرس https://example.com را وارد کنید..." className="min-h-[120px] text-lg text-center" dir="ltr"/>
-                    </div>
+                     <Tabs defaultValue={qrType} onValueChange={(val) => setQrType(val as QrContentType)}>
+                        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto">
+                            {contentTabs.map(tab => (
+                                <TabsTrigger key={tab.type} value={tab.type} className="h-12 gap-2 text-base">
+                                    {tab.icon} {tab.label}
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                        <TabsContent value="link" className="pt-4">
+                            <Label htmlFor="qr-link" className="text-muted-foreground">آدرس اینترنتی (URL)</Label>
+                            <Input id="qr-link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://example.com" dir="ltr" className="h-12 text-lg text-center" />
+                        </TabsContent>
+                        <TabsContent value="text" className="pt-4">
+                             <Label htmlFor="qr-text" className="text-muted-foreground">متن</Label>
+                            <Textarea id="qr-text" value={text} onChange={(e) => setText(e.target.value)} placeholder="متن خود را وارد کنید..."/>
+                        </TabsContent>
+                        <TabsContent value="wifi" className="pt-4 space-y-4">
+                             <div className="space-y-2">
+                                <Label htmlFor="wifi-ssid">نام شبکه (SSID)</Label>
+                                <Input id="wifi-ssid" value={wifi.ssid} onChange={e => setWifi(w => ({ ...w, ssid: e.target.value }))} dir="ltr" />
+                             </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="wifi-pass">رمز عبور</Label>
+                                <Input id="wifi-pass" type="password" value={wifi.password} onChange={e => setWifi(w => ({ ...w, password: e.target.value }))} dir="ltr" />
+                             </div>
+                             <div className="space-y-2">
+                                <Label>نوع رمزنگاری</Label>
+                                <Select value={wifi.encryption} onValueChange={(val) => setWifi(w => ({...w, encryption: val}))}>
+                                    <SelectTrigger><SelectValue/></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="WPA">WPA/WPA2</SelectItem>
+                                        <SelectItem value="WEP">WEP</SelectItem>
+                                        <SelectItem value="nopass">None</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                             </div>
+                        </TabsContent>
+                        <TabsContent value="email" className="pt-4 space-y-4">
+                             <div className="space-y-2">
+                                <Label htmlFor="email-to">گیرنده (To)</Label>
+                                <Input id="email-to" type="email" value={email.to} onChange={e => setEmail(em => ({...em, to: e.target.value}))} placeholder="address@example.com" dir="ltr" />
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="email-subject">موضوع</Label>
+                                <Input id="email-subject" value={email.subject} onChange={e => setEmail(em => ({...em, subject: e.target.value}))} />
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="email-body">متن ایمیل</Label>
+                                <Textarea id="email-body" value={email.body} onChange={e => setEmail(em => ({...em, body: e.target.value}))} />
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="phone" className="pt-4">
+                            <Label htmlFor="qr-phone" className="text-muted-foreground">شماره تلفن</Label>
+                            <Input id="qr-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+989123456789" dir="ltr" className="h-12 text-lg text-center" />
+                        </TabsContent>
+                     </Tabs>
                 </TabsContent>
 
                 {/* Design Tab */}
@@ -191,20 +283,6 @@ export default function QrCodeGenerator() {
                                     <Label htmlFor="logo-url">یا آدرس URL لوگو</Label>
                                     <Input id="logo-url" value={options.image} onChange={(e) => handleUpdate({ image: e.target.value })} placeholder="http://.../logo.png" dir="ltr"/>
                                     <p className='text-xs text-muted-foreground'>برای حذف لوگو، آدرس را پاک کنید.</p>
-                                </div>
-                                <div className='space-y-2'>
-                                    <div className="flex items-center justify-between">
-                                        <Label>اندازه لوگو</Label>
-                                        <span className="font-mono text-primary text-sm">{options.imageOptions?.imageSize}</span>
-                                    </div>
-                                    <Slider value={[options.imageOptions?.imageSize || 0.4]} onValueChange={(v) => handleUpdate({ imageOptions: {...options.imageOptions, imageSize: v[0] }})} min={0.1} max={0.7} step={0.05} />
-                                </div>
-                                <div className='space-y-2'>
-                                    <div className="flex items-center justify-between">
-                                        <Label>حاشیه لوگو</Label>
-                                        <span className="font-mono text-primary text-sm">{options.imageOptions?.margin}</span>
-                                    </div>
-                                    <Slider value={[options.imageOptions?.margin || 0]} onValueChange={(v) => handleUpdate({ imageOptions: {...options.imageOptions, margin: v[0] }})} min={0} max={20} step={1} />
                                 </div>
                             </AccordionContent>
                         </AccordionItem>
