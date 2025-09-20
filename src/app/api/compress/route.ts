@@ -19,13 +19,13 @@ export async function POST(request: Request) {
     const buffer = await file.arrayBuffer();
     let optimizedBuffer;
     let outputContentType = file.type;
-    let outputExtension = file.name.split('.').pop() || 'dat';
+    let outputExtension = file.name.split('.').pop()?.toLowerCase() || 'dat';
 
     const sharpInstance = sharp(Buffer.from(buffer));
 
     switch (file.type) {
         case 'image/jpeg':
-            optimizedBuffer = await sharpInstance.jpeg({ quality: imageQuality }).toBuffer();
+            optimizedBuffer = await sharpInstance.jpeg({ quality: imageQuality, mozjpeg: true }).toBuffer();
             outputExtension = 'jpg';
             break;
         case 'image/png':
@@ -36,11 +36,23 @@ export async function POST(request: Request) {
             optimizedBuffer = await sharpInstance.webp({ quality: imageQuality }).toBuffer();
             outputExtension = 'webp';
             break;
+        case 'image/avif':
+             optimizedBuffer = await sharpInstance.avif({ quality: imageQuality }).toBuffer();
+            outputExtension = 'avif';
+            break;
+        case 'image/tiff':
+             optimizedBuffer = await sharpInstance.tiff({ quality: imageQuality }).toBuffer();
+            outputExtension = 'tiff';
+            break;
+        case 'image/gif':
+             optimizedBuffer = await sharpInstance.gif().toBuffer();
+            outputExtension = 'gif';
+            break;
         default:
             // Fallback for unsupported types, try to convert to jpeg
             outputContentType = 'image/jpeg';
             outputExtension = 'jpg';
-            optimizedBuffer = await sharpInstance.jpeg({ quality: imageQuality }).toBuffer();
+            optimizedBuffer = await sharpInstance.jpeg({ quality: imageQuality, mozjpeg: true }).toBuffer();
             break;
     }
 

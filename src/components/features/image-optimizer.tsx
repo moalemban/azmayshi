@@ -101,15 +101,15 @@ export default function ImageOptimizer() {
         const errorData = await response.json();
         throw new Error(errorData.error || 'بهینه‌سازی با خطا مواجه شد.');
       }
+      
+      const filename = response.headers.get('Content-Disposition')?.split('filename=')[1].replace(/"/g, '') || 'optimized_image';
 
       const blob = await response.blob();
-      const originalName = data.file.name.split('.').slice(0, -1).join('.');
-      const optimizedName = `${originalName}_optimized.webp`;
       
       setOptimizedImage({
         url: URL.createObjectURL(blob),
         size: blob.size,
-        name: optimizedName,
+        name: filename,
       });
       
       toast({
@@ -151,10 +151,10 @@ export default function ImageOptimizer() {
             className="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-muted-foreground/30 rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
              onDragOver={onDragOver} onDrop={onDrop} onClick={() => fileInputRef.current?.click()}
           >
-              <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/png, image/jpeg, image/webp" />
+              <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/png, image/jpeg, image/webp, image/gif, image/avif, image/tiff" />
               <Upload className="w-12 h-12 text-muted-foreground/50 mb-4" />
               <p className="text-muted-foreground text-center font-semibold">تصویر را بکشید یا برای انتخاب کلیک کنید</p>
-              <p className="text-xs text-muted-foreground/70 mt-2">PNG, JPG, WEBP - حداکثر ${MAX_FILE_SIZE_MB} مگابایت</p>
+              <p className="text-xs text-muted-foreground/70 mt-2">JPG, PNG, WEBP, GIF, AVIF, TIFF - حداکثر ${MAX_FILE_SIZE_MB} مگابایت</p>
               {errors.file && <p className="text-sm text-destructive mt-2">{errors.file.message}</p>}
           </div>
         )}
@@ -236,7 +236,7 @@ export default function ImageOptimizer() {
                       )}
                   </Button>
               ) : (
-                  <Button onClick={handleDownload} className="w-full h-12 text-base">
+                  <Button type="button" onClick={handleDownload} className="w-full h-12 text-base">
                     <Download className="ml-2 h-5 w-5" />
                     دانلود نسخه بهینه
                   </Button>
