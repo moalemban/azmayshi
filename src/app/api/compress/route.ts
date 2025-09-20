@@ -17,14 +17,38 @@ export async function POST(request: Request) {
     }
 
     const buffer = await file.arrayBuffer();
+    let optimizedBuffer;
+    let outputContentType = file.type;
+    let outputExtension = file.name.split('.').pop() || 'dat';
 
-    const optimizedBuffer = await sharp(Buffer.from(buffer))
-        .webp({ quality: imageQuality })
-        .toBuffer();
+    const sharpInstance = sharp(Buffer.from(buffer));
+
+    switch (file.type) {
+        case 'image/jpeg':
+            optimizedBuffer = await sharpInstance.jpeg({ quality: imageQuality }).toBuffer();
+            outputExtension = 'jpg';
+            break;
+        case 'image/png':
+            optimizedBuffer = await sharpInstance.png({ quality: imageQuality }).toBuffer();
+            outputExtension = 'png';
+            break;
+        case 'image/webp':
+            optimizedBuffer = await sharpInstance.webp({ quality: imageQuality }).toBuffer();
+            outputExtension = 'webp';
+            break;
+        default:
+            // Fallback for unsupported types, try to convert to jpeg
+            outputContentType = 'image/jpeg';
+            outputExtension = 'jpg';
+            optimizedBuffer = await sharpInstance.jpeg({ quality: imageQuality }).toBuffer();
+            break;
+    }
+
 
     const headers = new Headers();
-    headers.set('Content-Type', 'image/webp');
-    headers.set('Content-Disposition', `attachment; filename="optimized.webp"`);
+    headers.set('Content-Type', outputContentType);
+    const originalName = file.name.split('.').slice(0, -1).join('.');
+    headers.set('Content-Disposition', `attachment; filename="${originalName}_optimized.${outputExtension}"`);
 
     return new NextResponse(optimizedBuffer, { status: 200, headers });
 
