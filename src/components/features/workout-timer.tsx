@@ -52,6 +52,41 @@ const toEnglishDigits = (str: string): string => {
     return str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d).toString());
 };
 
+const InputWithControls = ({ label, id, value, onValueChange, placeholder, incrementStep = 1 }: {
+    label: string,
+    id: string,
+    value: string,
+    onValueChange: (newValue: string) => void,
+    placeholder: string,
+    incrementStep?: number
+}) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        onValueChange(toEnglishDigits(e.target.value).replace(/[^0-9]/g, ''));
+    };
+    
+    const handleStep = (amount: number) => {
+        const currentValue = parseInt(toEnglishDigits(value), 10) || 0;
+        onValueChange(String(Math.max(0, currentValue + amount)));
+    }
+
+    return (
+        <div className="space-y-1 text-center">
+            <Label htmlFor={id}>{label}</Label>
+            <div className="flex items-center justify-center">
+                <Button variant="outline" size="icon" className="h-14 w-10 rounded-l-full rounded-r-none" onClick={() => handleStep(-incrementStep)}><Minus className="w-5 h-5"/></Button>
+                <Input 
+                    id={id} 
+                    value={toPersianDigits(value)} 
+                    onChange={handleChange} 
+                    placeholder={placeholder} 
+                    className="h-14 text-2xl text-center font-display w-24 rounded-none z-10 border-x-0 focus-visible:ring-offset-0 focus-visible:ring-0" 
+                />
+                <Button variant="outline" size="icon" className="h-14 w-10 rounded-r-full rounded-l-none" onClick={() => handleStep(incrementStep)}><Plus className="w-5 h-5"/></Button>
+            </div>
+        </div>
+    );
+};
+
 
 export default function WorkoutTimer() {
   // Settings
@@ -216,12 +251,6 @@ export default function WorkoutTimer() {
         <span className="text-lg font-bold text-foreground font-display">{typeof value === 'number' ? toPersianDigits(value) : value}</span>
     </div>
   );
-  
-  const handleSettingChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
-    const englishValue = toEnglishDigits(value);
-    setter(englishValue.replace(/[^0-9]/g, ''));
-  };
-
 
   const renderContent = () => {
     if (phase === 'configuring') {
@@ -231,15 +260,22 @@ export default function WorkoutTimer() {
             <Settings className="w-6 h-6 text-muted-foreground" />
             <h3 className="text-lg font-semibold text-muted-foreground">تنظیمات تمرین</h3>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <Label htmlFor="sets">تعداد ست (ضروری)</Label>
-              <Input id="sets" value={toPersianDigits(sets)} onChange={(e) => handleSettingChange(setSets, e.target.value)} placeholder="۴" className="h-14 text-2xl text-center font-display" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="workout-time">زمان تمرین (ثانیه)</Label>
-              <Input id="workout-time" value={toPersianDigits(workoutTime)} onChange={(e) => handleSettingChange(setWorkoutTime, e.target.value)} placeholder="۴۵" className="h-14 text-2xl text-center font-display" />
-            </div>
+          <div className="flex justify-around items-end gap-2">
+            <InputWithControls
+                id="sets"
+                label="تعداد ست (ضروری)"
+                value={sets}
+                onValueChange={setSets}
+                placeholder="۴"
+            />
+            <InputWithControls
+                id="workout-time"
+                label="زمان تمرین (ثانیه)"
+                value={workoutTime}
+                onValueChange={setWorkoutTime}
+                placeholder="۴۵"
+                incrementStep={5}
+            />
           </div>
           <div className="space-y-2">
             <Label className="text-muted-foreground">حالت تایمر</Label>
@@ -258,10 +294,14 @@ export default function WorkoutTimer() {
              <p className='text-xs text-muted-foreground/80 pt-1'>حالت خودکار: زمان استراحت به صورت اتوماتیک شروع می‌شود.</p>
           </div>
           {timerMode === 'auto' && (
-             <div className="space-y-1">
-                <Label htmlFor="rest-time">زمان استراحت (ثانیه)</Label>
-                 <Input id="rest-time" value={toPersianDigits(restTime)} onChange={(e) => handleSettingChange(setRestTime, e.target.value)} placeholder="۱۵" className="h-14 text-2xl text-center font-display" />
-            </div>
+             <InputWithControls
+                id="rest-time"
+                label="زمان استراحت (ثانیه)"
+                value={restTime}
+                onValueChange={setRestTime}
+                placeholder="۱۵"
+                incrementStep={5}
+            />
           )}
         </div>
       );
