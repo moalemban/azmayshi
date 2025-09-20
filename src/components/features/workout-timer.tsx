@@ -94,6 +94,7 @@ export default function WorkoutTimer() {
   const [workoutTime, setWorkoutTime] = useState('45');
   const [restTime, setRestTime] = useState('15');
   const [timerMode, setTimerMode] = useState<TimerMode>('auto');
+  const [manualRestEnabled, setManualRestEnabled] = useState(false);
   
   // State
   const [phase, setPhase] = useState<Phase>('configuring');
@@ -120,7 +121,14 @@ export default function WorkoutTimer() {
   
   const totalWorkoutTime = history.reduce((acc, h) => acc + h.duration, 0);
   const totalReps = history.reduce((acc, h) => acc + h.reps, 0);
-  const totalRestTime = history.length > 0 ? (history.length -1) * (parseInt(restTime) || 0) : 0;
+  
+  const totalRestTime = history.reduce((acc, h, index) => {
+    if (index < history.length -1) { // Don't add rest after last set
+        if (timerMode === 'auto') return acc + (parseInt(restTime) || 0);
+        if (timerMode === 'manual' && manualRestEnabled) return acc + (parseInt(restTime) || 0);
+    }
+    return acc;
+  }, 0);
 
 
   const handleStart = () => {
@@ -179,16 +187,25 @@ export default function WorkoutTimer() {
       const numRestTime = parseInt(toEnglishDigits(restTime) || '0', 10);
 
       if (currentSet < numSets) {
-        if (timerMode === 'auto' && numRestTime > 0) {
-          setPhase('rest');
-          setTimeLeft(numRestTime);
-          toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: `زمان استراحت (${toPersianDigits(numRestTime)} ثانیه) شروع شد.` });
-        } else {
-           setPhase('paused');
-           setPausedFrom('rest');
-           setTimeLeft(numRestTime);
-           toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: numRestTime > 0 ? 'برای شروع استراحت، دکمه پلی را بزنید.' : 'برای شروع ست بعدی، دکمه پلی را بزنید.' });
-        }
+          if (timerMode === 'auto' && numRestTime > 0) {
+            setPhase('rest');
+            setTimeLeft(numRestTime);
+            toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: `زمان استراحت (${toPersianDigits(numRestTime)} ثانیه) شروع شد.` });
+          } else if (timerMode === 'manual' && manualRestEnabled && numRestTime > 0) {
+            setPhase('paused');
+            setPausedFrom('rest');
+            setTimeLeft(numRestTime);
+            toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: 'برای شروع استراحت، دکمه پلی را بزنید.' });
+          } else {
+             // Skip rest and go to paused workout for next set
+             setCurrentSet(prev => prev + 1);
+             const nextSet = currentSet + 1;
+             setPhase('paused');
+             setPausedFrom('workout');
+             setTimeLeft(numWorkoutTime);
+             setReps(0);
+             toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: `برای شروع ست ${toPersianDigits(nextSet)} دکمه پلی را بزنید.` });
+          }
       } else {
         setPhase('finished');
         if (timerRef.current) clearInterval(timerRef.current);
@@ -207,7 +224,7 @@ export default function WorkoutTimer() {
         setTimeLeft(numWorkoutTime);
         setReps(0);
         toast({ title: `شروع ست ${toPersianDigits(nextSet)}` });
-      } else {
+      } else { // Manual mode after rest
         setPhase('paused');
         setPausedFrom('workout');
         setTimeLeft(numWorkoutTime);
@@ -277,32 +294,44 @@ export default function WorkoutTimer() {
                 incrementStep={5}
             />
           </div>
-          <div className="space-y-2">
-            <Label className="text-muted-foreground">حالت تایمر</Label>
-            <div className="flex items-center justify-center p-1 bg-muted rounded-lg w-full">
-              {(['auto', 'manual'] as TimerMode[]).map((mode) => (
-                <Button
-                  key={mode}
-                  onClick={() => setTimerMode(mode)}
-                  variant={timerMode === mode ? 'default' : 'ghost'}
-                  className={`w-full h-10 ${timerMode === mode ? '' : 'text-muted-foreground'}`}
-                >
-                  {mode === 'auto' ? 'خودکار' : 'دستی'}
-                </Button>
-              ))}
+          <div className="space-y-4">
+            <div className="space-y-2">
+                <Label className="text-muted-foreground">حالت تایمر</Label>
+                <div className="flex items-center justify-center p-1 bg-muted rounded-lg w-full">
+                {(['auto', 'manual'] as TimerMode[]).map((mode) => (
+                    <Button
+                    key={mode}
+                    onClick={() => setTimerMode(mode)}
+                    variant={timerMode === mode ? 'default' : 'ghost'}
+                    className={`w-full h-10 ${timerMode === mode ? '' : 'text-muted-foreground'}`}
+                    >
+                    {mode === 'auto' ? 'خودکار' : 'دستی'}
+                    </Button>
+                ))}
+                </div>
+                <p className='text-xs text-muted-foreground/80 pt-1'>حالت خودکار: زمان استراحت به صورت اتوماتیک شروع می‌شود.</p>
             </div>
-             <p className='text-xs text-muted-foreground/80 pt-1'>حالت خودکار: زمان استراحت به صورت اتوماتیک شروع می‌شود.</p>
+
+            {timerMode === 'manual' && (
+                 <div className="flex items-center justify-between rounded-lg border p-3">
+                    <Label htmlFor="manual-rest-switch" className="cursor-pointer">
+                        استراحت کنترل‌شده در حالت دستی
+                    </Label>
+                    <Switch id="manual-rest-switch" checked={manualRestEnabled} onCheckedChange={setManualRestEnabled} />
+                </div>
+            )}
+             
+            {(timerMode === 'auto' || (timerMode === 'manual' && manualRestEnabled)) && (
+                <InputWithControls
+                    id="rest-time"
+                    label="زمان استراحت (ثانیه)"
+                    value={restTime}
+                    onValueChange={setRestTime}
+                    placeholder="۱۵"
+                    incrementStep={5}
+                />
+            )}
           </div>
-          {timerMode === 'auto' && (
-             <InputWithControls
-                id="rest-time"
-                label="زمان استراحت (ثانیه)"
-                value={restTime}
-                onValueChange={setRestTime}
-                placeholder="۱۵"
-                incrementStep={5}
-            />
-          )}
         </div>
       );
     }
@@ -341,7 +370,7 @@ export default function WorkoutTimer() {
     }
     
     const numWorkoutTime = parseInt(toEnglishDigits(workoutTime), 10) || 0;
-    const numRestTime = parseInt(toEnglishDigits(restTime), 10) || 0;
+    const numRestTime = parseInt(toEnglishDigits(restTime) || 0);
     const totalDuration = (phase === 'workout' || pausedFrom === 'workout') ? numWorkoutTime : numRestTime;
     const percentage = totalDuration > 0 ? (timeLeft / totalDuration) * 100 : 0;
     
