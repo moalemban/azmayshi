@@ -10,14 +10,12 @@ import { Button } from '../ui/button';
 type InterestType = 'compound' | 'simple';
 
 export default function DepositCalculator() {
-  const [principal, setPrincipal] = useState<string>('10,000,000');
-  const [interestRate, setInterestRate] = useState<string>('20');
-  const [duration, setDuration] = useState<string>('12'); // in months
+  const [principal, setPrincipal] = useState<string>('');
+  const [interestRate, setInterestRate] = useState<string>('');
+  const [duration, setDuration] = useState<string>('');
   const [interestType, setInterestType] = useState<InterestType>('compound');
-  const [isInitial, setIsInitial] = useState(true);
 
   const handlePrincipalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsInitial(false);
     const value = e.target.value.replace(/[^0-9]/g, '');
     if (value === '') {
       setPrincipal('');
@@ -72,11 +70,11 @@ export default function DepositCalculator() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="depositInterestRate" className="text-muted-foreground">نرخ سود سالانه (%)</Label>
-          <Input id="depositInterestRate" type="number" value={interestRate} onChange={(e) => {setInterestRate(e.target.value); setIsInitial(false);}} placeholder="۲۰" className="h-12 text-lg text-center font-display" />
+          <Input id="depositInterestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="۲۰" className="h-12 text-lg text-center font-display" />
         </div>
           <div className="space-y-2">
           <Label htmlFor="depositDuration" className="text-muted-foreground">مدت (ماه)</Label>
-          <Input id="depositDuration" type="number" value={duration} onChange={(e) => {setDuration(e.target.value); setIsInitial(false);}} placeholder="۱۲" className="h-12 text-lg text-center font-display" />
+          <Input id="depositDuration" type="number" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="۱۲" className="h-12 text-lg text-center font-display" />
         </div>
       </div>
       
@@ -84,7 +82,7 @@ export default function DepositCalculator() {
             {(['compound', 'simple'] as InterestType[]).map((type) => (
             <Button 
                 key={type}
-                onClick={() => {setInterestType(type); setIsInitial(false);}} 
+                onClick={() => setInterestType(type)} 
                 variant={interestType === type ? 'default' : 'ghost'}
                 className={`w-full ${interestType === type ? '' : 'text-muted-foreground'}`}
             >
@@ -93,7 +91,7 @@ export default function DepositCalculator() {
             ))}
         </div>
 
-      {hasValues && !isInitial ? (
+      {hasValues ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
               <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
                   <p className="text-sm text-muted-foreground">سود ماهانه</p>

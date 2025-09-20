@@ -8,9 +8,8 @@ import { Percent } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 export default function PercentageCalculator() {
-  const [val1, setVal1] = useState<string>('20');
-  const [val2, setVal2] = useState<string>('150');
-  const [isInitial, setIsInitial] = useState(true);
+  const [val1, setVal1] = useState<string>('');
+  const [val2, setVal2] = useState<string>('');
 
   const num1 = parseFloat(val1);
   const num2 = parseFloat(val2);
@@ -33,17 +32,17 @@ export default function PercentageCalculator() {
       <div className="flex gap-4 items-end">
         <div className="space-y-2 flex-1">
           <Label htmlFor="val1" className="text-muted-foreground">مقدار اول</Label>
-          <Input id="val1" type="number" value={val1} onChange={(e) => {setVal1(e.target.value); setIsInitial(false);}} className="h-12 text-lg text-center font-display" placeholder="۲۰"/>
+          <Input id="val1" type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۲۰"/>
         </div>
         <div className="space-y-2 flex-1">
           <Label htmlFor="val2" className="text-muted-foreground">مقدار دوم</Label>
-          <Input id="val2" type="number" value={val2} onChange={(e) => {setVal2(e.target.value); setIsInitial(false);}} className="h-12 text-lg text-center font-display" placeholder="۱۵۰"/>
+          <Input id="val2" type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۱۵۰"/>
         </div>
       </div>
 
       <Separator className="my-2 bg-border/50" />
 
-      { hasValues && !isInitial ? (
+      { hasValues ? (
           <div className="space-y-3">
               <div className="p-3 bg-muted/50 rounded-lg shadow-inner text-center">
                     <p className='text-sm text-muted-foreground'>

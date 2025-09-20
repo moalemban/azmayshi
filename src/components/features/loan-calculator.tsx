@@ -10,14 +10,12 @@ import { Button } from '../ui/button';
 type InterestType = 'compound' | 'simple';
 
 export default function LoanCalculator() {
-  const [loanAmount, setLoanAmount] = useState<string>('100,000,000');
-  const [interestRate, setInterestRate] = useState<string>('23');
-  const [loanTerm, setLoanTerm] = useState<string>('36'); // in months
+  const [loanAmount, setLoanAmount] = useState<string>('');
+  const [interestRate, setInterestRate] = useState<string>('');
+  const [loanTerm, setLoanTerm] = useState<string>('');
   const [interestType, setInterestType] = useState<InterestType>('compound');
-  const [isInitial, setIsInitial] = useState(true);
 
   const handleLoanAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsInitial(false);
     const value = e.target.value.replace(/[^0-9]/g, '');
     if (value === '') {
       setLoanAmount('');
@@ -79,11 +77,11 @@ export default function LoanCalculator() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="interestRate" className="text-muted-foreground">نرخ سود سالانه (%)</Label>
-          <Input id="interestRate" type="number" value={interestRate} onChange={(e) => {setInterestRate(e.target.value); setIsInitial(false);}} placeholder="۲۳" className="h-12 text-lg text-center font-display" />
+          <Input id="interestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="۲۳" className="h-12 text-lg text-center font-display" />
         </div>
           <div className="space-y-2">
           <Label htmlFor="loanTerm" className="text-muted-foreground">مدت بازپرداخت (ماه)</Label>
-          <Input id="loanTerm" type="number" value={loanTerm} onChange={(e) => {setLoanTerm(e.target.value); setIsInitial(false);}} placeholder="۳۶" className="h-12 text-lg text-center font-display" />
+          <Input id="loanTerm" type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="۳۶" className="h-12 text-lg text-center font-display" />
         </div>
       </div>
       
@@ -91,7 +89,7 @@ export default function LoanCalculator() {
             {(['compound', 'simple'] as InterestType[]).map((type) => (
             <Button 
                 key={type}
-                onClick={() => {setInterestType(type); setIsInitial(false);}} 
+                onClick={() => setInterestType(type)} 
                 variant={interestType === type ? 'default' : 'ghost'}
                 className={`w-full ${interestType === type ? '' : 'text-muted-foreground'}`}
             >
@@ -100,7 +98,7 @@ export default function LoanCalculator() {
             ))}
         </div>
 
-      {hasValues && !isInitial ? (
+      {hasValues ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
               <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
                   <p className="text-sm text-muted-foreground">مبلغ هر قسط</p>
