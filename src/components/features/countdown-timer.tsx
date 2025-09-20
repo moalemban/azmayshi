@@ -89,6 +89,7 @@ export default function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState(60);
   const [isRunning, setIsRunning] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
+  const [isConfiguring, setIsConfiguring] = useState(true);
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -149,6 +150,9 @@ export default function CountdownTimer() {
 
   const handleStartPause = () => {
     if (isFinished) return;
+    if (isConfiguring) {
+        setIsConfiguring(false);
+    }
     if (timeLeft > 0) {
       setIsRunning(!isRunning);
     }
@@ -159,6 +163,13 @@ export default function CountdownTimer() {
     setIsFinished(false);
     setTimeLeft(initialTotalSeconds);
   };
+
+  const openSettings = () => {
+    setIsRunning(false);
+    setIsFinished(false);
+    setIsConfiguring(true);
+    setTimeLeft(initialTotalSeconds);
+  }
   
   const formatTime = (timeInSeconds: number) => {
     const hours = Math.floor(timeInSeconds / 3600);
@@ -174,12 +185,10 @@ export default function CountdownTimer() {
   const { hours, minutes, seconds } = formatTime(timeLeft);
   const { hours: initialH, minutes: initialM, seconds: initialS } = formatTime(initialTotalSeconds);
   
-  const inConfigurationMode = !isRunning && timeLeft === initialTotalSeconds;
-
   return (
     <CardContent className="flex flex-col gap-6 p-4 items-center justify-center min-h-[450px]">
       
-      { inConfigurationMode ? (
+      { isConfiguring ? (
         <Card className="w-full max-w-sm glass-effect">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -216,23 +225,28 @@ export default function CountdownTimer() {
 
 
       <div className="flex justify-center items-center gap-4 w-full max-w-sm mt-4">
-        {inConfigurationMode ? (
+        {isConfiguring ? (
             <Button onClick={handleStartPause} size="lg" className="w-full h-14 text-lg bg-green-500 hover:bg-green-600 text-green-50" disabled={isFinished || initialTotalSeconds <= 0}>
                 <Play className="ml-2 h-6 w-6"/>
                 شروع شمارش
             </Button>
         ) : (
-          <>
-            <Button onClick={handleReset} variant="outline" size="icon" className="h-16 w-16 rounded-full" disabled={isRunning && timeLeft > 0}>
+          <div className="flex w-full items-center justify-around">
+            <Button onClick={handleReset} variant="outline" size="icon" className="h-16 w-16 rounded-full text-muted-foreground hover:text-destructive" disabled={isRunning}>
               <Redo className="h-7 w-7" />
+              <span className="sr-only">ریست</span>
             </Button>
             <Button onClick={handleStartPause} size="lg" className={cn('h-20 w-20 rounded-full text-lg shadow-lg', 
                 isRunning ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-50 animate-pulse-slow' : 'bg-green-500 hover:bg-green-600 text-green-50'
             )} disabled={isFinished}>
               {isRunning ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
+               <span className="sr-only">{isRunning ? 'توقف' : 'ادامه'}</span>
             </Button>
-            <div className='w-16'></div>
-          </>
+             <Button onClick={openSettings} variant="outline" size="icon" className="h-16 w-16 rounded-full text-muted-foreground hover:text-primary">
+              <Settings className="h-7 w-7" />
+               <span className="sr-only">تنظیمات</span>
+            </Button>
+          </div>
         )}
       </div>
     </CardContent>
