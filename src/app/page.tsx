@@ -120,7 +120,6 @@ const toolCategories = [
       { id: 'deposit-calculator', title: 'سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
       { id: 'savings-calculator', title: 'محاسبه‌گر پس‌انداز', icon: <TrendingUp className="h-8 w-8 text-lime-400" />, component: <SavingsCalculator /> },
       { id: 'percentage-calculator', title: 'محاسبه درصد', icon: <Percent className="h-8 w-8 text-teal-400" />, component: <PercentageCalculator /> },
-      { id: 'live-prices', title: 'نرخ ارز و طلا', icon: <CandlestickChart className="h-8 w-8 text-yellow-400" />, component: <AdvancedLivePrices /> },
     ]
   },
   {
