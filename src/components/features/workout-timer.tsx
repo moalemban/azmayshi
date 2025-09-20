@@ -293,11 +293,11 @@ export default function WorkoutTimer() {
           <div className='flex flex-col items-center gap-2 w-full'>
             <p className='text-muted-foreground'>تعداد حرکت</p>
             <div className="flex items-center gap-4">
-              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))} ><Minus/></Button>
+              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))} disabled={isRunning && timerMode === 'auto'}><Minus/></Button>
               <span className="text-4xl font-bold w-20 text-center font-display">{reps.toLocaleString('fa-IR')}</span>
-              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)}><Plus/></Button>
+              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)} disabled={isRunning && timerMode === 'auto'}><Plus/></Button>
             </div>
-             <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2">
+             <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2" disabled={isRunning && timerMode === 'auto'}>
                 <Plus className="w-4 h-4 ml-2"/> ثبت حرکت
             </Button>
           </div>
