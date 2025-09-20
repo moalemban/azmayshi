@@ -26,7 +26,7 @@ const ResultCard = ({ icon, title, value, onCopy }: { icon: React.ReactNode, tit
             {icon}
             <div>
                 <p className="text-sm text-muted-foreground">{title}</p>
-                <p className="text-lg font-semibold text-primary font-mono tracking-wider" dir="ltr">{value}</p>
+                <p className="text-lg font-semibold text-primary font-display tracking-wider" dir="ltr">{value}</p>
             </div>
         </div>
         <Button variant="ghost" size="icon" className="absolute top-2 left-2 text-muted-foreground" onClick={onCopy} title={`کپی کردن ${title}`}>
@@ -83,7 +83,7 @@ export default function ShebaConverter() {
             value={sheba}
             onChange={handleShebaChange}
             placeholder="XX XXXX XXXX XXXX XXXX XXXX XXXX"
-            className="h-14 text-2xl tracking-widest font-mono text-center"
+            className="h-14 text-2xl tracking-wider font-display text-center"
             maxLength={29}
           />
         </div>
