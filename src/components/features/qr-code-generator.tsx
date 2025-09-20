@@ -81,6 +81,7 @@ export default function QrCodeGenerator() {
   };
   
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     if (!qrContainerRef.current) return;
 
     qrCodeInstance.current = new QRCodeStyling({
@@ -238,3 +239,5 @@ export default function QrCodeGenerator() {
     </CardContent>
   );
 }
+
+    
