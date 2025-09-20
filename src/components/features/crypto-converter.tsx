@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ArrowUp, ArrowDown, RefreshCw, Timer } from 'lucide-react';
+import { ArrowUp, ArrowDown, RefreshCw, Timer, Bitcoin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { CryptoPrice } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -140,7 +140,13 @@ export default function CryptoConverter() {
                             <TableRow key={`${crypto.symbol}-${index}`}>
                                 <TableCell className="font-medium">
                                     <div className="flex items-center gap-3">
-                                        <Image src={crypto.icon} alt={crypto.name_en} width={28} height={28} className="rounded-full" />
+                                        {crypto.icon ? (
+                                            <Image src={crypto.icon} alt={crypto.name_en} width={28} height={28} className="rounded-full" />
+                                        ) : (
+                                            <div className="w-7 h-7 flex items-center justify-center bg-muted rounded-full">
+                                                <Bitcoin className="w-4 h-4 text-muted-foreground" />
+                                            </div>
+                                        )}
                                         <div>
                                             <div className="font-bold">{crypto.name_en}</div>
                                             <div className="text-xs text-muted-foreground">{crypto.symbol}</div>

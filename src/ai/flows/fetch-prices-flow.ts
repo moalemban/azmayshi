@@ -39,7 +39,7 @@ const CryptoPriceSchema = z.object({
   name_fa: z.string(),
   name_en: z.string(),
   symbol: z.string(),
-  icon: z.string(),
+  icon: z.string().nullable(),
   price_usdt: z.number(),
   price_irr: z.number(),
   change_percent: z.number(),
@@ -105,7 +105,7 @@ const fetchPricesFlow = ai.defineFlow(
                 const nameFa = $crypto(tds[0]).find('span.name-fa').text().trim();
                 const nameEn = $crypto(tds[0]).find('span.name-en').text().trim();
                 const symbol = nameEn.split(' ')[0].toUpperCase();
-                const icon = $crypto(tds[0]).find('img').attr('data-src') || $crypto(tds[0]).find('img').attr('src') || '';
+                const icon = $crypto(tds[0]).find('img').attr('data-src') || $crypto(tds[0]).find('img').attr('src') || null;
                 
                 const parseNumber = (selector: cheerio.Cheerio) => parseFloat(selector.text().trim().replace(/,/g, '')) || 0;
 

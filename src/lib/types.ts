@@ -23,7 +23,7 @@ export type CryptoPrice = {
   name_fa: string;
   name_en: string;
   symbol: string;
-  icon: string;
+  icon: string | null;
   price_usdt: number;
   price_irr: number;
   change_percent: number;
