@@ -109,7 +109,7 @@ export default function CountdownTimer() {
 
   const handleInputChange = (field: 'hours' | 'minutes' | 'seconds', value: string) => {
     if (isRunning) return;
-    const numValue = parseInt(value, 10) || 0;
+    const numValue = parseInt(value.replace(/[^۰-۹]/g, ''), 10) || 0;
     
     const currentHours = Math.floor(initialTotalSeconds / 3600);
     const currentMinutes = Math.floor((initialTotalSeconds % 3600) / 60);
@@ -184,13 +184,9 @@ export default function CountdownTimer() {
 
   const { hours, minutes, seconds } = formatTime(timeLeft);
   
-  const formatInputTime = (timeInSeconds: number) => {
-    const hours = String(Math.floor(timeInSeconds / 3600)).padStart(2, '0');
-    const minutes = String(Math.floor((timeInSeconds % 3600) / 60)).padStart(2, '0');
-    const seconds = String(timeInSeconds % 60).padStart(2, '0');
-    return { hours, minutes, seconds };
-  };
-  const { hours: iH, minutes: iM, seconds: iS } = formatInputTime(initialTotalSeconds);
+  const getInputHours = (totalSeconds: number) => Math.floor(totalSeconds / 3600);
+  const getInputMinutes = (totalSeconds: number) => Math.floor((totalSeconds % 3600) / 60);
+  const getInputSeconds = (totalSeconds: number) => totalSeconds % 60;
 
   return (
     <CardContent className="flex flex-col gap-6 p-4 items-center justify-center min-h-[450px]">
@@ -207,17 +203,17 @@ export default function CountdownTimer() {
             <CardContent>
                 <div className="flex flex-row-reverse gap-2 items-end p-4">
                     <div className="flex-1 space-y-1 text-center">
-                        <Input id="hours-input" type="number" placeholder="00" value={iH} onChange={e => handleInputChange('hours', e.target.value)} className="h-16 w-full text-4xl text-center font-display" min={0}/>
+                        <Input id="hours-input" type="number" placeholder="۰۰" value={getInputHours(initialTotalSeconds).toLocaleString('fa-IR', { useGrouping: false })} onChange={e => handleInputChange('hours', e.target.value)} className="h-16 w-full text-4xl text-center font-display" min={0}/>
                         <Label htmlFor="hours-input" className="text-xs text-muted-foreground">ساعت</Label>
                     </div>
                     <span className='text-4xl font-display text-muted-foreground pb-8'>:</span>
                     <div className="flex-1 space-y-1 text-center">
-                        <Input id="minutes-input" type="number" placeholder="01" value={iM} onChange={e => handleInputChange('minutes', e.target.value)} className="h-16 w-full text-4xl text-center font-display" max={59} min={0}/>
+                        <Input id="minutes-input" type="number" placeholder="۰۱" value={getInputMinutes(initialTotalSeconds).toLocaleString('fa-IR', { useGrouping: false })} onChange={e => handleInputChange('minutes', e.target.value)} className="h-16 w-full text-4xl text-center font-display" max={59} min={0}/>
                         <Label htmlFor="minutes-input" className="text-xs text-muted-foreground">دقیقه</Label>
                     </div>
                     <span className='text-4xl font-display text-muted-foreground pb-8'>:</span>
                     <div className="flex-1 space-y-1 text-center">
-                        <Input id="seconds-input" type="number" placeholder="00" value={iS} onChange={e => handleInputChange('seconds', e.target.value)} className="h-16 w-full text-4xl text-center font-display" max={59} min={0}/>
+                        <Input id="seconds-input" type="number" placeholder="۰۰" value={getInputSeconds(initialTotalSeconds).toLocaleString('fa-IR', { useGrouping: false })} onChange={e => handleInputChange('seconds', e.target.value)} className="h-16 w-full text-4xl text-center font-display" max={59} min={0}/>
                         <Label htmlFor="seconds-input" className="text-xs text-muted-foreground">ثانیه</Label>
                     </div>
                 </div>
