@@ -139,12 +139,6 @@ export default function QrCodeGenerator() {
         
         {/* Content Section */}
         <div className="space-y-4">
-            <Alert>
-                <Text className="h-4 w-4" />
-                <AlertTitle>محتوای QR Code</AlertTitle>
-                <AlertDescription>نوع محتوایی که می‌خواهید در کد QR قرار دهید را انتخاب و اطلاعات آن را وارد کنید.</AlertDescription>
-            </Alert>
-
             <div>
                 <Label className="text-muted-foreground">نوع محتوا</Label>
                 <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-2">
@@ -171,11 +165,6 @@ export default function QrCodeGenerator() {
 
         {/* Design Section */}
          <div className="space-y-6">
-             <Alert>
-                <Palette className="h-4 w-4" />
-                <AlertTitle>طراحی QR Code</AlertTitle>
-                <AlertDescription>ظاهر کد QR خود را شخصی‌سازی کنید.</AlertDescription>
-            </Alert>
             <div className="space-y-2">
                 <div className="flex justify-between items-center">
                      <Label className="text-muted-foreground">اندازه</Label>
