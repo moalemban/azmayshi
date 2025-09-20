@@ -54,7 +54,7 @@ export default function VehiclePlateIdentifier() {
                 <div className="flex-grow flex items-center justify-evenly px-2 h-full">
                      <span className="text-2xl font-mono text-gray-400">•••</span>
                     <Select value={plateLetter} onValueChange={setPlateLetter}>
-                        <SelectTrigger className="w-16 h-12 text-lg border-none bg-transparent focus:ring-0 focus:ring-offset-0 font-bold">
+                        <SelectTrigger className="w-16 h-12 text-lg border-none bg-transparent focus:ring-0 focus:ring-offset-0 font-bold text-gray-800">
                            <SelectValue placeholder="ب" />
                         </SelectTrigger>
                         <SelectContent className="glass-effect">
@@ -73,7 +73,7 @@ export default function VehiclePlateIdentifier() {
                         value={plateNumber}
                         onChange={handlePlateNumberChange}
                         placeholder="۱۱"
-                        className="w-12 h-12 text-3xl text-center font-mono tracking-widest border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
+                        className="w-12 h-12 text-3xl text-center font-mono tracking-widest border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-gray-800"
                         maxLength={2}
                     />
                 </div>
