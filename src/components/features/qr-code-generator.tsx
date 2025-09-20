@@ -70,7 +70,7 @@ const ColorPicker = ({ label, value, onChange }: { label: string, value: string,
     </div>
 );
 
-const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi, setWifi, email, setEmail, phone, setPhone }: any) => {
+const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi, setWifi, email, setEmail, phone, setPhone, size, setSize }: any) => {
     const contentTabs: { type: QrContentType, icon: React.ReactNode, label: string }[] = [
         { type: 'link', icon: <LinkIcon className="w-5 h-5" />, label: 'لینک' },
         { type: 'text', icon: <Text className="w-5 h-5" />, label: 'متن' },
@@ -88,6 +88,13 @@ const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi
                     </div>
                 </AccordionTrigger>
                 <AccordionContent className='space-y-4 pt-4'>
+                    <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                            <Label className="text-muted-foreground">اندازه</Label>
+                            <span className="text-sm font-mono text-primary">{size}px</span>
+                        </div>
+                        <Slider value={[size]} onValueChange={(val) => setSize(val[0])} min={128} max={1024} step={16} />
+                    </div>
                     <Select defaultValue={qrType} onValueChange={(val) => setQrType(val as QrContentType)}>
                         <SelectTrigger className="h-12 text-base">
                              <SelectValue placeholder="نوع محتوا را انتخاب کنید" />
@@ -237,7 +244,7 @@ export default function QrCodeGenerator() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start w-full">
             {/* Options Section */}
             <div className="md:col-span-2 space-y-4">
-                 <ContentTypeTabs {...{ qrType, setQrType, link, setLink, text, setText, wifi, setWifi, email, setEmail, phone, setPhone }} />
+                 <ContentTypeTabs {...{ qrType, setQrType, link, setLink, text, setText, wifi, setWifi, email, setEmail, phone, setPhone, size, setSize }} />
                  <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="item-1">
                         <AccordionTrigger className="text-xl font-semibold font-display text-foreground">
@@ -247,13 +254,6 @@ export default function QrCodeGenerator() {
                             </div>
                         </AccordionTrigger>
                         <AccordionContent className='space-y-6 pt-4'>
-                            <div className="space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <Label className="text-muted-foreground">اندازه</Label>
-                                    <span className="text-sm font-mono text-primary">{size}px</span>
-                                </div>
-                                <Slider value={[size]} onValueChange={(val) => setSize(val[0])} min={128} max={1024} step={16} />
-                            </div>
                              <div className="grid grid-cols-2 gap-4">
                                <ColorPicker label="رنگ QR" value={options.dotsOptions?.color || '#000000'} onChange={color => handleUpdate({ dotsOptions: { ...options.dotsOptions, color }, cornersSquareOptions: { ...options.cornersSquareOptions, color } })} />
                                <ColorPicker label="رنگ پس‌زمینه" value={options.backgroundOptions?.color || '#FFFFFF'} onChange={color => handleUpdate({ backgroundOptions: { ...options.backgroundOptions, color }})} />
