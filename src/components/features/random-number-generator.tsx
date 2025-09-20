@@ -10,6 +10,15 @@ import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '../ui/checkbox';
 import { ScrollArea } from '../ui/scroll-area';
 
+const toPersianDigits = (str: string): string => {
+    return String(str).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d)]);
+};
+
+const toEnglishDigits = (str: string): string => {
+    return String(str).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d).toString());
+};
+
+
 export default function RandomNumberGenerator() {
   const [min, setMin] = useState('1');
   const [max, setMax] = useState('100');
@@ -17,6 +26,11 @@ export default function RandomNumberGenerator() {
   const [unique, setUnique] = useState(true);
   const [results, setResults] = useState<number[]>([]);
   const { toast } = useToast();
+
+  const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
+    const englishValue = toEnglishDigits(value);
+    setter(englishValue);
+  };
 
   const generateNumbers = () => {
     const minValue = parseInt(min, 10);
@@ -39,7 +53,7 @@ export default function RandomNumberGenerator() {
     if (unique) {
       const rangeSize = maxValue - minValue + 1;
       if (numCount > rangeSize) {
-        toast({ title: 'خطا', description: `امکان تولید ${numCount} عدد منحصر به فرد در بازه ${minValue} تا ${maxValue} وجود ندارد.`, variant: 'destructive' });
+        toast({ title: 'خطا', description: `امکان تولید ${toPersianDigits(count)} عدد منحصر به فرد در بازه ${toPersianDigits(min)} تا ${toPersianDigits(max)} وجود ندارد.`, variant: 'destructive' });
         return;
       }
       const numbers = new Set<number>();
@@ -78,15 +92,15 @@ export default function RandomNumberGenerator() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center">
         <div className="space-y-2">
           <Label htmlFor="min-val" className="text-muted-foreground">حداقل</Label>
-          <Input id="min-val" type="number" value={min} onChange={(e) => setMin(e.target.value)} className="h-12 text-lg text-center" placeholder="1"/>
+          <Input id="min-val" type="text" value={toPersianDigits(min)} onChange={(e) => handleInputChange(setMin, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۱"/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="max-val" className="text-muted-foreground">حداکثر</Label>
-          <Input id="max-val" type="number" value={max} onChange={(e) => setMax(e.target.value)} className="h-12 text-lg text-center" placeholder="100"/>
+          <Input id="max-val" type="text" value={toPersianDigits(max)} onChange={(e) => handleInputChange(setMax, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۱۰۰"/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="count" className="text-muted-foreground">تعداد</Label>
-          <Input id="count" type="number" value={count} onChange={(e) => setCount(e.target.value)} className="h-12 text-lg text-center" placeholder="5"/>
+          <Input id="count" type="text" value={toPersianDigits(count)} onChange={(e) => handleInputChange(setCount, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۵"/>
         </div>
       </div>
       
