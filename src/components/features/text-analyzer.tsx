@@ -9,7 +9,7 @@ import { Trash2 } from 'lucide-react';
 const StatCard = ({ label, value }: { label: string, value: number }) => (
   <div className="p-3 bg-muted/50 rounded-lg shadow-inner text-center">
     <p className="text-sm text-muted-foreground">{label}</p>
-    <p className="text-2xl font-bold text-primary font-mono">{value.toLocaleString('fa-IR')}</p>
+    <p className="text-2xl font-bold text-primary font-display">{value.toLocaleString('fa-IR')}</p>
   </div>
 );
 
