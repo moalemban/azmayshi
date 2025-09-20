@@ -98,14 +98,12 @@ export default function WorkoutTimer() {
   
   const handleResume = () => {
     if (pausedFrom) {
-      if (timerMode === 'manual') {
-        if (pausedFrom === 'rest' && timeLeft === restTime) {
-          setTimeLeft(restTime -1);
-          setTimeout(() => setTimeLeft(restTime), 0);
-        } else if (pausedFrom === 'workout' && timeLeft === workoutTime) {
-          setTimeLeft(workoutTime - 1);
-          setTimeout(() => setTimeLeft(workoutTime), 0);
-        }
+      if (pausedFrom === 'rest' && timeLeft === restTime && timerMode === 'auto') {
+        setTimeLeft(restTime - 1);
+        setTimeout(() => setTimeLeft(restTime), 0);
+      } else if (pausedFrom === 'workout' && timeLeft === workoutTime && timerMode === 'auto') {
+        setTimeLeft(workoutTime - 1);
+        setTimeout(() => setTimeLeft(workoutTime), 0);
       }
       setPhase(pausedFrom);
       setPausedFrom(null);
@@ -123,7 +121,7 @@ export default function WorkoutTimer() {
   };
 
   const finishSet = () => {
-      const duration = workoutTime - timeLeft;
+      const duration = (phase === 'workout' ? workoutTime - timeLeft : workoutTime);
       const newHistory: SetHistory = { set: currentSet, reps: reps, duration: duration };
       setHistory(prev => [...prev, newHistory]);
       playSound();
@@ -295,11 +293,11 @@ export default function WorkoutTimer() {
           <div className='flex flex-col items-center gap-2 w-full'>
             <p className='text-muted-foreground'>تعداد حرکت</p>
             <div className="flex items-center gap-4">
-              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))} disabled={isRunning && timerMode === 'manual'}><Minus/></Button>
+              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))} ><Minus/></Button>
               <span className="text-4xl font-bold w-20 text-center font-display">{reps.toLocaleString('fa-IR')}</span>
-              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)} disabled={isRunning && timerMode === 'manual'}><Plus/></Button>
+              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)}><Plus/></Button>
             </div>
-             <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2" disabled={isRunning && timerMode === 'manual'}>
+             <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2">
                 <Plus className="w-4 h-4 ml-2"/> ثبت حرکت
             </Button>
           </div>
