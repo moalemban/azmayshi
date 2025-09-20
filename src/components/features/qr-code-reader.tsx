@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,10 +24,11 @@ export default function QrCodeReader() {
   const streamRef = useRef<MediaStream | null>(null);
   const { toast } = useToast();
 
-  const stopScan = () => {
+  const stopScan = useCallback(() => {
     setIsScanning(false);
     if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = undefined;
     }
     if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
@@ -36,10 +37,10 @@ export default function QrCodeReader() {
     if(videoRef.current) {
         videoRef.current.srcObject = null;
     }
-  };
+  }, []);
 
-  const scanQrCode = () => {
-    if (!isScanning || !videoRef.current || !canvasRef.current) return;
+  const scanQrCode = useCallback(() => {
+    if (!videoRef.current || !canvasRef.current) return;
 
     const video = videoRef.current;
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -50,25 +51,33 @@ export default function QrCodeReader() {
         canvas.height = video.videoHeight;
         canvas.width = video.videoWidth;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: "dontInvert",
-        });
-
-        if (code) {
-          setResult(code.data);
-          setError(null);
-          toast({ title: 'موفق!', description: 'کد QR با موفقیت خوانده شد.', className: 'bg-green-500/10 text-green-600'});
-          stopScan();
+        try {
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+              inversionAttempts: "dontInvert",
+            });
+    
+            if (code) {
+              setResult(code.data);
+              setError(null);
+              toast({ title: 'موفق!', description: 'کد QR با موفقیت خوانده شد.', className: 'bg-green-500/10 text-green-600'});
+              stopScan();
+            }
+        } catch (e) {
+            console.error("Error getting image data from canvas", e)
         }
       }
     }
     animationFrameRef.current = requestAnimationFrame(scanQrCode);
-  };
+  }, [stopScan, toast]);
   
    useEffect(() => {
     if (isScanning) {
       animationFrameRef.current = requestAnimationFrame(scanQrCode);
+    } else {
+        if(animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current)
+        }
     }
     return () => {
       if (animationFrameRef.current) {
@@ -76,18 +85,19 @@ export default function QrCodeReader() {
       }
       stopScan();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isScanning]);
+  }, [isScanning, scanQrCode, stopScan]);
 
 
   const startCamera = async () => {
-    stopScan(); // Stop any previous scan
+    stopScan(); 
     setResult(null);
     setError(null);
+    setIsScanning(true);
     
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setError("دوربین در این مرورگر پشتیبانی نمی‌شود.");
         setHasCameraPermission(false);
+        setIsScanning(false);
         return;
     }
 
@@ -96,14 +106,13 @@ export default function QrCodeReader() {
         streamRef.current = stream;
         if (videoRef.current) {
             videoRef.current.srcObject = stream;
-            // videoRef.current.play(); // autoPlay should handle this
         }
         setHasCameraPermission(true);
-        setIsScanning(true);
     } catch (err) {
         console.error("Camera access error:", err);
         setError("امکان دسترسی به دوربین وجود ندارد. لطفاً دسترسی لازم را بدهید.");
         setHasCameraPermission(false);
+        stopScan();
     }
   };
   
