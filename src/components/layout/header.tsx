@@ -1,8 +1,40 @@
+
+'use client';
 import { ThemeToggle } from './theme-toggle';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useEffect, useState } from 'react';
+import { Clock } from 'lucide-react';
 
+
+const LiveClock = () => {
+    const [time, setTime] = useState(new Date());
+
+    useEffect(() => {
+        const timerId = setInterval(() => {
+            setTime(new Date());
+        }, 1000);
+
+        return () => {
+            clearInterval(timerId);
+        };
+    }, []);
+
+    const formattedTime = time.toLocaleTimeString('fa-IR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+
+    return (
+        <div className="hidden md:flex items-center space-x-2 space-x-reverse bg-background/50 rounded-full px-4 py-2">
+            <Clock className="w-5 h-5 text-primary animate-pulse" />
+            <span className="text-muted-foreground text-sm font-body font-mono">{formattedTime}</span>
+        </div>
+    );
+};
 
 export default function Header() {
   const logo = PlaceHolderImages.find(p => p.id === 'logo');
@@ -29,10 +61,7 @@ export default function Header() {
           </div>
         </Link>
         <div className="flex items-center gap-2">
-            <div className="hidden md:flex items-center space-x-2 space-x-reverse bg-background/50 rounded-full px-4 py-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
-                <span className="text-muted-foreground text-sm font-body">آنلاین</span>
-            </div>
+            <LiveClock />
             <ThemeToggle />
         </div>
       </div>
