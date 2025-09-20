@@ -124,10 +124,6 @@ const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi
                             <Input id="wifi-ssid" value={wifi.ssid} onChange={e => setWifi((w:any) => ({ ...w, ssid: e.target.value }))} dir="ltr" />
                          </div>
                          <div className="space-y-2">
-                            <Label htmlFor="wifi-pass">رمز عبور</Label>
-                            <Input id="wifi-pass" type="password" value={wifi.password} onChange={e => setWifi((w:any) => ({ ...w, password: e.target.value }))} dir="ltr" />
-                         </div>
-                         <div className="space-y-2">
                             <Label>نوع رمزنگاری</Label>
                             <Select value={wifi.encryption} onValueChange={(val) => setWifi((w:any) => ({...w, encryption: val}))}>
                                 <SelectTrigger><SelectValue/></SelectTrigger>
@@ -138,6 +134,12 @@ const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi
                                 </SelectContent>
                             </Select>
                          </div>
+                         {wifi.encryption !== 'nopass' && (
+                             <div className="space-y-2">
+                                <Label htmlFor="wifi-pass">رمز عبور</Label>
+                                <Input id="wifi-pass" type="password" value={wifi.password} onChange={e => setWifi((w:any) => ({ ...w, password: e.target.value }))} dir="ltr" />
+                             </div>
+                         )}
                     </div>}
                      {qrType === 'email' && <div className="space-y-4">
                          <div className="space-y-2">
@@ -186,7 +188,13 @@ export default function QrCodeGenerator() {
     switch (qrType) {
         case 'link': data = link; break;
         case 'text': data = text; break;
-        case 'wifi': data = `WIFI:T:${wifi.encryption};S:${wifi.ssid};P:${wifi.password};;`; break;
+        case 'wifi':
+            if (wifi.encryption === 'nopass') {
+                 data = `WIFI:T:nopass;S:${wifi.ssid};;`;
+            } else {
+                 data = `WIFI:T:${wifi.encryption};S:${wifi.ssid};P:${wifi.password};;`;
+            }
+            break;
         case 'email': data = `mailto:${email.to}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}`; break;
         case 'phone': data = `tel:${phone}`; break;
     }
