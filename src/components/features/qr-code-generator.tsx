@@ -29,8 +29,23 @@ const qrTypes: { value: QRType; label: string; icon: React.ReactNode }[] = [
 const wifiEncryptions = ['WPA', 'WEP', 'nopass'];
 
 const dotTypes: QRCodeOptions['dotsOptions']['type'][] = ['rounded', 'dots', 'classy', 'classy-rounded', 'square', 'extra-rounded'];
-const cornerDotTypes: QRCodeOptions['cornersDotOptions']['type'][] = ['dot', 'square'];
 const cornerSquareTypes: QRCodeOptions['cornersSquareOptions']['type'][] = ['square', 'extra-rounded', 'dot'];
+const cornerDotTypes: QRCodeOptions['cornersDotOptions']['type'][] = ['dot', 'square'];
+
+const dotTypeTranslations: { [key: string]: string } = {
+  rounded: 'گرد',
+  dots: 'نقطه‌ای',
+  classy: 'کلاسیک',
+  'classy-rounded': 'کلاسیک گرد',
+  square: 'مربعی',
+  'extra-rounded': 'بسیار گرد',
+};
+
+const cornerSquareTypeTranslations: { [key: string]: string } = {
+  square: 'مربعی',
+  'extra-rounded': 'بسیار گرد',
+  dot: 'نقطه‌ای',
+};
 
 
 export default function QrCodeGenerator() {
@@ -58,7 +73,7 @@ export default function QrCodeGenerator() {
 
   const getQrData = (): string => {
     switch (type) {
-      case 'url': return text.startsWith('http') ? text : `http://${text}`;
+      case 'url': return text.startsWith('http') ? text : `https://''' + text;
       case 'text': return text;
       case 'email': return `mailto:${email}`;
       case 'tel': return `tel:${phone}`;
@@ -187,14 +202,14 @@ export default function QrCodeGenerator() {
                     <Label>شکل نقاط</Label>
                     <Select value={dotType} onValueChange={(v) => setDotType(v as any)}>
                         <SelectTrigger className="h-12"><SelectValue/></SelectTrigger>
-                        <SelectContent>{dotTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                        <SelectContent>{dotTypes.map(t => <SelectItem key={t} value={t}>{dotTypeTranslations[t] || t}</SelectItem>)}</SelectContent>
                     </Select>
                 </div>
                 <div className="space-y-2">
                     <Label>شکل گوشه‌ها</Label>
                     <Select value={cornerSquareType} onValueChange={(v) => setCornerSquareType(v as any)}>
-                        <SelectTrigger className="h-12"><SelectValue/></SelectTrigger>
-                        <SelectContent>{cornerSquareTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                        <SelectTrigger className="h-12"><SelectValue/></SelectValue></SelectTrigger>
+                        <SelectContent>{cornerSquareTypes.map(t => <SelectItem key={t} value={t}>{cornerSquareTypeTranslations[t] || t}</SelectItem>)}</SelectContent>
                     </Select>
                 </div>
             </div>
