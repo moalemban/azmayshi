@@ -66,6 +66,7 @@ export default function CurrencyConverter() {
     const rate = getRate(fromCurrency, toCurrency);
     if(isNaN(rate)) return 0;
     return numericAmount * rate;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [numericAmount, fromCurrency, toCurrency, liveRates]);
 
   const formattedResult = useMemo(() => {
