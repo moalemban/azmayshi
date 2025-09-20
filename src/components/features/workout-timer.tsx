@@ -90,9 +90,9 @@ const InputWithControls = ({ label, id, value, onValueChange, placeholder, incre
 
 export default function WorkoutTimer() {
   // Settings
-  const [sets, setSets] = useState('');
-  const [workoutTime, setWorkoutTime] = useState('');
-  const [restTime, setRestTime] = useState('');
+  const [sets, setSets] = useState('1');
+  const [workoutTime, setWorkoutTime] = useState('45');
+  const [restTime, setRestTime] = useState('15');
   const [timerMode, setTimerMode] = useState<TimerMode>('auto');
   
   // State
