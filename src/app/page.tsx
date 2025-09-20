@@ -34,9 +34,10 @@ import ScrollToTop from '@/components/layout/scroll-to-top';
 import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink } from 'lucide-react';
+import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
+import { Badge } from '@/components/ui/badge';
 
 
 const toolCategories = [
@@ -99,7 +100,7 @@ const toolCategories = [
       { id: 'password-generator', title: 'تولید رمز عبور', icon: <KeyRound className="h-8 w-8 text-violet-400" />, component: <PasswordGenerator /> },
       { id: 'qr-code-generator', title: 'QR Code ساز', icon: <QrCode className="h-8 w-8 text-emerald-400" />, component: <QrCodeGenerator /> },
       { id: 'qr-code-reader', title: 'QR Code خوان', icon: <ScanLine className="h-8 w-8 text-blue-400" />, component: <QrCodeReader /> },
-      { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, isExternal: true, href: 'https://www.nigardip.site/' },
+      { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, isWip: true },
       { id: 'image-optimizer', title: 'بهینه‌ساز تصویر', icon: <Image className="h-8 w-8 text-orange-400" />, component: <ImageOptimizer /> },
       { id: 'website-screenshot', title: 'اسکرین‌شات وب‌سایت', icon: <Monitor className="h-8 w-8 text-teal-400" />, component: <WebsiteScreenshot /> },
       { id: 'text-analyzer', title: 'تحلیلگر متن', icon: <FileText className="h-8 w-8 text-yellow-400" />, component: <TextAnalyzer /> },
@@ -138,14 +139,24 @@ export default async function Home() {
                     {category.title}
                   </h3>
                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    {category.tools.map((tool) => (
-                      <a href={(tool as any).href || `#${tool.id}`} key={`shortcut-${tool.id}`} className="block" target={(tool as any).isExternal ? '_blank' : '_self'}>
-                        <div className="glass-effect rounded-2xl p-4 card-hover w-full h-full flex flex-col items-center justify-center text-center gap-3">
+                    {category.tools.map((tool) => {
+                      const typedTool = tool as any;
+                      const content = (
+                        <div className="glass-effect rounded-2xl p-4 w-full h-full flex flex-col items-center justify-center text-center gap-3 relative overflow-hidden">
+                          {typedTool.isWip && <Badge variant="secondary" className="absolute top-2 right-2 bg-yellow-400/20 text-yellow-600 border-none">بزودی</Badge>}
                           {tool.icon}
                           <span className="font-semibold text-sm text-foreground">{tool.title}</span>
                         </div>
+                      );
+                      if(typedTool.isWip) {
+                          return <div key={`shortcut-${tool.id}`} className="block opacity-60 cursor-not-allowed">{content}</div>
+                      }
+                      return (
+                      <a href={typedTool.href || `#${tool.id}`} key={`shortcut-${tool.id}`} className="block card-hover" target={typedTool.isExternal ? '_blank' : '_self'}>
+                        {content}
                       </a>
-                    ))}
+                    )}
+                    )}
                   </div>
                 </div>
               ))}
@@ -161,6 +172,27 @@ export default async function Home() {
                 </h2>
                 {category.tools.map((tool) => {
                     const typedTool = tool as any;
+                    if (typedTool.isWip) {
+                      return (
+                        <Card key={tool.id} id={tool.id} className="glass-effect scroll-mt-24 opacity-70">
+                            <CardHeader>
+                              <CardTitle className='flex items-center justify-between text-xl font-display text-muted-foreground'>
+                                 <div className='flex items-center gap-3'>
+                                     {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
+                                     {tool.title}
+                                 </div>
+                                 <Badge variant="outline">به‌زودی...</Badge>
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col items-center justify-center text-center text-muted-foreground h-24 gap-4">
+                                  <Construction className="w-12 h-12" />
+                                  <p>این ابزار در حال توسعه است و به‌زودی فعال خواهد شد.</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                      )
+                    }
                     if (typedTool.isExternal) {
                       return (
                         <a key={tool.id} href={typedTool.href} target="_blank" rel="noopener noreferrer">
