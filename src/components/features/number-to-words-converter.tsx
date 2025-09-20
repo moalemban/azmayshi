@@ -37,7 +37,7 @@ export default function NumberToWordsConverter() {
           type="number"
           value={number} 
           onChange={(e) => setNumber(e.target.value)} 
-          placeholder="مثلا: 1375"
+          placeholder="مثلا: ۱۳۷۵"
           className="h-12 text-lg text-center"
         />
       </div>

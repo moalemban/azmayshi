@@ -700,7 +700,7 @@ export default function NationalIdValidator() {
                   inputMode='numeric'
                   value={nationalId}
                   onChange={handleInputChange}
-                  placeholder="--- - ------ - -"
+                  placeholder="مثلا: --- - ------ - -"
                   maxLength={12}
                   className="w-full h-12 text-center text-3xl font-display tracking-[.25em] bg-transparent border-none focus:ring-0 focus:ring-offset-0"
               />

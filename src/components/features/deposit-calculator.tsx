@@ -66,15 +66,15 @@ export default function DepositCalculator() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="principalAmount" className="text-muted-foreground">مبلغ سپرده (تومان)</Label>
-          <Input id="principalAmount" type="text" value={principal} onChange={handlePrincipalChange} placeholder="۱۰,۰۰۰,۰۰۰" className="h-12 text-lg text-center font-display" dir="ltr"/>
+          <Input id="principalAmount" type="text" value={principal} onChange={handlePrincipalChange} placeholder="مثلا: ۱۰,۰۰۰,۰۰۰" className="h-12 text-lg text-center font-display" dir="ltr"/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="depositInterestRate" className="text-muted-foreground">نرخ سود سالانه (%)</Label>
-          <Input id="depositInterestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="۲۰" className="h-12 text-lg text-center font-display" />
+          <Input id="depositInterestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="مثلا: ۲۰" className="h-12 text-lg text-center font-display" />
         </div>
           <div className="space-y-2">
           <Label htmlFor="depositDuration" className="text-muted-foreground">مدت (ماه)</Label>
-          <Input id="depositDuration" type="number" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="۱۲" className="h-12 text-lg text-center font-display" />
+          <Input id="depositDuration" type="number" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="مثلا: ۱۲" className="h-12 text-lg text-center font-display" />
         </div>
       </div>
       

@@ -52,11 +52,11 @@ export default function BmiCalculator() {
     <CardContent className="flex flex-col gap-4">
       <div className="space-y-2">
         <Label htmlFor="height" className="text-muted-foreground">قد (سانتی‌متر)</Label>
-        <Input id="height" type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="مثلا: 175" className="h-12 text-lg"/>
+        <Input id="height" type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="مثلا: ۱۷۵" className="h-12 text-lg"/>
       </div>
       <div className="space-y-2">
         <Label htmlFor="weight" className="text-muted-foreground">وزن (کیلوگرم)</Label>
-        <Input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="مثلا: 70" className="h-12 text-lg"/>
+        <Input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="مثلا: ۷۰" className="h-12 text-lg"/>
       </div>
 
       {bmi ? (

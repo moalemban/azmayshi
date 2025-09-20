@@ -100,7 +100,7 @@ export default function UnitConverter() {
         <div className="space-y-4">
         <div className="flex flex-col sm:flex-row items-center gap-2">
             <div className='w-full space-y-2'>
-                <Input type="number" value={fromValue} onChange={e => setFromValue(e.target.value)} placeholder="1" className="h-12 text-lg text-center" />
+                <Input type="number" value={fromValue} onChange={e => setFromValue(e.target.value)} placeholder="مثلا: ۱" className="h-12 text-lg text-center" />
                 {renderSelect(fromUnit, handleFromUnitChange)}
             </div>
 

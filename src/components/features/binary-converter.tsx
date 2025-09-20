@@ -50,7 +50,7 @@ export default function BinaryConverter() {
           id="text-input"
           value={text}
           onChange={handleTextChange}
-          placeholder="سلام دنیا"
+          placeholder="مثلا: سلام دنیا"
           className="min-h-[100px] text-base"
         />
       </div>
@@ -65,7 +65,7 @@ export default function BinaryConverter() {
           id="binary-input"
           value={binary}
           onChange={handleBinaryChange}
-          placeholder="11010110 10100011 11010110 10111001 11010110 10100001 11010111 10000000 00100000 11010110 10111010 11010110 10011111 11010111 10001000 11010110 10100001"
+          placeholder="مثلا: 11010110 10100011 11010110 10111001 11010110 10100001 11010111 10000000 00100000 11010110 10111010 11010110 10011111 11010111 10001000 11010110 10100001"
           className="min-h-[100px] text-left font-mono"
           dir="ltr"
         />
