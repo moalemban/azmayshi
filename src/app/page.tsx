@@ -15,8 +15,6 @@ import NumberToWordsConverter from '@/components/features/number-to-words-conver
 import NumberSystemConverter from '@/components/features/number-system-converter';
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
-import QrCodeGenerator from '@/components/features/qr-code-generator';
-import QrCodeReader from '@/components/features/qr-code-reader';
 import IpDetector from '@/components/features/ip-detector';
 import BinaryConverter from '@/components/features/binary-converter';
 import DistanceCalculator from '@/components/features/distance-calculator';
@@ -98,8 +96,6 @@ const toolCategories = [
       { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
       { id: 'random-number', title: 'عدد تصادفی', icon: <Dices className="h-8 w-8 text-orange-400" />, component: <RandomNumberGenerator /> },
       { id: 'password-generator', title: 'تولید رمز عبور', icon: <KeyRound className="h-8 w-8 text-violet-400" />, component: <PasswordGenerator /> },
-      { id: 'qr-code-generator', title: 'QR Code ساز', icon: <QrCode className="h-8 w-8 text-lime-400" />, component: <QrCodeGenerator /> },
-      { id: 'qr-code-reader', title: 'QR Code خوان', icon: <ScanLine className="h-8 w-8 text-green-400" />, component: <QrCodeReader /> },
       { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, component: <IpDetector /> },
       { id: 'image-optimizer', title: 'بهینه‌ساز تصویر', icon: <Image className="h-8 w-8 text-orange-400" />, component: <ImageOptimizer /> },
       { id: 'website-screenshot', title: 'اسکرین‌شات وب‌سایت', icon: <Monitor className="h-8 w-8 text-teal-400" />, component: <WebsiteScreenshot /> },
