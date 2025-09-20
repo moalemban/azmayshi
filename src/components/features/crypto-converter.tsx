@@ -138,7 +138,6 @@ export default function CryptoConverter() {
                         prices.map((crypto, index) => {
                             const isPositive = crypto.change_percent > 0;
                             const isNegative = crypto.change_percent < 0;
-                            const badgeVariant = isPositive ? "default" : isNegative ? "destructive" : "secondary";
                             const badgeClass = isPositive 
                                 ? "bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20"
                                 : isNegative 
@@ -164,11 +163,11 @@ export default function CryptoConverter() {
                                     </div>
                                 </TableCell>
                                 <TableCell className="text-center font-display font-bold text-xl text-primary text-glow">{formatNumber(crypto.price_irr / 10)}</TableCell>
-                                <TableCell className="text-center font-mono">
-                                    <Badge variant={badgeVariant} className={cn("inline-flex flex-col items-center justify-center h-auto px-3 py-1.5 gap-1 w-32", badgeClass)}>
-                                        <span className="font-bold text-base">{formatNumber(crypto.price_usdt, 2)} $</span>
+                                <TableCell className="text-center">
+                                    <div className={cn("inline-flex flex-col items-center justify-center h-auto px-3 py-1.5 gap-1 w-32 rounded-2xl border", badgeClass)}>
+                                        <span className="font-display font-bold text-base">{formatNumber(crypto.price_usdt, 2)} $</span>
                                         <PriceChangeIndicator change={crypto.change_percent} />
-                                    </Badge>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                             )
