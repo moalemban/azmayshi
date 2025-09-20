@@ -19,6 +19,19 @@ export type PriceDataItem = {
   change: string | null;
 }
 
+export type CryptoPrice = {
+  name_fa: string;
+  name_en: string;
+  symbol: string;
+  icon: string;
+  price_usdt: number;
+  price_irr: number;
+  change_percent: number;
+  volume_24h: number;
+  market_cap: number;
+  last_update: string;
+};
+
 export type PriceData = {
   GoldOunce?: PriceDataItem;
   MesghalGold?: PriceDataItem;
@@ -26,9 +39,7 @@ export type PriceData = {
   EmamiCoin?: PriceDataItem;
   Dollar?: PriceDataItem;
   USDT?: PriceDataItem;
-  Bitcoin?: PriceDataItem;
-  Ethereum?: PriceDataItem;
-  Tron?: PriceDataItem;
+  cryptos?: CryptoPrice[];
 };
 
 

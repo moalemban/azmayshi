@@ -2,86 +2,43 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ArrowUp, ArrowDown, RefreshCw, Timer, Bitcoin, CandlestickChart } from 'lucide-react';
+import { ArrowUp, ArrowDown, RefreshCw, Timer } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { LivePrice, PriceData } from '@/lib/types';
+import type { CryptoPrice } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { fetchPrices as fetchPricesFlow } from '@/ai/flows/fetch-prices-flow';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-const PriceChangeIndicator = ({ change }: { change: string | null }) => {
-  if (!change || change === "0" || change === "۰") {
-     const isZero = change === "0" || change === "۰";
-     return (
-        <div className={cn("flex items-center text-xs font-mono", isZero ? "text-muted-foreground" : "text-green-500")}>
-            <span>{isZero ? "0" : change}</span>
-        </div>
-     )
+const PriceChangeIndicator = ({ change }: { change: number }) => {
+  if (change === 0) {
+    return <div className="text-muted-foreground">۰.۰۰٪</div>;
   }
-
-  const isPositive = !change.startsWith('-');
-  const isNegative = change.startsWith('-');
-  
-  const displayChange = change.replace(/[+-]/, '');
+  const isPositive = change > 0;
+  const color = isPositive ? 'text-green-500' : 'text-red-500';
+  const Icon = isPositive ? ArrowUp : ArrowDown;
 
   return (
-    <div className={cn("flex items-center text-xs font-mono", isPositive ? "text-green-500" : isNegative ? "text-red-500" : "text-muted-foreground")}>
-      <span>{displayChange}</span>
-      {isPositive && <ArrowUp className="w-3 h-3 ml-1" />}
-      {isNegative && <ArrowDown className="w-3 h-3 ml-1" />}
+    <div className={cn("flex items-center gap-1 font-mono", color)}>
+      <Icon className="w-3.5 h-3.5" />
+      <span>{change.toFixed(2)}%</span>
     </div>
   );
 };
 
-const PriceCard = ({ item }: { item: LivePrice }) => (
-    <div className="glass-effect rounded-2xl p-3 card-hover w-full flex-shrink-0">
-        <div className="flex items-center gap-2">
-            <div className="w-8 h-8 flex items-center justify-center">
-                {typeof item.icon === 'string' ? (
-                     <Image src={item.icon} alt={`${item.name} icon`} width={28} height={28} className='object-contain'/>
-                ) : (
-                    React.isValidElement(item.icon) ? React.cloneElement(item.icon, { className: 'w-7 h-7 text-primary' }) : item.icon
-                )}
-            </div>
-            <div className="flex-grow text-right">
-                <h3 className="text-foreground font-display font-semibold text-sm truncate">{item.name}</h3>
-                <div className="text-muted-foreground text-[11px] font-body">{item.symbol}</div>
-            </div>
-        </div>
-        <div className="mt-2 text-right">
-            <div className="text-lg text-foreground font-display font-bold text-glow">{item.price}</div>
-             <div className="flex justify-end mt-1 h-5">
-                <PriceChangeIndicator change={item.change} />
-            </div>
-        </div>
-    </div>
-);
-
-const PriceCardSkeleton = () => (
-  <div className="glass-effect rounded-2xl p-3 w-full">
-    <div className="flex items-center gap-2">
-      <Skeleton className="w-8 h-8 rounded-full" />
-      <div className="flex-grow space-y-1.5">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-3 w-1/4" />
-      </div>
-    </div>
-    <div className="mt-2 space-y-2 text-right">
-        <Skeleton className="h-5 w-1/2 ml-auto" />
-        <Skeleton className="h-5 w-1/4 ml-auto" />
-    </div>
-  </div>
-);
-
-const cryptoPriceConfig: { [key in keyof Pick<PriceData, 'Bitcoin' | 'Ethereum' | 'Tron' | 'USDT'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    Bitcoin: { id: 'Bitcoin', name: 'بیت‌کوین', symbol: 'BTC/IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/bitcoin-3025711-2526913.png' },
-    Ethereum: { id: 'Ethereum', name: 'اتریوم', symbol: 'ETH/IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/ethereum-3025718-2526920.png' },
-    Tron: { id: 'Tron', name: 'ترون', symbol: 'TRX/IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/tron-4318974-3580554.png' },
-    USDT: { id: 'USDT', name: 'تتر', symbol: 'USDT/IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/tether-usdt-5334659-4468691.png' },
-};
+const formatNumber = (num: number, maximumFractionDigits = 0) => {
+    return num.toLocaleString('fa-IR', { maximumFractionDigits });
+}
 
 export default function CryptoConverter() {
-  const [prices, setPrices] = useState<LivePrice[]>([]);
+  const [prices, setPrices] = useState<CryptoPrice[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   
@@ -98,29 +55,12 @@ export default function CryptoConverter() {
 
     try {
       const data = await fetchPricesFlow();
-      if (!data) throw new Error("No data returned from flow");
-
-      const newPrices: LivePrice[] = Object.entries(data)
-        .map(([key, priceData]) => {
-          const configKey = key as keyof typeof cryptoPriceConfig;
-          const config = cryptoPriceConfig[configKey];
-          
-          if (!config || !priceData?.price) return null;
-          
-          const priceNumber = Number(priceData.price);
-
-          return {
-            ...config,
-            price: priceNumber.toLocaleString('fa-IR'),
-            change: priceData.change,
-          };
-        })
-        .filter((p): p is LivePrice => p !== null);
-
-      setPrices(newPrices);
+      if (!data?.cryptos) throw new Error("No crypto data returned from flow");
+      
+      setPrices(data.cryptos);
       setLastUpdated(new Date());
     } catch (error) {
-      console.error("Failed to fetch prices:", error);
+      console.error("Failed to fetch crypto prices:", error);
       setPrices([]);
     } finally {
       setLoading(false);
@@ -147,8 +87,8 @@ export default function CryptoConverter() {
   }, []);
 
   return (
-    <div id="crypto-prices" className="p-4 md:p-0">
-        <div className="flex flex-wrap items-center justify-between gap-y-2 mb-4">
+    <div id="crypto-prices" className="p-0 md:p-0">
+        <div className="flex flex-wrap items-center justify-between gap-y-2 mb-4 px-4 md:px-0">
             <div className="flex items-center space-x-2 space-x-reverse">
                 <Button variant="ghost" size="sm" onClick={fetchPrices} disabled={loading || isCooldown} className="text-muted-foreground w-28">
                     {loading ? <RefreshCw className={cn("h-5 w-5 animate-spin")} /> 
@@ -171,12 +111,54 @@ export default function CryptoConverter() {
                 )}
             </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2">
-            {loading && prices.length === 0 ? (
-            Array.from({ length: 4 }).map((_, index) => <PriceCardSkeleton key={index} />)
-            ) : (
-            prices.map((item) => item ? <PriceCard key={item.id} item={item} /> : null)
-            )}
+        <div className="overflow-x-auto horizontal-scrollbar">
+            <Table className="w-full min-w-max">
+                <TableHeader>
+                    <TableRow>
+                    <TableHead className="text-right">ارز دیجیتال</TableHead>
+                    <TableHead className="text-center">قیمت (تومان)</TableHead>
+                    <TableHead className="text-center">قیمت (دلار)</TableHead>
+                    <TableHead className="text-center">تغییرات ۲۴س</TableHead>
+                    <TableHead className="text-center">ارزش بازار</TableHead>
+                    <TableHead className="text-center">حجم معاملات ۲۴س</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {loading ? (
+                        Array.from({ length: 10 }).map((_, i) => (
+                            <TableRow key={i}>
+                                <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+                                <TableCell><Skeleton className="h-6 w-20" /></TableCell>
+                                <TableCell><Skeleton className="h-6 w-20" /></TableCell>
+                                <TableCell><Skeleton className="h-6 w-16" /></TableCell>
+                                <TableCell><Skeleton className="h-6 w-28" /></TableCell>
+                                <TableCell><Skeleton className="h-6 w-28" /></TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        prices.map((crypto) => (
+                            <TableRow key={crypto.symbol}>
+                                <TableCell className="font-medium">
+                                    <div className="flex items-center gap-3">
+                                        <Image src={crypto.icon} alt={crypto.name_en} width={28} height={28} className="rounded-full" />
+                                        <div>
+                                            <div className="font-bold">{crypto.name_en}</div>
+                                            <div className="text-xs text-muted-foreground">{crypto.symbol}</div>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="text-center font-mono font-semibold text-lg">{formatNumber(crypto.price_irr / 10)}</TableCell>
+                                <TableCell className="text-center font-mono">{formatNumber(crypto.price_usdt, 2)}</TableCell>
+                                <TableCell className="text-center">
+                                    <PriceChangeIndicator change={crypto.change_percent} />
+                                </TableCell>
+                                <TableCell className="text-center font-mono">{formatNumber(crypto.market_cap / 10)}</TableCell>
+                                <TableCell className="text-center font-mono">{formatNumber(crypto.volume_24h / 10)}</TableCell>
+                            </TableRow>
+                        ))
+                    )}
+                </TableBody>
+            </Table>
         </div>
     </div>
   );
