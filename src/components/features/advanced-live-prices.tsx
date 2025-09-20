@@ -103,19 +103,19 @@ export default function AdvancedLivePrices() {
       if (!data) throw new Error("No data returned from flow");
 
       const newPrices: LivePrice[] = Object.entries(data)
-        .map(([key, priceData]) => {
-          if (key === 'cryptos' || !priceData) return null;
+        .map(([key, value]) => {
+          if (key === 'cryptos' || !value) return null;
           const configKey = key as keyof Omit<PriceData, 'cryptos'>;
           const config = priceConfig[configKey];
           
-          if (!config || !priceData?.price) return null;
+          if (!config || !value?.price) return null;
           
-          const priceNumber = Number(priceData.price);
+          const priceNumber = Number(value.price);
 
           return {
             ...config,
             price: priceNumber.toLocaleString('fa-IR'),
-            change: priceData.change,
+            change: value.change,
           };
         })
         .filter((p): p is LivePrice => p !== null);
