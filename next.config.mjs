@@ -1,21 +1,15 @@
 /** @type {import('next').NextConfig} */
+import withPWA from '@ducanh2912/next-pwa';
+
+const pwaConfig = withPWA({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
+
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'static.tgju.org',
-        port: '',
-        pathname: '/images/crypto/icons/**',
-      },
-       {
-        protocol: 'https',
-        hostname: 'uploadkon.ir',
-        port: '',
-        pathname: '/uploads/**',
-      }
-    ],
-  },
+  // Your existing Next.js config...
 };
 
-export default nextConfig;
+export default pwaConfig(nextConfig);
