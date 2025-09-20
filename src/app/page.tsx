@@ -73,6 +73,7 @@ import {
   TrendingUp,
   Fingerprint,
   Dumbbell,
+  CandlestickChart,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -110,6 +111,7 @@ const toolCategories = [
     title: 'محاسبات مالی',
     icon: <Wallet className="h-6 w-6 text-primary-foreground" />,
     tools: [
+      { id: 'live-prices', title: 'قیمت‌های لحظه‌ای', icon: <CandlestickChart className="h-8 w-8 text-yellow-400" />, component: <LivePrices /> },
       { id: 'loan-calculator', title: 'اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
       { id: 'deposit-calculator', title: 'سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
       { id: 'savings-calculator', title: 'محاسبه‌گر پس‌انداز', icon: <TrendingUp className="h-8 w-8 text-lime-400" />, component: <SavingsCalculator /> },
@@ -150,9 +152,6 @@ export default function Home() {
       <Header />
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-screen-2xl">
-          <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
-            <LivePrices />
-          </div>
 
           {/* Toolbox Shortcuts */}
           <div className="glass-effect rounded-3xl p-4 md:p-8 mb-10">
@@ -280,5 +279,7 @@ export default function Home() {
 
 
 
+
+    
 
     

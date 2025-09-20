@@ -145,43 +145,39 @@ export default function LivePrices() {
   }, []);
 
   return (
-    <>
-      <div className="flex flex-wrap items-center justify-between gap-y-2 mb-4">
-        <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground flex items-center text-glow">
-          <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center ml-3 animate-pulse">
-              <CandlestickChart className="w-6 h-6 text-white" />
-          </div>
-          قیمت‌های لحظه‌ای
-        </h2>
-        <div className="flex items-center space-x-2 space-x-reverse">
-             <Button variant="ghost" size="sm" onClick={fetchPrices} disabled={loading || isCooldown} className="text-muted-foreground w-28">
-                {loading ? <RefreshCw className={cn("h-5 w-5 animate-spin")} /> 
-                         : isCooldown ? <><Timer className="h-5 w-5 ml-2" /> {cooldownTime} ثانیه</>
-                         : <><RefreshCw className="h-5 w-5 ml-2" /> به‌روزرسانی</>
-                }
-             </Button>
-            {lastUpdated && !loading && (
-                <>
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
-                <span className="text-sm text-muted-foreground font-body">
-                 زنده - {lastUpdated.toLocaleTimeString('fa-IR')}
-                </span>
-                </>
-            )}
-             {loading && (
-                <span className="text-sm text-muted-foreground font-body">
-                در حال بروزرسانی...
-                </span>
+    <CardContent>
+        <div className="flex flex-wrap items-center justify-between gap-y-2 mb-4">
+            <div className="flex items-center space-x-2 space-x-reverse">
+                <Button variant="ghost" size="sm" onClick={fetchPrices} disabled={loading || isCooldown} className="text-muted-foreground w-28">
+                    {loading ? <RefreshCw className={cn("h-5 w-5 animate-spin")} /> 
+                            : isCooldown ? <><Timer className="h-5 w-5 ml-2" /> {cooldownTime} ثانیه</>
+                            : <><RefreshCw className="h-5 w-5 ml-2" /> به‌روزرسانی</>
+                    }
+                </Button>
+                {lastUpdated && !loading && (
+                    <>
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                    <span className="text-sm text-muted-foreground font-body">
+                    زنده - {lastUpdated.toLocaleTimeString('fa-IR')}
+                    </span>
+                    </>
+                )}
+                {loading && (
+                    <span className="text-sm text-muted-foreground font-body">
+                    در حال بروزرسانی...
+                    </span>
+                )}
+            </div>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+            {loading && prices.length === 0 ? (
+            Array.from({ length: 6 }).map((_, index) => <PriceCardSkeleton key={index} />)
+            ) : (
+            prices.map((item) => item ? <PriceCard key={item.id} item={item} /> : null)
             )}
         </div>
-      </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-        {loading && prices.length === 0 ? (
-          Array.from({ length: 6 }).map((_, index) => <PriceCardSkeleton key={index} />)
-        ) : (
-          prices.map((item) => item ? <PriceCard key={item.id} item={item} /> : null)
-        )}
-      </div>
-    </>
+    </CardContent>
   );
 }
+
+    
