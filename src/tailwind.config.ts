@@ -20,6 +20,7 @@ export default {
         body: ['Vazirmatn', 'sans-serif'],
         headline: ['Vazirmatn', 'sans-serif'],
         code: ['monospace'],
+        display: ['Vazirmatn', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',

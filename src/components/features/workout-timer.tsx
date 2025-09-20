@@ -97,6 +97,11 @@ export default function WorkoutTimer() {
   };
   
   const handleResume = () => {
+    if(pausedFrom === 'rest' && timerMode === 'manual' && timeLeft === restTime) {
+      // Manually starting the rest period
+      setTimeLeft(restTime - 1);
+      setTimeout(() => setTimeLeft(restTime), 0);
+    }
     if(pausedFrom) setPhase(pausedFrom);
     setPausedFrom(null);
   }
@@ -108,11 +113,12 @@ export default function WorkoutTimer() {
     setReps(0);
     setTimeLeft(0);
     setHistory([]);
+    setPausedFrom(null);
   };
 
   const finishSet = () => {
       // Use the actual time spent if it was paused
-      const duration = (phase === 'paused' && pausedFrom === 'workout') ? workoutTime - timeLeft : workoutTime;
+      const duration = workoutTime - timeLeft;
       const newHistory: SetHistory = { set: currentSet, reps: reps, duration: duration };
       setHistory(prev => [...prev, newHistory]);
       playSound();
@@ -125,6 +131,7 @@ export default function WorkoutTimer() {
         } else {
            setPhase('paused');
            setPausedFrom('rest');
+           setTimeLeft(restTime);
            toast({ title: `پایان ست ${currentSet}`, description: 'برای شروع استراحت، دکمه پلی را بزنید.' });
         }
       } else {
@@ -136,10 +143,19 @@ export default function WorkoutTimer() {
   const finishRest = () => {
       playSound();
       setCurrentSet(prev => prev + 1);
-      setPhase('workout');
-      setTimeLeft(workoutTime);
-      setReps(0);
-      toast({ title: `شروع ست ${currentSet + 1}` });
+      
+      if (timerMode === 'auto') {
+        setPhase('workout');
+        setTimeLeft(workoutTime);
+        setReps(0);
+        toast({ title: `شروع ست ${currentSet + 1}` });
+      } else {
+        setPhase('paused');
+        setPausedFrom('workout');
+        setTimeLeft(workoutTime);
+        setReps(0);
+        toast({ title: `پایان استراحت`, description: `برای شروع ست ${currentSet + 1} دکمه پلی را بزنید.` });
+      }
   }
   
   const skipRest = () => {
@@ -168,14 +184,14 @@ export default function WorkoutTimer() {
   const formatSeconds = (totalSeconds: number) => {
     const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
     const seconds = String(totalSeconds % 60).padStart(2, '0');
-    return `${minutes}:${seconds}`;
+    return `${minutes.toLocaleString('fa-IR')}:${seconds.toLocaleString('fa-IR')}`;
   }
   
   const StatDisplay = ({ icon, label, value }: { icon: React.ReactNode, label: string, value: string | number }) => (
     <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-background/50 flex-1 min-w-[80px] text-center">
         {icon}
         <span className="text-sm font-semibold text-muted-foreground mt-1">{label}</span>
-        <span className="text-lg font-bold text-foreground">{value}</span>
+        <span className="text-lg font-bold text-foreground font-display">{typeof value === 'number' ? value.toLocaleString('fa-IR') : value}</span>
     </div>
   );
 
@@ -242,9 +258,9 @@ export default function WorkoutTimer() {
                  <div className='max-h-40 overflow-y-auto space-y-1 pr-2'>
                      {history.map(h => (
                          <div key={h.set} className='flex justify-between items-center bg-muted/30 p-2 rounded-md text-sm'>
-                             <span className='font-bold'>ست {h.set}</span>
-                             <div className='flex gap-4 font-mono'>
-                                 <span>{h.reps} حرکت</span>
+                             <span className='font-bold font-display'>ست {h.set.toLocaleString('fa-IR')}</span>
+                             <div className='flex gap-4 font-display'>
+                                 <span>{h.reps.toLocaleString('fa-IR')} حرکت</span>
                                  <span>{formatSeconds(h.duration)}</span>
                              </div>
                          </div>
@@ -256,7 +272,7 @@ export default function WorkoutTimer() {
        )
     }
     
-    const totalDuration = (phase === 'workout' || (phase === 'paused' && pausedFrom === 'workout')) ? workoutTime : restTime;
+    const totalDuration = (phase === 'workout' || pausedFrom === 'workout') ? workoutTime : restTime;
     const percentage = totalDuration > 0 ? (timeLeft / totalDuration) * 100 : 0;
     
     return (
@@ -265,9 +281,9 @@ export default function WorkoutTimer() {
             percentage={percentage} 
             colorClass={phase === 'workout' || pausedFrom === 'workout' ? 'text-green-500' : 'text-yellow-500'}
         >
-          <p className="text-xl font-semibold">{phase === 'workout' ? `ست ${currentSet}` : (phase === 'rest' ? 'استراحت' : (pausedFrom === 'rest' ? 'شروع استراحت؟' : 'متوقف شده'))}</p>
-          <p className="text-6xl font-mono">{formatSeconds(timeLeft)}</p>
-          <p className="text-lg text-muted-foreground">از {sets} ست</p>
+          <p className="text-xl font-semibold font-display">{phase === 'workout' ? `ست ${currentSet.toLocaleString('fa-IR')}` : (phase === 'rest' ? 'استراحت' : (pausedFrom === 'rest' ? 'شروع استراحت؟' : 'متوقف شده'))}</p>
+          <p className="text-6xl font-display text-glow">{formatSeconds(timeLeft)}</p>
+          <p className="text-lg text-muted-foreground font-display">از {sets.toLocaleString('fa-IR')} ست</p>
         </CircularProgress>
         
         { (phase === 'workout' || (phase === 'paused' && pausedFrom === 'workout')) && (
@@ -275,7 +291,7 @@ export default function WorkoutTimer() {
             <p className='text-muted-foreground'>تعداد حرکت</p>
             <div className="flex items-center gap-4">
               <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))} disabled={isRunning}><Minus/></Button>
-              <span className="text-4xl font-bold w-20 text-center">{reps}</span>
+              <span className="text-4xl font-bold w-20 text-center font-display">{reps.toLocaleString('fa-IR')}</span>
               <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)} disabled={isRunning}><Plus/></Button>
             </div>
              <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2" disabled={isRunning}>
@@ -317,7 +333,7 @@ export default function WorkoutTimer() {
                 </Button>
                 
                 { (phase === 'workout' || (phase === 'paused' && pausedFrom === 'workout')) ? (
-                    <Button onClick={finishSet} variant="secondary" className='h-16 w-16 rounded-full p-0 flex flex-col leading-tight text-xs' disabled={isRunning}>
+                    <Button onClick={finishSet} variant="secondary" className='h-16 w-16 rounded-full p-0 flex flex-col leading-tight text-xs' disabled={isRunning && timerMode === 'auto'}>
                         <span>پایان</span>
                         <span>ست</span>
                     </Button>
