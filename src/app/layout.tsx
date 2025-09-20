@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Vazirmatn } from 'next/font/google';
+import NetworkStatusDetector from '@/components/layout/network-status-detector';
 
 const vazirmatn = Vazirmatn({ subsets: ['latin', 'arabic'], variable: '--font-vazirmatn' });
 
@@ -40,6 +41,7 @@ export default function RootLayout({
             <div className="gradient-bg antialiased">
                 {children}
                 <Toaster />
+                <NetworkStatusDetector />
             </div>
         </ThemeProvider>
       </body>
