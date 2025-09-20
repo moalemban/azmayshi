@@ -17,65 +17,31 @@ import {
 } from "@/components/ui/card"
 
 
-const CircularProgress = ({
+const RectangularProgress = ({
   percentage,
   timeLeftFormatted,
 }: {
   percentage: number;
   timeLeftFormatted: string;
 }) => {
-  const radius = 110;
-  const stroke = 12;
-  const normalizedRadius = radius - stroke * 2;
-  const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  let colorClass = 'bg-primary/20';
+   if (percentage <= 50) colorClass = 'bg-yellow-400/20';
+   if (percentage <= 25) colorClass = 'bg-orange-500/20';
+   if (percentage <= 10) colorClass = 'bg-red-500/20';
 
-  let colorClass = 'text-primary';
-   if (percentage <= 50) colorClass = 'text-yellow-400';
-   if (percentage <= 25) colorClass = 'text-orange-500';
-   if (percentage <= 10) colorClass = 'text-red-500';
-  
   return (
-    <div className="relative flex items-center justify-center w-80 h-80">
+    <div className="relative flex items-center justify-center w-full max-w-sm h-32 bg-card/30 rounded-2xl overflow-hidden glass-effect">
       {/* Background Glow */}
-      <div className={cn("absolute w-72 h-72 rounded-full blur-2xl animate-pulse-slow", colorClass)} style={{ opacity: 0.3 }}/>
+      <div className={cn("absolute w-full h-full blur-2xl animate-pulse-slow", colorClass)} />
 
-      <svg
-        height={radius * 2}
-        width={radius * 2}
-        className="transform -rotate-90"
-      >
-        <defs>
-            <linearGradient id="countdownGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" />
-              <stop offset="100%" stopColor="hsl(var(--accent))" />
-            </linearGradient>
-        </defs>
-        {/* Background Circle */}
-        <circle
-          stroke="hsl(var(--muted) / 0.15)"
-          fill="hsl(var(--card) / 0.3)"
-          strokeWidth={stroke}
-          r={normalizedRadius}
-          cx={radius}
-          cy={radius}
-        />
-        {/* Foreground Circle (Progress) */}
-        <circle
-          className="transition-all duration-500"
-          stroke="url(#countdownGradient)"
-          fill="transparent"
-          strokeWidth={stroke}
-          strokeDasharray={circumference + ' ' + circumference}
-          style={{ strokeDashoffset }}
-          strokeLinecap="round"
-          r={normalizedRadius}
-          cx={radius}
-          cy={radius}
-        />
-      </svg>
-      <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-7xl font-display text-cyan-300 drop-shadow-glow tracking-widest text-glow-strong">
+      {/* Progress bar */}
+      <div className="absolute top-0 right-0 h-full bg-gradient-to-l from-primary/50 to-accent/50 transition-all duration-500"
+           style={{ width: `${percentage}%` }}
+      />
+      
+      {/* The text */}
+      <div className="relative flex flex-col items-center justify-center">
+        <span className="text-6xl font-display text-cyan-300 drop-shadow-glow tracking-widest text-glow-strong">
           {timeLeftFormatted}
         </span>
       </div>
@@ -235,7 +201,7 @@ export default function CountdownTimer() {
             </CardContent>
         </Card>
       ) : (
-          <CircularProgress 
+          <RectangularProgress 
             percentage={(timeLeft / initialTotalSeconds) * 100} 
             timeLeftFormatted={`${hours}:${minutes}:${seconds}`} 
           />
