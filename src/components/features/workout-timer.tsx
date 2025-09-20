@@ -44,6 +44,15 @@ type Phase = 'configuring' | 'workout' | 'rest' | 'paused' | 'finished';
 type TimerMode = 'auto' | 'manual';
 type SetHistory = { set: number; reps: number; duration: number };
 
+const toPersianDigits = (str: string | number): string => {
+    return String(str).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d)]);
+};
+
+const toEnglishDigits = (str: string): string => {
+    return str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d).toString());
+};
+
+
 export default function WorkoutTimer() {
   // Settings
   const [sets, setSets] = useState(4);
@@ -86,7 +95,7 @@ export default function WorkoutTimer() {
     setTimeLeft(workoutTime);
     setReps(0);
     setHistory([]);
-    toast({ title: "تمرین شروع شد!", description: `ست ${currentSet.toLocaleString('fa-IR')} از ${sets.toLocaleString('fa-IR')} آغاز شد.` });
+    toast({ title: "تمرین شروع شد!", description: `ست ${toPersianDigits(currentSet)} از ${toPersianDigits(sets)} آغاز شد.` });
     playSound();
   };
   
@@ -98,13 +107,6 @@ export default function WorkoutTimer() {
   
   const handleResume = () => {
     if (pausedFrom) {
-      if (pausedFrom === 'rest' && timeLeft === restTime && timerMode === 'auto') {
-        setTimeLeft(restTime - 1);
-        setTimeout(() => setTimeLeft(restTime), 0);
-      } else if (pausedFrom === 'workout' && timeLeft === workoutTime && timerMode === 'auto') {
-        setTimeLeft(workoutTime - 1);
-        setTimeout(() => setTimeLeft(workoutTime), 0);
-      }
       setPhase(pausedFrom);
       setPausedFrom(null);
     }
@@ -130,12 +132,12 @@ export default function WorkoutTimer() {
         if (timerMode === 'auto') {
           setPhase('rest');
           setTimeLeft(restTime);
-          toast({ title: `پایان ست ${currentSet.toLocaleString('fa-IR')}`, description: `زمان استراحت (${restTime.toLocaleString('fa-IR')} ثانیه) شروع شد.` });
+          toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: `زمان استراحت (${toPersianDigits(restTime)} ثانیه) شروع شد.` });
         } else {
            setPhase('paused');
            setPausedFrom('rest');
            setTimeLeft(restTime);
-           toast({ title: `پایان ست ${currentSet.toLocaleString('fa-IR')}`, description: 'برای شروع استراحت، دکمه پلی را بزنید.' });
+           toast({ title: `پایان ست ${toPersianDigits(currentSet)}`, description: 'برای شروع استراحت، دکمه پلی را بزنید.' });
         }
       } else {
         setPhase('finished');
@@ -147,18 +149,19 @@ export default function WorkoutTimer() {
   const finishRest = () => {
       playSound();
       setCurrentSet(prev => prev + 1);
+      const nextSet = currentSet + 1;
       
       if (timerMode === 'auto') {
         setPhase('workout');
         setTimeLeft(workoutTime);
         setReps(0);
-        toast({ title: `شروع ست ${(currentSet + 1).toLocaleString('fa-IR')}` });
+        toast({ title: `شروع ست ${toPersianDigits(nextSet)}` });
       } else {
         setPhase('paused');
         setPausedFrom('workout');
         setTimeLeft(workoutTime);
         setReps(0);
-        toast({ title: `پایان استراحت`, description: `برای شروع ست ${(currentSet + 1).toLocaleString('fa-IR')} دکمه پلی را بزنید.` });
+        toast({ title: `پایان استراحت`, description: `برای شروع ست ${toPersianDigits(nextSet)} دکمه پلی را بزنید.` });
       }
   }
   
@@ -187,16 +190,39 @@ export default function WorkoutTimer() {
   const formatSeconds = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    return `${minutes.toLocaleString('fa-IR', {minimumIntegerDigits: 2})}:${seconds.toLocaleString('fa-IR', {minimumIntegerDigits: 2})}`;
+    return `${toPersianDigits(minutes.toString().padStart(2, '0'))}:${toPersianDigits(seconds.toString().padStart(2, '0'))}`;
   }
   
   const StatDisplay = ({ icon, label, value }: { icon: React.ReactNode, label: string, value: string | number }) => (
     <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-background/50 flex-1 min-w-[80px] text-center">
         {icon}
         <span className="text-sm font-semibold text-muted-foreground mt-1">{label}</span>
-        <span className="text-lg font-bold text-foreground font-display">{typeof value === 'number' ? value.toLocaleString('fa-IR') : value}</span>
+        <span className="text-lg font-bold text-foreground font-display">{typeof value === 'number' ? toPersianDigits(value) : value}</span>
     </div>
   );
+  
+  const NumberInput = ({ id, value, onChange }: { id: string, value: number, onChange: (val: number) => void}) => {
+    const [displayValue, setDisplayValue] = useState(toPersianDigits(value));
+    
+    useEffect(() => {
+        setDisplayValue(toPersianDigits(value));
+    }, [value]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const persianVal = toPersianDigits(e.target.value);
+        setDisplayValue(persianVal);
+        const englishVal = toEnglishDigits(persianVal);
+        const num = parseInt(englishVal, 10);
+        if (!isNaN(num)) {
+            onChange(num);
+        } else if (englishVal === '') {
+            onChange(0);
+        }
+    };
+
+    return <Input id={id} value={displayValue} onChange={handleChange} className="h-14 text-2xl text-center font-display" />;
+  }
+
 
   const renderContent = () => {
     if (phase === 'configuring') {
@@ -209,11 +235,11 @@ export default function WorkoutTimer() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <Label htmlFor="sets">تعداد ست</Label>
-              <Input id="sets" type="number" value={sets} onChange={(e) => setSets(Math.max(1, +e.target.value))} className="h-14 text-2xl text-center font-display" />
+              <NumberInput id="sets" value={sets} onChange={(val) => setSets(Math.max(1, val))} />
             </div>
             <div className="space-y-1">
               <Label htmlFor="workout-time">زمان تمرین (ثانیه)</Label>
-              <Input id="workout-time" type="number" value={workoutTime} onChange={(e) => setWorkoutTime(Math.max(1, +e.target.value))} className="h-14 text-2xl text-center font-display" />
+              <NumberInput id="workout-time" value={workoutTime} onChange={(val) => setWorkoutTime(Math.max(1, val))} />
             </div>
           </div>
           <div className="space-y-2">
@@ -235,7 +261,7 @@ export default function WorkoutTimer() {
           {timerMode === 'auto' && (
              <div className="space-y-1">
                 <Label htmlFor="rest-time">زمان استراحت (ثانیه)</Label>
-                <Input id="rest-time" type="number" value={restTime} onChange={e => setRestTime(Math.max(0, +e.target.value))} className="h-14 text-2xl text-center font-display" />
+                <NumberInput id="rest-time" value={restTime} onChange={e => setRestTime(Math.max(0, e))} />
             </div>
           )}
         </div>
@@ -261,9 +287,9 @@ export default function WorkoutTimer() {
                  <div className='max-h-40 overflow-y-auto space-y-1 pr-2'>
                      {history.map(h => (
                          <div key={h.set} className='flex justify-between items-center bg-muted/30 p-2 rounded-md text-sm'>
-                             <span className='font-bold font-display'>ست {h.set.toLocaleString('fa-IR')}</span>
+                             <span className='font-bold font-display'>ست {toPersianDigits(h.set)}</span>
                              <div className='flex gap-4 font-display'>
-                                 <span>{h.reps.toLocaleString('fa-IR')} حرکت</span>
+                                 <span>{toPersianDigits(h.reps)} حرکت</span>
                                  <span>{formatSeconds(h.duration)}</span>
                              </div>
                          </div>
@@ -284,20 +310,20 @@ export default function WorkoutTimer() {
             percentage={percentage} 
             colorClass={phase === 'workout' || pausedFrom === 'workout' ? 'text-green-500' : 'text-yellow-500'}
         >
-          <p className="text-xl font-semibold font-display">{phase === 'workout' || pausedFrom === 'workout' ? `ست ${currentSet.toLocaleString('fa-IR')}` : (phase === 'rest' ? 'استراحت' : (pausedFrom === 'rest' ? 'شروع استراحت؟' : 'متوقف شده'))}</p>
+          <p className="text-xl font-semibold font-display">{phase === 'workout' || pausedFrom === 'workout' ? `ست ${toPersianDigits(currentSet)}` : (phase === 'rest' ? 'استراحت' : (pausedFrom === 'rest' ? 'شروع استراحت؟' : 'متوقف شده'))}</p>
           <p className="text-6xl font-display text-glow">{formatSeconds(timeLeft)}</p>
-          <p className="text-lg text-muted-foreground font-display">از {sets.toLocaleString('fa-IR')} ست</p>
+          <p className="text-lg text-muted-foreground font-display">از {toPersianDigits(sets)} ست</p>
         </CircularProgress>
         
         { (phase === 'workout' || (phase === 'paused' && pausedFrom === 'workout')) && (
           <div className='flex flex-col items-center gap-2 w-full'>
             <p className='text-muted-foreground'>تعداد حرکت</p>
             <div className="flex items-center gap-4">
-              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))} disabled={isRunning && timerMode === 'auto'}><Minus/></Button>
-              <span className="text-4xl font-bold w-20 text-center font-display">{reps.toLocaleString('fa-IR')}</span>
-              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)} disabled={isRunning && timerMode === 'auto'}><Plus/></Button>
+              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => Math.max(0, r - 1))}><Minus/></Button>
+              <span className="text-4xl font-bold w-20 text-center font-display">{toPersianDigits(reps)}</span>
+              <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)}><Plus/></Button>
             </div>
-             <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2" disabled={isRunning && timerMode === 'auto'}>
+             <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2">
                 <Plus className="w-4 h-4 ml-2"/> ثبت حرکت
             </Button>
           </div>

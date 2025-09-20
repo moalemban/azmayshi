@@ -72,16 +72,18 @@ export default function Stopwatch() {
       </div>
 
       <div className="flex justify-center items-center gap-4 w-full max-w-sm">
-         <Button onClick={handleReset} variant="outline" size="icon" className="h-16 w-16 rounded-full" disabled={isRunning}>
-              <Redo className="h-7 w-7"/>
+         <Button onClick={handleReset} variant="outline" className="h-16 w-16 rounded-full flex-col text-xs" disabled={isRunning}>
+              <Redo className="h-6 w-6 mb-1"/>
+              ریست
           </Button>
-          <Button onClick={handleStartPause} size="lg" className={cn('h-20 w-20 rounded-full text-lg shadow-lg', 
+          <Button onClick={handleStartPause} size="lg" className={cn('h-20 w-20 rounded-full text-lg shadow-lg flex-col', 
              isRunning ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-50' : 'bg-green-500 hover:bg-green-600 text-green-50'
           )}>
-            {isRunning ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
+            {isRunning ? <><Pause className="h-7 w-7 mb-1" /><span>توقف</span></> : <><Play className="h-7 w-7 mb-1" /><span>شروع</span></>}
           </Button>
-          <Button onClick={handleLap} variant="secondary" size="icon" className="h-16 w-16 rounded-full" disabled={!isRunning}>
-            <History className="h-7 w-7" />
+          <Button onClick={handleLap} variant="secondary" className="h-16 w-16 rounded-full flex-col text-xs" disabled={!isRunning}>
+            <History className="h-6 w-6 mb-1" />
+            ثبت دور
           </Button>
       </div>
       
