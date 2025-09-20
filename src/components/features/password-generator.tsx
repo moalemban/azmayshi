@@ -110,10 +110,12 @@ export default function PasswordGenerator() {
 
   useEffect(() => {
     generatePassword();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [length, options]);
 
   useEffect(() => {
     calculateStrength();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password, length, options]);
 
   const copyToClipboard = () => {
