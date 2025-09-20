@@ -105,7 +105,7 @@ const fetchPricesFlow = ai.defineFlow(
                 const nameFa = $crypto(tds[0]).find('span.name-fa').text().trim();
                 const nameEn = $crypto(tds[0]).find('span.name-en').text().trim();
                 const symbol = nameEn.split(' ')[0].toUpperCase();
-                const icon = $crypto(tds[0]).find('img').attr('data-src') || $crypto(tds[0]).find('img').attr('src') || null;
+                const iconSrc = $crypto(tds[0]).find('img').attr('data-src') || $crypto(tds[0]).find('img').attr('src');
                 
                 const parseNumber = (selector: cheerio.Cheerio) => parseFloat(selector.text().trim().replace(/,/g, '')) || 0;
 
@@ -113,7 +113,7 @@ const fetchPricesFlow = ai.defineFlow(
                     name_fa: nameFa,
                     name_en: nameEn,
                     symbol: symbol,
-                    icon: icon,
+                    icon: iconSrc || null,
                     price_usdt: parseNumber($crypto(tds[1])),
                     price_irr: parseNumber($crypto(tds[2])),
                     change_percent: parseFloat($crypto(tds[3]).text().trim()) || 0,
