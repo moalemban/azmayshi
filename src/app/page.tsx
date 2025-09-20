@@ -20,7 +20,6 @@ import DistanceCalculator from '@/components/features/distance-calculator';
 import VehiclePlateIdentifier from '@/components/features/vehicle-plate-identifier';
 import TextAnalyzer from '@/components/features/text-analyzer';
 import ImageOptimizer from '@/components/features/image-optimizer';
-import WebsiteScreenshot from '@/components/features/website-screenshot';
 import TextSummarizer from '@/components/features/text-summarizer';
 import RialTomanConverter from '@/components/features/rial-toman-converter';
 import SavingsCalculator from '@/components/features/savings-calculator';
@@ -102,7 +101,6 @@ const toolCategories = [
       { id: 'qr-code-reader', title: 'QR Code خوان', icon: <ScanLine className="h-8 w-8 text-blue-400" />, component: <QrCodeReader /> },
       { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, isWip: true },
       { id: 'image-optimizer', title: 'کاهش حجم تصویر', icon: <Image className="h-8 w-8 text-orange-400" />, component: <ImageOptimizer /> },
-      { id: 'website-screenshot', title: 'اسکرین‌شات وب‌سایت', icon: <Monitor className="h-8 w-8 text-teal-400" />, component: <WebsiteScreenshot /> },
       { id: 'text-analyzer', title: 'تحلیلگر متن', icon: <FileText className="h-8 w-8 text-yellow-400" />, component: <TextAnalyzer /> },
       { id: 'distance-calculator', title: 'محاسبه مسافت', icon: <Map className="h-8 w-8 text-fuchsia-400" />, component: <DistanceCalculator /> },
     ]
