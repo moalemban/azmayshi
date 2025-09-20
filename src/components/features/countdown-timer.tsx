@@ -90,6 +90,11 @@ export default function CountdownTimer() {
   const [isRunning, setIsRunning] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [isConfiguring, setIsConfiguring] = useState(true);
+
+  // Separate state for input fields
+  const [inputHours, setInputHours] = useState('0');
+  const [inputMinutes, setInputMinutes] = useState('1');
+  const [inputSeconds, setInputSeconds] = useState('0');
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -107,41 +112,34 @@ export default function CountdownTimer() {
     }
   }, []);
 
-  const handleInputChange = (field: 'hours' | 'minutes' | 'seconds', value: string) => {
-    if (isRunning) return;
-    const numValue = parseInt(value.replace(/[^۰-۹]/g, ''), 10) || 0;
-    
-    const currentHours = Math.floor(initialTotalSeconds / 3600);
-    const currentMinutes = Math.floor((initialTotalSeconds % 3600) / 60);
-    const currentSeconds = initialTotalSeconds % 60;
+  const toEnglishDigits = (str: string): string => {
+    return str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d).toString());
+  };
 
-    let newTotalSeconds = 0;
-    if (field === 'hours') newTotalSeconds = numValue * 3600 + currentMinutes * 60 + currentSeconds;
-    if (field === 'minutes') newTotalSeconds = currentHours * 3600 + numValue * 60 + currentSeconds;
-    if (field === 'seconds') newTotalSeconds = currentHours * 3600 + currentMinutes * 60 + numValue;
-    
-    setInitialTotalSeconds(newTotalSeconds);
-    setTimeLeft(newTotalSeconds);
+  const toPersianDigits = (str: string): string => {
+    return str.replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d)]);
+  };
+
+  const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
+    if (isRunning) return;
+    const englishValue = toEnglishDigits(value);
+    const numericValue = englishValue.replace(/[^0-9]/g, '');
+    setter(numericValue);
   };
   
    useEffect(() => {
-    if (isRunning) {
-      if (timeLeft <= 0) {
+    if (isRunning && timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => prev - 1);
+      }, 1000);
+    } else if (timeLeft <= 0 && isRunning) {
         setIsRunning(false);
         setIsFinished(true);
         if (timerRef.current) clearInterval(timerRef.current);
         toast({ title: "پایان تایمر!", description: "زمان شما به پایان رسید." });
         playSound();
-        return;
-      }
-      timerRef.current = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
-      }, 1000);
-    } else {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
     }
+    
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
@@ -150,10 +148,23 @@ export default function CountdownTimer() {
 
   const handleStartPause = () => {
     if (isFinished) return;
+    
     if (isConfiguring) {
+        const h = parseInt(toEnglishDigits(inputHours) || '0', 10);
+        const m = parseInt(toEnglishDigits(inputMinutes) || '0', 10);
+        const s = parseInt(toEnglishDigits(inputSeconds) || '0', 10);
+        const totalSeconds = h * 3600 + m * 60 + s;
+
+        if (totalSeconds <= 0) {
+            toast({ title: "خطا", description: "لطفا زمان معتبری را وارد کنید.", variant: "destructive"});
+            return;
+        }
+
+        setInitialTotalSeconds(totalSeconds);
+        setTimeLeft(totalSeconds);
         setIsConfiguring(false);
-    }
-    if (timeLeft > 0) {
+        setIsRunning(true);
+    } else {
       setIsRunning(!isRunning);
     }
   };
@@ -168,6 +179,14 @@ export default function CountdownTimer() {
     setIsRunning(false);
     setIsFinished(false);
     setIsConfiguring(true);
+
+    const h = Math.floor(initialTotalSeconds / 3600);
+    const m = Math.floor((initialTotalSeconds % 3600) / 60);
+    const s = initialTotalSeconds % 60;
+    setInputHours(h.toString());
+    setInputMinutes(m.toString());
+    setInputSeconds(s.toString());
+
     setTimeLeft(initialTotalSeconds);
   }
   
@@ -176,17 +195,13 @@ export default function CountdownTimer() {
     const minutes = Math.floor((timeInSeconds % 3600) / 60);
     const seconds = timeInSeconds % 60;
     return {
-      hours: hours.toLocaleString('fa-IR', { minimumIntegerDigits: 2 }),
-      minutes: minutes.toLocaleString('fa-IR', { minimumIntegerDigits: 2 }),
-      seconds: seconds.toLocaleString('fa-IR', { minimumIntegerDigits: 2 }),
+      hours: toPersianDigits(hours.toString().padStart(2, '0')),
+      minutes: toPersianDigits(minutes.toString().padStart(2, '0')),
+      seconds: toPersianDigits(seconds.toString().padStart(2, '0')),
     };
   };
 
   const { hours, minutes, seconds } = formatTime(timeLeft);
-  
-  const getInputHours = (totalSeconds: number) => Math.floor(totalSeconds / 3600);
-  const getInputMinutes = (totalSeconds: number) => Math.floor((totalSeconds % 3600) / 60);
-  const getInputSeconds = (totalSeconds: number) => totalSeconds % 60;
 
   return (
     <CardContent className="flex flex-col gap-6 p-4 items-center justify-center min-h-[450px]">
@@ -203,17 +218,17 @@ export default function CountdownTimer() {
             <CardContent>
                 <div className="flex flex-row-reverse gap-2 items-end p-4">
                     <div className="flex-1 space-y-1 text-center">
-                        <Input id="hours-input" type="number" placeholder="۰۰" value={getInputHours(initialTotalSeconds).toLocaleString('fa-IR', { useGrouping: false })} onChange={e => handleInputChange('hours', e.target.value)} className="h-16 w-full text-4xl text-center font-display" min={0}/>
+                        <Input id="hours-input" value={toPersianDigits(inputHours)} onChange={e => handleInputChange(setInputHours, e.target.value)} className="h-16 w-full text-4xl text-center font-display" placeholder="۰۰" />
                         <Label htmlFor="hours-input" className="text-xs text-muted-foreground">ساعت</Label>
                     </div>
                     <span className='text-4xl font-display text-muted-foreground pb-8'>:</span>
                     <div className="flex-1 space-y-1 text-center">
-                        <Input id="minutes-input" type="number" placeholder="۰۱" value={getInputMinutes(initialTotalSeconds).toLocaleString('fa-IR', { useGrouping: false })} onChange={e => handleInputChange('minutes', e.target.value)} className="h-16 w-full text-4xl text-center font-display" max={59} min={0}/>
+                        <Input id="minutes-input" value={toPersianDigits(inputMinutes)} onChange={e => handleInputChange(setInputMinutes, e.target.value)} className="h-16 w-full text-4xl text-center font-display" placeholder="۰۱" />
                         <Label htmlFor="minutes-input" className="text-xs text-muted-foreground">دقیقه</Label>
                     </div>
                     <span className='text-4xl font-display text-muted-foreground pb-8'>:</span>
                     <div className="flex-1 space-y-1 text-center">
-                        <Input id="seconds-input" type="number" placeholder="۰۰" value={getInputSeconds(initialTotalSeconds).toLocaleString('fa-IR', { useGrouping: false })} onChange={e => handleInputChange('seconds', e.target.value)} className="h-16 w-full text-4xl text-center font-display" max={59} min={0}/>
+                        <Input id="seconds-input" value={toPersianDigits(inputSeconds)} onChange={e => handleInputChange(setInputSeconds, e.target.value)} className="h-16 w-full text-4xl text-center font-display" placeholder="۰۰" />
                         <Label htmlFor="seconds-input" className="text-xs text-muted-foreground">ثانیه</Label>
                     </div>
                 </div>
@@ -229,7 +244,7 @@ export default function CountdownTimer() {
 
       <div className="flex justify-center items-center gap-4 w-full max-w-sm mt-4">
         {isConfiguring ? (
-            <Button onClick={handleStartPause} size="lg" className="w-full h-14 text-lg bg-green-500 hover:bg-green-600 text-green-50" disabled={isFinished || initialTotalSeconds <= 0}>
+            <Button onClick={handleStartPause} size="lg" className="w-full h-14 text-lg bg-green-500 hover:bg-green-600 text-green-50">
                 <Play className="ml-2 h-6 w-6"/>
                 شروع شمارش
             </Button>
