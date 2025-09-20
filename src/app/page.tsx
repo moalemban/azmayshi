@@ -4,6 +4,7 @@ import UnitConverter from '@/components/features/unit-converter';
 import CurrencyConverter from '@/components/features/currency-converter';
 import DateConverter from '@/components/features/date-converter';
 import LivePrices from '@/components/features/live-prices';
+import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import AgeCalculator from '@/components/features/age-calculator';
 import BmiCalculator from '@/components/features/bmi-calculator';
 import PercentageCalculator from '@/components/features/percentage-calculator';
@@ -45,7 +46,6 @@ import {
   Gift,
   HeartPulse,
   Dices,
-  Timer,
   KeyRound,
   QrCode,
   ScanLine,
@@ -74,6 +74,8 @@ import {
   Fingerprint,
   Dumbbell,
   CandlestickChart,
+  Clock,
+  Bitcoin
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -103,7 +105,7 @@ const toolCategories = [
     icon: <CalendarClock className="h-6 w-6 text-primary-foreground" />,
     tools: [
       { id: 'age-calculator', title: 'محاسبه سن', icon: <Gift className="h-8 w-8 text-pink-400" />, component: <AgeCalculator /> },
-      { id: 'stopwatch', title: 'کرونومتر', icon: <Timer className="h-8 w-8 text-indigo-400" />, component: <Stopwatch /> },
+      { id: 'stopwatch', title: 'کرونومتر', icon: <Clock className="h-8 w-8 text-indigo-400" />, component: <Stopwatch /> },
       { id: 'countdown-timer', title: 'تایمر شمارش معکوس', icon: <Hourglass className="h-8 w-8 text-blue-400" />, component: <CountdownTimer /> },
     ]
   },
@@ -111,6 +113,7 @@ const toolCategories = [
     title: 'محاسبات مالی',
     icon: <Wallet className="h-6 w-6 text-primary-foreground" />,
     tools: [
+      { id: 'advanced-live-prices', title: 'نرخ طلا و ارز', icon: <Bitcoin className="h-8 w-8 text-yellow-400" />, component: <AdvancedLivePrices /> },
       { id: 'live-prices', title: 'قیمت‌های لحظه‌ای', icon: <CandlestickChart className="h-8 w-8 text-yellow-400" />, component: <LivePrices /> },
       { id: 'loan-calculator', title: 'اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
       { id: 'deposit-calculator', title: 'سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
@@ -271,15 +274,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-
-
-
-
-
-
-
-    
-
-    
