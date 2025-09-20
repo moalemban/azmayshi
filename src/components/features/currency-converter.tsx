@@ -43,7 +43,7 @@ export default function CurrencyConverter() {
     if (from === 'IRR' && to === 'IRT') return 0.1;
     if (from === 'IRT' && to === 'IRR') return 10;
     
-    const allRates = { ...mockExchangeRates, 'USD-IRR': liveRates['USD-IRR'] };
+    const allRates: { [key: string]: number } = { ...mockExchangeRates, 'USD-IRR': liveRates['USD-IRR'] };
 
     let fromRateUSD = from === 'USD' ? 1 : allRates[`USD-${from}`];
     if (from === 'IRT') fromRateUSD = allRates['USD-IRR'] / 10;
