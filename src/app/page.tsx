@@ -115,7 +115,7 @@ const toolCategories = [
     title: 'محاسبات مالی',
     icon: <Wallet className="h-6 w-6 text-primary-foreground" />,
     tools: [
-      { id: 'live-prices-advanced', title: 'نرخ طلا و ارز', icon: <CandlestickChart className="h-8 w-8 text-yellow-400" />, component: <AdvancedLivePrices /> },
+      { id: 'live-prices', title: 'نرخ طلا و ارز', icon: <CandlestickChart className="h-8 w-8 text-yellow-400" />, component: <AdvancedLivePrices /> },
       { id: 'loan-calculator', title: 'اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
       { id: 'deposit-calculator', title: 'سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
       { id: 'savings-calculator', title: 'محاسبه‌گر پس‌انداز', icon: <TrendingUp className="h-8 w-8 text-lime-400" />, component: <SavingsCalculator /> },
@@ -135,7 +135,6 @@ const toolCategories = [
     icon: <User className="h-6 w-6 text-primary-foreground" />,
     tools: [
       { id: 'sheba-converter', title: 'ابزار شبا', icon: <ShieldCheck className="h-8 w-8 text-green-500" />, component: <ShebaConverter /> },
-      { id: 'live-prices', title: 'قیمت‌های لحظه‌ای', icon: <CandlestickChart className="h-8 w-8 text-yellow-400" />, component: <LivePrices /> },
       { id: 'national-id-validator', title: 'بررسی صحت و شهر شماره ملی', icon: <Fingerprint className="h-8 w-8 text-teal-400" />, component: <NationalIdValidator /> },
       { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
       { id: 'random-number', title: 'عدد تصادفی', icon: <Dices className="h-8 w-8 text-orange-400" />, component: <RandomNumberGenerator /> },
@@ -162,7 +161,7 @@ export default function Home() {
           <Card id="live-prices" className="glass-effect scroll-mt-24 mb-10">
               <CardHeader>
                 <CardTitle className='flex items-center gap-3 text-xl font-display'>
-                    <Bitcoin className="h-7 w-7" />
+                    <CandlestickChart className="h-7 w-7" />
                     قیمت‌های لحظه‌ای
                 </CardTitle>
               </CardHeader>

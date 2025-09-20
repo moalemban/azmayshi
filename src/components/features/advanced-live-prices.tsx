@@ -70,12 +70,12 @@ const PriceCardSkeleton = () => (
 
 
 const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-3d-icon-png-download-4060918.png' },
-    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-coin-5645226-4702196.png' },
-    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bar-4060920-3363673.png' },
-    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: 'https://ice.ir/assets/images/home/section/coin.webp' },
-    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: 'https://png.pngtree.com/png-vector/20241009/ourmid/pngtree-3d-realistic-dollar-icon-on-a-transparent-background-png-image_14037686.png' },
-    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/tether-usdt-5334659-4468691.png' },
+    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: 'https://uploadkon.ir/uploads/cd2519_25gold-ingots-gold-bars-3d-icon-png.png' },
+    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/e41319_25gold-coin-3d-icon-illustration-png.png' },
+    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/a48119_25gold-bar-3d-icon-png.png' },
+    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/e69719_25coin-3d-icon-illustration-png.png' },
+    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/049c19_25dollar-3d-icon-illustration-png.png' },
+    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: 'https://uploadkon.ir/uploads/d82219_25tether-usdt-3d-icon-illustration-png.png' },
 };
 
 
