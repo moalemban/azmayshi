@@ -115,6 +115,7 @@ const toolCategories = [
     title: 'محاسبات مالی',
     icon: <Wallet className="h-6 w-6 text-primary-foreground" />,
     tools: [
+      { id: 'live-prices', title: 'نرخ ارز و طلا', icon: <CandlestickChart className="h-8 w-8 text-yellow-400" />, component: <AdvancedLivePrices /> },
       { id: 'loan-calculator', title: 'اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
       { id: 'deposit-calculator', title: 'سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
       { id: 'savings-calculator', title: 'محاسبه‌گر پس‌انداز', icon: <TrendingUp className="h-8 w-8 text-lime-400" />, component: <SavingsCalculator /> },
@@ -157,7 +158,7 @@ export default function Home() {
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-screen-2xl">
 
-          <Card id="live-prices" className="glass-effect scroll-mt-24 mb-10">
+          <Card id="live-prices-main" className="glass-effect scroll-mt-24 mb-10">
               <CardHeader>
                 <CardTitle className='flex items-center gap-3 text-xl font-display'>
                     <Bitcoin className="h-7 w-7" />
