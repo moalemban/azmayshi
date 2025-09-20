@@ -173,16 +173,13 @@ export default function CountdownTimer() {
 
   const { hours, minutes, seconds } = formatTime(timeLeft);
   const { hours: initialH, minutes: initialM, seconds: initialS } = formatTime(initialTotalSeconds);
+  
+  const inConfigurationMode = !isRunning && timeLeft === initialTotalSeconds;
 
   return (
     <CardContent className="flex flex-col gap-6 p-4 items-center justify-center min-h-[450px]">
       
-      { (isRunning || timeLeft < initialTotalSeconds) ? (
-          <CircularProgress 
-            percentage={(timeLeft / initialTotalSeconds) * 100} 
-            timeLeftFormatted={`${hours}:${minutes}:${seconds}`} 
-          />
-      ) : (
+      { inConfigurationMode ? (
         <Card className="w-full max-w-sm glass-effect">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -210,19 +207,33 @@ export default function CountdownTimer() {
                 </div>
             </CardContent>
         </Card>
+      ) : (
+          <CircularProgress 
+            percentage={(timeLeft / initialTotalSeconds) * 100} 
+            timeLeftFormatted={`${hours}:${minutes}:${seconds}`} 
+          />
       )}
 
 
       <div className="flex justify-center items-center gap-4 w-full max-w-sm mt-4">
-        <Button onClick={handleReset} variant="outline" size="icon" className="h-16 w-16 rounded-full" disabled={isRunning && timeLeft > 0}>
-          <Redo className="h-7 w-7" />
-        </Button>
-        <Button onClick={handleStartPause} size="lg" className={cn('h-20 w-20 rounded-full text-lg shadow-lg', 
-            isRunning ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-50 animate-pulse-slow' : 'bg-green-500 hover:bg-green-600 text-green-50'
-        )} disabled={isFinished}>
-          {isRunning ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
-        </Button>
-        <div className='w-16'></div>
+        {inConfigurationMode ? (
+            <Button onClick={handleStartPause} size="lg" className="w-full h-14 text-lg bg-green-500 hover:bg-green-600 text-green-50" disabled={isFinished || initialTotalSeconds <= 0}>
+                <Play className="ml-2 h-6 w-6"/>
+                شروع شمارش
+            </Button>
+        ) : (
+          <>
+            <Button onClick={handleReset} variant="outline" size="icon" className="h-16 w-16 rounded-full" disabled={isRunning && timeLeft > 0}>
+              <Redo className="h-7 w-7" />
+            </Button>
+            <Button onClick={handleStartPause} size="lg" className={cn('h-20 w-20 rounded-full text-lg shadow-lg', 
+                isRunning ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-50 animate-pulse-slow' : 'bg-green-500 hover:bg-green-600 text-green-50'
+            )} disabled={isFinished}>
+              {isRunning ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
+            </Button>
+            <div className='w-16'></div>
+          </>
+        )}
       </div>
     </CardContent>
   );
