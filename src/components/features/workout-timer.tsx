@@ -209,7 +209,7 @@ export default function WorkoutTimer() {
     }, [value]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const persianVal = toPersianDigits(e.target.value);
+        const persianVal = e.target.value.replace(/[^۰-۹]/g, '');
         setDisplayValue(persianVal);
         const englishVal = toEnglishDigits(persianVal);
         const num = parseInt(englishVal, 10);
