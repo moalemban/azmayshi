@@ -28,8 +28,7 @@ export default function RandomNumberGenerator() {
   const { toast } = useToast();
 
   const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
-    const englishValue = toEnglishDigits(value);
-    setter(englishValue);
+    setter(toEnglishDigits(value));
   };
 
   const generateNumbers = () => {

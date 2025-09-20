@@ -23,12 +23,15 @@ export default function SavingsCalculator() {
   const [targetAmount, setTargetAmount] = useState('1,000,000,000');
   const [monthlySaving, setMonthlySaving] = useState('10,000,000');
   const [increaseRate, setIncreaseRate] = useState(10); // Percentage
+  const [isInitial, setIsInitial] = useState(true);
 
   const handleTargetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsInitial(false);
     setTargetAmount(formatNumberWithCommas(e.target.value));
   };
   
   const handleMonthlySavingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsInitial(false);
     setMonthlySaving(formatNumberWithCommas(e.target.value));
   };
   
@@ -74,7 +77,7 @@ export default function SavingsCalculator() {
             value={targetAmount} 
             onChange={handleTargetAmountChange} 
             placeholder="۱,۰۰۰,۰۰۰,۰۰۰" 
-            className="h-12 text-lg text-center" 
+            className="h-12 text-lg text-center font-display" 
             dir="ltr"
           />
         </div>
@@ -86,7 +89,7 @@ export default function SavingsCalculator() {
             value={monthlySaving} 
             onChange={handleMonthlySavingChange} 
             placeholder="۱۰,۰۰۰,۰۰۰" 
-            className="h-12 text-lg text-center" 
+            className="h-12 text-lg text-center font-display" 
             dir="ltr"
           />
         </div>
@@ -100,18 +103,18 @@ export default function SavingsCalculator() {
           <Slider
             id="increaseRate"
             value={[increaseRate]}
-            onValueChange={(val) => setIncreaseRate(val[0])}
+            onValueChange={(val) => {setIncreaseRate(val[0]); setIsInitial(false);}}
             min={0}
             max={50}
             step={1}
           />
       </div>
 
-      {calculationResult ? (
+      {calculationResult && !isInitial ? (
           <div className="w-full text-center bg-muted/50 p-4 rounded-lg shadow-inner mt-2 space-y-3">
               <div>
                   <p className="text-lg text-muted-foreground">زمان لازم برای رسیدن به هدف</p>
-                  <p className="text-2xl font-bold text-primary" dir="rtl">
+                  <p className="text-2xl font-bold text-primary font-display" dir="rtl">
                     <span>{calculationResult.years.toLocaleString('fa-IR')}</span>
                     <span className="text-base font-normal mx-1">سال و</span>
                     <span>{calculationResult.remainingMonths.toLocaleString('fa-IR')}</span>
@@ -120,7 +123,7 @@ export default function SavingsCalculator() {
               </div>
                <div>
                   <p className="text-sm text-muted-foreground">مبلغ نهایی پس‌انداز شده</p>
-                  <p className="text-xl font-medium text-foreground/80">
+                  <p className="text-xl font-medium text-foreground/80 font-display">
                      {Math.round(calculationResult.finalAmount).toLocaleString('fa-IR')} تومان
                   </p>
               </div>
