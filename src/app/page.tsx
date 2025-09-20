@@ -3,7 +3,6 @@ import Header from '@/components/layout/header';
 import UnitConverter from '@/components/features/unit-converter';
 import CurrencyConverter from '@/components/features/currency-converter';
 import DateConverter from '@/components/features/date-converter';
-import LivePrices from '@/components/features/live-prices';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import AgeCalculator from '@/components/features/age-calculator';
 import BmiCalculator from '@/components/features/bmi-calculator';
@@ -113,7 +112,6 @@ const toolCategories = [
     title: 'محاسبات مالی',
     icon: <Wallet className="h-6 w-6 text-primary-foreground" />,
     tools: [
-      { id: 'advanced-live-prices', title: 'نرخ طلا و ارز', icon: <Bitcoin className="h-8 w-8 text-yellow-400" />, component: <AdvancedLivePrices /> },
       { id: 'loan-calculator', title: 'اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
       { id: 'deposit-calculator', title: 'سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
       { id: 'savings-calculator', title: 'محاسبه‌گر پس‌انداز', icon: <TrendingUp className="h-8 w-8 text-lime-400" />, component: <SavingsCalculator /> },
@@ -158,11 +156,11 @@ export default function Home() {
           <Card id="live-prices" className="glass-effect scroll-mt-24 mb-10">
               <CardHeader>
                 <CardTitle className='flex items-center gap-3 text-xl font-display'>
-                    <CandlestickChart className="h-7 w-7" />
-                    قیمت‌های لحظه‌ای
+                    <Bitcoin className="h-7 w-7" />
+                    نرخ طلا و ارز
                 </CardTitle>
               </CardHeader>
-              <LivePrices />
+              <AdvancedLivePrices />
           </Card>
 
           {/* Toolbox Shortcuts */}
