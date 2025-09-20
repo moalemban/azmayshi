@@ -73,15 +73,15 @@ export default function LoanCalculator() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="loanAmount" className="text-muted-foreground">مبلغ وام (تومان)</Label>
-          <Input id="loanAmount" type="text" value={loanAmount} onChange={handleLoanAmountChange} placeholder="مثلا: ۱۰۰,۰۰۰,۰۰۰" className="h-12 text-lg text-center font-display" dir="ltr"/>
+          <Input id="loanAmount" type="text" value={loanAmount} onChange={handleLoanAmountChange} placeholder="۱۰۰,۰۰۰,۰۰۰" className="h-12 text-lg text-center font-display" dir="ltr"/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="interestRate" className="text-muted-foreground">نرخ سود سالانه (%)</Label>
-          <Input id="interestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="مثلا: ۲۳" className="h-12 text-lg text-center font-display" />
+          <Input id="interestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="۲۳" className="h-12 text-lg text-center font-display" />
         </div>
           <div className="space-y-2">
           <Label htmlFor="loanTerm" className="text-muted-foreground">مدت بازپرداخت (ماه)</Label>
-          <Input id="loanTerm" type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="مثلا: ۳۶" className="h-12 text-lg text-center font-display" />
+          <Input id="loanTerm" type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="۳۶" className="h-12 text-lg text-center font-display" />
         </div>
       </div>
       

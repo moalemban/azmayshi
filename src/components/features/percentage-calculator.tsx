@@ -32,11 +32,11 @@ export default function PercentageCalculator() {
       <div className="flex gap-4 items-end">
         <div className="space-y-2 flex-1">
           <Label htmlFor="val1" className="text-muted-foreground">مقدار اول</Label>
-          <Input id="val1" type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="h-12 text-lg text-center font-display" placeholder="مثلا: ۲۰"/>
+          <Input id="val1" type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۲۰"/>
         </div>
         <div className="space-y-2 flex-1">
           <Label htmlFor="val2" className="text-muted-foreground">مقدار دوم</Label>
-          <Input id="val2" type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="h-12 text-lg text-center font-display" placeholder="مثلا: ۱۵۰"/>
+          <Input id="val2" type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۱۵۰"/>
         </div>
       </div>
 

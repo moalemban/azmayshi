@@ -76,7 +76,7 @@ export default function TextSummarizer() {
           id="original-text"
           value={originalText}
           onChange={(e) => setOriginalText(e.target.value)}
-          placeholder="مثلا: متن طولانی خود را اینجا وارد یا پیست کنید (حداقل ۱۰۰ کاراکتر)..."
+          placeholder="متن طولانی خود را اینجا وارد یا پیست کنید (حداقل ۱۰۰ کاراکتر)..."
           className="min-h-[200px] text-base"
         />
         <p className="text-xs text-muted-foreground text-left pr-1" dir='ltr'>
@@ -120,7 +120,7 @@ export default function TextSummarizer() {
                 id="summary-text"
                 readOnly
                 value={summary}
-                placeholder="مثلا: خلاصه متن اینجا نمایش داده می‌شود..."
+                placeholder="خلاصه متن اینجا نمایش داده می‌شود..."
                 className="min-h-[150px] text-base bg-muted/50"
              />
             {loading && (

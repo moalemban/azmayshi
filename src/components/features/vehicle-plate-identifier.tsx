@@ -72,7 +72,7 @@ export default function VehiclePlateIdentifier() {
                         type="text"
                         value={plateNumber}
                         onChange={handlePlateNumberChange}
-                        placeholder="مثلا: ۱۱"
+                        placeholder="۱۱"
                         className="w-12 h-12 text-3xl text-center font-mono tracking-widest border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
                         maxLength={2}
                     />

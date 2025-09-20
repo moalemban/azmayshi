@@ -234,11 +234,11 @@ export default function WorkoutTimer() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <Label htmlFor="sets">تعداد ست (ضروری)</Label>
-              <Input id="sets" value={toPersianDigits(sets)} onChange={(e) => handleSettingChange(setSets, e.target.value)} placeholder="مثلا: ۴" className="h-14 text-2xl text-center font-display" />
+              <Input id="sets" value={toPersianDigits(sets)} onChange={(e) => handleSettingChange(setSets, e.target.value)} placeholder="۴" className="h-14 text-2xl text-center font-display" />
             </div>
             <div className="space-y-1">
               <Label htmlFor="workout-time">زمان تمرین (ثانیه)</Label>
-              <Input id="workout-time" value={toPersianDigits(workoutTime)} onChange={(e) => handleSettingChange(setWorkoutTime, e.target.value)} placeholder="مثلا: ۴۵" className="h-14 text-2xl text-center font-display" />
+              <Input id="workout-time" value={toPersianDigits(workoutTime)} onChange={(e) => handleSettingChange(setWorkoutTime, e.target.value)} placeholder="۴۵" className="h-14 text-2xl text-center font-display" />
             </div>
           </div>
           <div className="space-y-2">
@@ -260,7 +260,7 @@ export default function WorkoutTimer() {
           {timerMode === 'auto' && (
              <div className="space-y-1">
                 <Label htmlFor="rest-time">زمان استراحت (ثانیه)</Label>
-                 <Input id="rest-time" value={toPersianDigits(restTime)} onChange={(e) => handleSettingChange(setRestTime, e.target.value)} placeholder="مثلا: ۱۵" className="h-14 text-2xl text-center font-display" />
+                 <Input id="rest-time" value={toPersianDigits(restTime)} onChange={(e) => handleSettingChange(setRestTime, e.target.value)} placeholder="۱۵" className="h-14 text-2xl text-center font-display" />
             </div>
           )}
         </div>
@@ -375,5 +375,3 @@ export default function WorkoutTimer() {
     </CardContent>
   );
 }
-
-    

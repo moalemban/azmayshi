@@ -42,7 +42,7 @@ export default function NumberSystemConverter() {
           id="number-input" 
           value={inputValue} 
           onChange={(e) => setInputValue(e.target.value)} 
-          placeholder="مثلا: 123۴۵۶"
+          placeholder="123۴۵۶"
           className="h-12 text-lg text-center"
           dir="ltr"
         />

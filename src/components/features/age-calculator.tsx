@@ -130,15 +130,15 @@ export default function AgeCalculator() {
           <div className="flex flex-row-reverse gap-2">
             <div className="flex-1 space-y-1">
                 <Label htmlFor="shamsi-day" className="text-xs text-muted-foreground">روز</Label>
-                <Input id="shamsi-day" ref={dayRef} type="number" placeholder="مثلا: ۲" value={shamsiDay} onChange={e => handleShamsiChange('day', e.target.value)} className="h-12 text-center" max={31} min={1} maxLength={2}/>
+                <Input id="shamsi-day" ref={dayRef} type="number" placeholder="۲" value={shamsiDay} onChange={e => handleShamsiChange('day', e.target.value)} className="h-12 text-center" max={31} min={1} maxLength={2}/>
             </div>
             <div className="flex-1 space-y-1">
                 <Label htmlFor="shamsi-month" className="text-xs text-muted-foreground">ماه</Label>
-                <Input id="shamsi-month" ref={monthRef} type="number" placeholder="مثلا: ۸" value={shamsiMonth} onChange={e => handleShamsiChange('month', e.target.value)} className="h-12 text-center" max={12} min={1} maxLength={2}/>
+                <Input id="shamsi-month" ref={monthRef} type="number" placeholder="۸" value={shamsiMonth} onChange={e => handleShamsiChange('month', e.target.value)} className="h-12 text-center" max={12} min={1} maxLength={2}/>
             </div>
             <div className="flex-1 space-y-1">
                 <Label htmlFor="shamsi-year" className="text-xs text-muted-foreground">سال</Label>
-                <Input id="shamsi-year" ref={yearRef} type="number" placeholder="مثلا: ۱۳۷۵" value={shamsiYear} onChange={e => handleShamsiChange('year', e.target.value)} className="h-12 text-center" maxLength={4}/>
+                <Input id="shamsi-year" ref={yearRef} type="number" placeholder="۱۳۷۵" value={shamsiYear} onChange={e => handleShamsiChange('year', e.target.value)} className="h-12 text-center" maxLength={4}/>
             </div>
           </div>
       ) : (

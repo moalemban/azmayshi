@@ -56,7 +56,7 @@ export default function RialTomanConverter() {
                         type="text"
                         value={toman}
                         onChange={handleTomanChange}
-                        placeholder="مثلا: ۱,۰۰۰"
+                        placeholder="۱,۰۰۰"
                         className="text-lg h-14 text-center text-primary"
                     />
                 </div>
@@ -73,7 +73,7 @@ export default function RialTomanConverter() {
                         type="text"
                         value={rial}
                         onChange={handleRialChange}
-                        placeholder="مثلا: ۱۰,۰۰۰"
+                        placeholder="۱۰,۰۰۰"
                         className="text-lg h-14 text-center"
                     />
                 </div>

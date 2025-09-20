@@ -96,15 +96,15 @@ export default function RandomNumberGenerator() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 items-center">
         <div className="space-y-2">
           <Label htmlFor="min-val" className="text-muted-foreground">حداقل</Label>
-          <Input id="min-val" type="text" value={toPersianDigits(min)} onChange={(e) => handleInputChange(setMin, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="مثلا: ۱"/>
+          <Input id="min-val" type="text" value={toPersianDigits(min)} onChange={(e) => handleInputChange(setMin, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۱"/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="max-val" className="text-muted-foreground">حداکثر</Label>
-          <Input id="max-val" type="text" value={toPersianDigits(max)} onChange={(e) => handleInputChange(setMax, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="مثلا: ۱۰۰"/>
+          <Input id="max-val" type="text" value={toPersianDigits(max)} onChange={(e) => handleInputChange(setMax, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۱۰۰"/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="count" className="text-muted-foreground">تعداد</Label>
-          <Input id="count" type="text" value={toPersianDigits(count)} onChange={(e) => handleInputChange(setCount, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="مثلا: ۱"/>
+          <Input id="count" type="text" value={toPersianDigits(count)} onChange={(e) => handleInputChange(setCount, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۱"/>
         </div>
       </div>
       

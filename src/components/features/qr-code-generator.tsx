@@ -105,7 +105,7 @@ const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi
                     
                     {qrType === 'link' && <div className="space-y-4">
                         <Label htmlFor="qr-link" className="text-muted-foreground">آدرس اینترنتی (URL)</Label>
-                        <Input id="qr-link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="مثلا: https://example.com" dir="ltr" className="h-12 text-lg text-center" />
+                        <Input id="qr-link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://example.com" dir="ltr" className="h-12 text-lg text-center" />
                         <div className="space-y-2">
                             <div className="flex justify-between items-center">
                                 <Label className="text-muted-foreground">اندازه</Label>
@@ -116,7 +116,7 @@ const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi
                     </div>}
                     {qrType === 'text' && <>
                          <Label htmlFor="qr-text" className="text-muted-foreground">متن</Label>
-                        <Textarea id="qr-text" value={text} onChange={(e) => setText(e.target.value)} placeholder="مثلا: متن خود را وارد کنید..."/>
+                        <Textarea id="qr-text" value={text} onChange={(e) => setText(e.target.value)} placeholder="متن خود را وارد کنید..."/>
                     </>}
                     {qrType === 'wifi' && <div className="space-y-4">
                          <div className="space-y-2">
@@ -142,7 +142,7 @@ const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi
                      {qrType === 'email' && <div className="space-y-4">
                          <div className="space-y-2">
                             <Label htmlFor="email-to">گیرنده (To)</Label>
-                            <Input id="email-to" type="email" value={email.to} onChange={e => setEmail((em:any) => ({...em, to: e.target.value}))} placeholder="مثلا: address@example.com" dir="ltr" />
+                            <Input id="email-to" type="email" value={email.to} onChange={e => setEmail((em:any) => ({...em, to: e.target.value}))} placeholder="address@example.com" dir="ltr" />
                         </div>
                          <div className="space-y-2">
                             <Label htmlFor="email-subject">موضوع</Label>
@@ -155,7 +155,7 @@ const ContentTypeTabs = ({ qrType, setQrType, link, setLink, text, setText, wifi
                     </div>}
                     {qrType === 'phone' && <>
                         <Label htmlFor="qr-phone" className="text-muted-foreground">شماره تلفن</Label>
-                        <Input id="qr-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="مثلا: +989123456789" dir="ltr" className="h-12 text-lg text-center" />
+                        <Input id="qr-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+989123456789" dir="ltr" className="h-12 text-lg text-center" />
                     </>}
 
                 </AccordionContent>
@@ -276,7 +276,7 @@ export default function QrCodeGenerator() {
                             </div>
                              <div className='space-y-4'>
                                 <Label>لوگو</Label>
-                                <Input id="logo-url" value={options.image} onChange={(e) => handleUpdate({ image: e.target.value })} placeholder="مثلا: آدرس URL لوگو را وارد کنید..." dir="ltr"/>
+                                <Input id="logo-url" value={options.image} onChange={(e) => handleUpdate({ image: e.target.value })} placeholder="آدرس URL لوگو را وارد کنید..." dir="ltr"/>
                                 <div className="flex items-center gap-2">
                                     <Button variant="outline" className="w-full" onClick={() => fileInputRef.current?.click()}>
                                         <Upload className="w-4 h-4 ml-2"/> آپلود لوگو

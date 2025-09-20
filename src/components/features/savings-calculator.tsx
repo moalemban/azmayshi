@@ -73,7 +73,7 @@ export default function SavingsCalculator() {
             type="text" 
             value={targetAmount} 
             onChange={handleTargetAmountChange} 
-            placeholder="مثلا: ۱,۰۰۰,۰۰۰,۰۰۰" 
+            placeholder="۱,۰۰۰,۰۰۰,۰۰۰" 
             className="h-12 text-lg text-center font-display" 
             dir="ltr"
           />
@@ -85,7 +85,7 @@ export default function SavingsCalculator() {
             type="text" 
             value={monthlySaving} 
             onChange={handleMonthlySavingChange} 
-            placeholder="مثلا: ۱۰,۰۰۰,۰۰۰" 
+            placeholder="۱۰,۰۰۰,۰۰۰" 
             className="h-12 text-lg text-center font-display" 
             dir="ltr"
           />

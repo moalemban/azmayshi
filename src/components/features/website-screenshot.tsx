@@ -81,7 +81,7 @@ export default function WebsiteScreenshot() {
                     dir="ltr"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    placeholder="مثلا: https://example.com"
+                    placeholder="https://example.com"
                     className="h-12 text-lg"
                 />
             </div>
