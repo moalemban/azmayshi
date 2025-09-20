@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef, createRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -678,59 +678,35 @@ const validateNationalId = (id: string): ValidationResult => {
 };
 
 export default function NationalIdValidator() {
-  const [digits, setDigits] = useState(Array(10).fill(''));
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
-  const nationalId = digits.join('');
+  const [nationalId, setNationalId] = useState('');
 
   const result = useMemo(() => {
-    if (nationalId.length !== 10) return null;
-    return validateNationalId(nationalId);
+    const cleanId = nationalId.replace(/-/g, '');
+    if (cleanId.length !== 10) return null;
+    return validateNationalId(cleanId);
   }, [nationalId]);
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const { value } = e.target;
-    const newDigits = [...digits];
 
-    if (/^[0-9]?$/.test(value)) {
-      newDigits[index] = value;
-      setDigits(newDigits);
-      
-      if (value && index < 9 && inputRefs.current[index + 1]) {
-        inputRefs.current[index + 1]?.focus();
-      }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/[^0-9]/g, '');
+    if (rawValue.length > 10) return;
+    
+    let formattedValue = rawValue;
+    if (rawValue.length > 3) {
+      formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(3)}`;
     }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-    if (e.key === 'Backspace') {
-      const newDigits = [...digits];
-      if (!newDigits[index] && index > 0) {
-        inputRefs.current[index - 1]?.focus();
-        newDigits[index-1] = '';
-        setDigits(newDigits);
-      } else {
-        newDigits[index] = '';
-        setDigits(newDigits);
-      }
+    if (rawValue.length > 9) {
+      formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(3, 9)}-${rawValue.slice(9)}`;
     }
+    setNationalId(formattedValue);
   };
   
-  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
-      if (pastedData.length === 10) {
-          setDigits(pastedData.split(''));
-          inputRefs.current[9]?.focus();
-      }
-  }
 
   return (
     <CardContent className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="national-id-input-0" className="text-muted-foreground">شماره ملی را وارد کنید</Label>
+        <Label htmlFor="national-id-input" className="text-muted-foreground">شماره ملی را وارد کنید</Label>
         
-        <div className="relative w-full max-w-sm mx-auto p-4 bg-gray-100 dark:bg-gray-800/50 rounded-2xl shadow-inner border border-gray-200 dark:border-gray-700" dir="ltr">
+        <div className="relative w-full max-w-sm mx-auto p-4 bg-gray-100 dark:bg-gray-800/50 rounded-2xl shadow-inner border border-gray-200 dark:border-gray-700 glass-effect" dir="ltr">
             <div className="absolute top-3 left-4 flex items-center gap-2">
                 <div className="w-8 h-5 bg-white border border-gray-300 rounded-sm flex flex-col justify-around p-0.5">
                     <div className="h-1 bg-green-500"></div>
@@ -743,25 +719,17 @@ export default function NationalIdValidator() {
                  <Fingerprint className="h-6 w-6 text-gray-400" />
             </div>
 
-            <div className="flex justify-center items-center gap-1.5 mt-8" onPaste={handlePaste}>
-              {digits.map((digit, index) => (
-                <React.Fragment key={index}>
-                  <Input
-                    ref={(el) => (inputRefs.current[index] = el)}
-                    id={`national-id-input-${index}`}
-                    type="tel"
-                    inputMode='numeric'
-                    pattern="[0-9]*"
-                    value={digit}
-                    onChange={(e) => handleInputChange(e, index)}
-                    onKeyDown={(e) => handleKeyDown(e, index)}
-                    maxLength={1}
-                    className="w-8 h-12 text-center text-xl font-display bg-white dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:bg-blue-50 focus:dark:bg-blue-900/50 focus:ring-2 focus:ring-blue-400"
-                  />
-                  {index === 2 && <div className="w-1 h-5" />} 
-                  {index === 8 && <div className="w-1 h-5 bg-gray-300 dark:bg-gray-600 rounded-full" />}
-                </React.Fragment>
-              ))}
+            <div className="mt-8">
+              <Input
+                  id="national-id-input"
+                  type="tel"
+                  inputMode='numeric'
+                  value={nationalId}
+                  onChange={handleInputChange}
+                  placeholder="--- - ------ - -"
+                  maxLength={12}
+                  className="w-full h-12 text-center text-3xl font-display tracking-[.25em] bg-transparent border-none focus:ring-0 focus:ring-offset-0"
+              />
             </div>
             <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-2 tracking-widest">National ID</p>
         </div>
@@ -797,9 +765,15 @@ export default function NationalIdValidator() {
           )}
         </div>
       ) : (
-        <div className="flex items-center justify-center text-muted-foreground h-24 bg-muted/30 rounded-lg">
-          <p>شماره ملی ۱۰ رقمی خود را وارد کنید.</p>
-        </div>
+        nationalId.replace(/-/g, '').length === 10 ? (
+           <div className="flex items-center justify-center text-muted-foreground h-24 bg-muted/30 rounded-lg">
+                <p>در حال بررسی...</p>
+            </div>
+        ) : (
+             <div className="flex items-center justify-center text-muted-foreground h-24 bg-muted/30 rounded-lg">
+                <p>شماره ملی ۱۰ رقمی خود را وارد کنید.</p>
+            </div>
+        )
       )}
     </CardContent>
   );
