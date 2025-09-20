@@ -15,7 +15,6 @@ import NumberToWordsConverter from '@/components/features/number-to-words-conver
 import NumberSystemConverter from '@/components/features/number-system-converter';
 import PasswordGenerator from '@/components/features/password-generator';
 import RandomNumberGenerator from '@/components/features/random-number-generator';
-import IpDetector from '@/components/features/ip-detector';
 import BinaryConverter from '@/components/features/binary-converter';
 import DistanceCalculator from '@/components/features/distance-calculator';
 import VehiclePlateIdentifier from '@/components/features/vehicle-plate-identifier';
@@ -35,7 +34,7 @@ import ScrollToTop from '@/components/layout/scroll-to-top';
 import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart } from 'lucide-react';
+import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 
@@ -100,7 +99,7 @@ const toolCategories = [
       { id: 'password-generator', title: 'تولید رمز عبور', icon: <KeyRound className="h-8 w-8 text-violet-400" />, component: <PasswordGenerator /> },
       { id: 'qr-code-generator', title: 'QR Code ساز', icon: <QrCode className="h-8 w-8 text-emerald-400" />, component: <QrCodeGenerator /> },
       { id: 'qr-code-reader', title: 'QR Code خوان', icon: <ScanLine className="h-8 w-8 text-blue-400" />, component: <QrCodeReader /> },
-      { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, component: <IpDetector /> },
+      { id: 'ip-detector', title: 'تشخیص IP', icon: <LocateFixed className="h-8 w-8 text-sky-400" />, isExternal: true, href: 'https://www.nigardip.site/' },
       { id: 'image-optimizer', title: 'بهینه‌ساز تصویر', icon: <Image className="h-8 w-8 text-orange-400" />, component: <ImageOptimizer /> },
       { id: 'website-screenshot', title: 'اسکرین‌شات وب‌سایت', icon: <Monitor className="h-8 w-8 text-teal-400" />, component: <WebsiteScreenshot /> },
       { id: 'text-analyzer', title: 'تحلیلگر متن', icon: <FileText className="h-8 w-8 text-yellow-400" />, component: <TextAnalyzer /> },
@@ -140,7 +139,7 @@ export default async function Home() {
                   </h3>
                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     {category.tools.map((tool) => (
-                      <a href={`#${tool.id}`} key={`shortcut-${tool.id}`} className="block">
+                      <a href={(tool as any).href || `#${tool.id}`} key={`shortcut-${tool.id}`} className="block" target={(tool as any).isExternal ? '_blank' : '_self'}>
                         <div className="glass-effect rounded-2xl p-4 card-hover w-full h-full flex flex-col items-center justify-center text-center gap-3">
                           {tool.icon}
                           <span className="font-semibold text-sm text-foreground">{tool.title}</span>
@@ -160,17 +159,40 @@ export default async function Home() {
                 <h2 className="text-2xl font-bold font-display text-foreground text-glow border-r-4 border-primary pr-4">
                   {category.title}
                 </h2>
-                {category.tools.map((tool) => (
-                  <Card key={tool.id} id={tool.id} className="glass-effect scroll-mt-24">
-                    <CardHeader>
-                      <CardTitle className='flex items-center gap-3 text-xl font-display'>
-                         {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
-                         {tool.title}
-                      </CardTitle>
-                    </CardHeader>
-                    {tool.component}
-                  </Card>
-                ))}
+                {category.tools.map((tool) => {
+                    const typedTool = tool as any;
+                    if (typedTool.isExternal) {
+                      return (
+                        <a key={tool.id} href={typedTool.href} target="_blank" rel="noopener noreferrer">
+                            <Card id={tool.id} className="glass-effect card-hover scroll-mt-24">
+                              <CardHeader>
+                                <CardTitle className='flex items-center justify-between text-xl font-display'>
+                                   <div className='flex items-center gap-3'>
+                                       {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
+                                       {tool.title}
+                                   </div>
+                                   <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                                      مشاهده
+                                      <ExternalLink className="h-5 w-5" />
+                                   </div>
+                                </CardTitle>
+                              </CardHeader>
+                            </Card>
+                        </a>
+                      )
+                    }
+                    return (
+                        <Card key={tool.id} id={tool.id} className="glass-effect scroll-mt-24">
+                          <CardHeader>
+                            <CardTitle className='flex items-center gap-3 text-xl font-display'>
+                              {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
+                              {tool.title}
+                            </CardTitle>
+                          </CardHeader>
+                          {typedTool.component}
+                        </Card>
+                    )
+                })}
               </div>
             ))}
           </div>
