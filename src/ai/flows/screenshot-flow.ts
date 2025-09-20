@@ -8,6 +8,8 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
+import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
 
 const TakeScreenshotInputSchema = z.object({
   url: z.string().url({ message: 'آدرس URL وارد شده معتبر نیست.' }),
@@ -30,15 +32,11 @@ const takeScreenshotFlow = ai.defineFlow(
   async ({ url }) => {
     let browser = null;
     try {
-      // Dynamically import puppeteer and chrome-aws-lambda
-      const puppeteer = (await import('puppeteer-core')).default;
-      const chromium = (await import('chrome-aws-lambda')).default;
-
-      // Launch Puppeteer
+      // Launch Puppeteer with Spaticuz's chromium
       browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
+        executablePath: await chromium.executablePath(),
         headless: chromium.headless,
       });
 

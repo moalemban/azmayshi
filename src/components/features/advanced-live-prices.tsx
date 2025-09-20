@@ -40,7 +40,7 @@ const PriceCard = ({ item }: { item: LivePrice }) => (
                 {typeof item.icon === 'string' ? (
                      <Image src={item.icon} alt={`${item.name} icon`} width={28} height={28} className='object-contain'/>
                 ) : (
-                    React.isValidElement(item.icon) ? React.cloneElement(item.icon, { className: 'w-7 h-7 text-primary' }) : item.icon
+                    React.isValidElement(item.icon) ? React.cloneElement(item.icon, { className: 'w-7 h-7 text-primary' } as React.HTMLAttributes<HTMLElement>) : item.icon
                 )}
             </div>
             <div className="flex-grow text-right">
