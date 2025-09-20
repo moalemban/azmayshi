@@ -4,6 +4,7 @@ import UnitConverter from '@/components/features/unit-converter';
 import CurrencyConverter from '@/components/features/currency-converter';
 import DateConverter from '@/components/features/date-converter';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
+import CryptoConverter from '@/components/features/crypto-converter';
 import AgeCalculator from '@/components/features/age-calculator';
 import BmiCalculator from '@/components/features/bmi-calculator';
 import PercentageCalculator from '@/components/features/percentage-calculator';
@@ -114,6 +115,7 @@ const toolCategories = [
     title: 'محاسبات مالی',
     icon: <Wallet className="h-6 w-6 text-primary-foreground" />,
     tools: [
+      { id: 'crypto-converter', title: 'نرخ ارز دیجیتال', icon: <Bitcoin className="h-8 w-8 text-orange-400" />, component: <CryptoConverter /> },
       { id: 'loan-calculator', title: 'اقساط وام', icon: <Banknote className="h-8 w-8 text-rose-400" />, component: <LoanCalculator /> },
       { id: 'deposit-calculator', title: 'سود سپرده', icon: <PiggyBank className="h-8 w-8 text-emerald-400" />, component: <DepositCalculator /> },
       { id: 'savings-calculator', title: 'محاسبه‌گر پس‌انداز', icon: <TrendingUp className="h-8 w-8 text-lime-400" />, component: <SavingsCalculator /> },

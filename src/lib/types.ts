@@ -26,6 +26,9 @@ export type PriceData = {
   EmamiCoin?: PriceDataItem;
   Dollar?: PriceDataItem;
   USDT?: PriceDataItem;
+  Bitcoin?: PriceDataItem;
+  Ethereum?: PriceDataItem;
+  Tron?: PriceDataItem;
 };
 
 
@@ -33,5 +36,3 @@ export type ConversionSuggestion = {
   targetUnit: string;
   convertedValue: number;
 };
-
-    

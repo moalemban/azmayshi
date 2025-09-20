@@ -20,7 +20,7 @@ const HEADERS = {
     "Chrome/129.0.0.0 Safari/537.36",
 };
 
-const IDS: Record<keyof Omit<PriceData, 'Bourse' | 'BrentOil'>, string> = {
+const IDS: Record<keyof Omit<PriceData, 'Bourse' | 'BrentOil' | 'Bitcoin' | 'Ethereum' | 'Tron'>, string> = {
     GoldOunce: 'l-ons',
     MesghalGold: 'l-mesghal',
     Gold18K: 'l-geram18',
@@ -28,6 +28,12 @@ const IDS: Record<keyof Omit<PriceData, 'Bourse' | 'BrentOil'>, string> = {
     Dollar: 'l-price_dollar_rl',
     USDT: 'l-crypto-tether-irr',
 };
+
+const CRYPTO_IDS: Record<keyof Pick<PriceData, 'Bitcoin' | 'Ethereum' | 'Tron'>, string> = {
+    Bitcoin: "l-crypto-bitcoin-irr",
+    Ethereum: "l-crypto-ethereum-irr",
+    Tron: "l-crypto-tron-irr",
+}
 
 
 const PriceDataItemSchema = z.object({
@@ -42,6 +48,9 @@ const PriceDataSchema = z.object({
     EmamiCoin: PriceDataItemSchema.optional(),
     Dollar: PriceDataItemSchema.optional(),
     USDT: PriceDataItemSchema.optional(),
+    Bitcoin: PriceDataItemSchema.optional(),
+    Ethereum: PriceDataItemSchema.optional(),
+    Tron: PriceDataItemSchema.optional(),
 });
 
 
@@ -65,9 +74,11 @@ const fetchPricesFlow = ai.defineFlow(
             const $ = cheerio.load(html);
             const prices: PriceData = {};
 
-            for (const key in IDS) {
-                const typedKey = key as keyof Omit<PriceData, 'Bourse' | 'BrentOil'>;
-                const elem_id = IDS[typedKey];
+            const allIds = {...IDS, ...CRYPTO_IDS};
+
+            for (const key in allIds) {
+                const typedKey = key as keyof PriceData;
+                const elem_id = allIds[typedKey];
                 const element = $(`li#${elem_id}`);
 
                 if (element.length) {
@@ -87,5 +98,3 @@ const fetchPricesFlow = ai.defineFlow(
         }
     }
 );
-
-    
