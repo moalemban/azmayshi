@@ -37,6 +37,7 @@ import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart } from 'lucide-react';
 import ImageNext from 'next/image';
+import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 
 
 const toolCategories = [
@@ -117,15 +118,7 @@ export default async function Home() {
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mx-auto max-w-screen-2xl">
 
-         <div id="live-prices-main" className="glass-effect rounded-3xl p-4 md:p-8 mb-10 scroll-mt-24">
-              <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground flex items-center text-glow mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center ml-3 animate-pulse">
-                      <CandlestickChart className="w-6 h-6 text-white"/>
-                  </div>
-                  قیمت‌های لحظه‌ای
-              </h2>
-             <p className='text-muted-foreground -mt-2 mb-4'>ابزار تبدیل ارز در بخش مبدل ها قرار دارد</p>
-          </div>
+          <AdvancedLivePrices />
 
 
           {/* Toolbox Shortcuts */}
