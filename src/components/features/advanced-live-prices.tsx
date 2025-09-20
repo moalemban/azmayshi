@@ -57,22 +57,6 @@ const PriceCard = ({ item }: { item: LivePrice }) => (
     </div>
 );
 
-const PriceCardSkeleton = () => (
-  <div className="glass-effect rounded-2xl p-3 w-full">
-    <div className="flex items-center gap-2">
-      <Skeleton className="w-8 h-8 rounded-full" />
-      <div className="flex-grow space-y-1.5">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-3 w-1/4" />
-      </div>
-    </div>
-    <div className="mt-2 space-y-2 text-right">
-        <Skeleton className="h-5 w-1/2 ml-auto" />
-        <Skeleton className="h-5 w-1/4 ml-auto" />
-    </div>
-  </div>
-);
-
 const priceConfig: { [key in keyof Omit<PriceData, 'cryptos'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
     GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: <Gem /> },
     MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: <BarChart3 /> },
@@ -181,11 +165,7 @@ export default function AdvancedLivePrices() {
             </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-            {loading && prices.length === 0 ? (
-            Array.from({ length: 6 }).map((_, index) => <PriceCardSkeleton key={index} />)
-            ) : (
-            prices.map((item) => item ? <PriceCard key={item.id} item={item} /> : null)
-            )}
+            {prices.map((item) => item ? <PriceCard key={item.id} item={item} /> : null)}
         </div>
     </div>
   );
