@@ -197,9 +197,21 @@ export default function WorkoutTimer() {
               <Input id="workout-time" type="number" value={workoutTime} onChange={(e) => setWorkoutTime(Math.max(1, +e.target.value))} className="h-14 text-2xl text-center" />
             </div>
           </div>
-          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-            <Label htmlFor="timer-mode" className="text-muted-foreground cursor-pointer">حالت خودکار (تمرین » استراحت » ست بعدی)</Label>
-            <Switch id="timer-mode" checked={timerMode === 'auto'} onCheckedChange={(checked) => setTimerMode(checked ? 'auto' : 'manual')} />
+          <div className="space-y-2">
+            <Label className="text-muted-foreground">حالت تایمر</Label>
+            <div className="flex items-center justify-center p-1 bg-muted rounded-lg w-full">
+              {(['auto', 'manual'] as TimerMode[]).map((mode) => (
+                <Button
+                  key={mode}
+                  onClick={() => setTimerMode(mode)}
+                  variant={timerMode === mode ? 'default' : 'ghost'}
+                  className={`w-full h-10 ${timerMode === mode ? '' : 'text-muted-foreground'}`}
+                >
+                  {mode === 'auto' ? 'خودکار' : 'دستی'}
+                </Button>
+              ))}
+            </div>
+             <p className='text-xs text-muted-foreground/80 pt-1'>حالت خودکار: زمان استراحت به صورت اتوماتیک شروع می‌شود.</p>
           </div>
           {timerMode === 'auto' && (
              <div className="space-y-1">
@@ -280,14 +292,19 @@ export default function WorkoutTimer() {
     <CardContent className="flex flex-col items-center justify-center gap-6 p-4 md:p-6 min-h-[500px]">
         {renderContent()}
         
-        { phase !== 'finished' && (
+        { phase === 'configuring' ? (
+             <Button onClick={handleStart} size="lg" className="w-full max-w-sm h-14 text-lg bg-green-500 hover:bg-green-600 mt-auto">
+                <Play className="ml-2 h-6 w-6"/>
+                شروع تمرین
+             </Button>
+        ) : phase !== 'finished' && (
             <div className="flex justify-center items-center gap-4 w-full max-w-sm pt-6 border-t mt-auto">
                 <Button onClick={handleReset} variant="outline" size="icon" className="h-16 w-16 rounded-full" disabled={isRunning}>
                     <Redo className="h-7 w-7" />
                 </Button>
             
                 <Button 
-                    onClick={isRunning ? handlePause : (phase === 'configuring' ? handleStart : handleResume)} 
+                    onClick={isRunning ? handlePause : handleResume} 
                     size="lg" 
                     className={cn('h-20 w-20 rounded-full text-lg', 
                         isRunning ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600'
