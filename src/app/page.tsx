@@ -177,12 +177,12 @@ export default function Home() {
                     </div>
                     {category.title}
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 sm:gap-4">
                     {category.tools.map((tool) => (
                       <a href={`#${tool.id}`} key={`shortcut-${tool.id}`} className="block">
-                        <div className="glass-effect rounded-2xl p-4 card-hover w-full h-full flex flex-col items-center justify-center text-center gap-3">
-                          {tool.icon}
-                          <span className="font-semibold text-sm text-foreground">{tool.title}</span>
+                        <div className="glass-effect rounded-2xl p-3 sm:p-4 card-hover w-full h-full flex flex-col items-center justify-center text-center gap-2 sm:gap-3">
+                          {React.cloneElement(tool.icon, { className: "h-7 w-7 sm:h-8 sm:w-8" })}
+                          <span className="font-semibold text-xs sm:text-sm text-foreground">{tool.title}</span>
                         </div>
                       </a>
                     ))}
