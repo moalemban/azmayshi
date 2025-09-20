@@ -104,6 +104,7 @@ export default function AdvancedLivePrices() {
 
       const newPrices: LivePrice[] = Object.entries(data)
         .map(([key, priceData]) => {
+          if (key === 'cryptos' || !priceData) return null;
           const configKey = key as keyof Omit<PriceData, 'cryptos'>;
           const config = priceConfig[configKey];
           
