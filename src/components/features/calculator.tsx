@@ -111,18 +111,10 @@ export default function QuickCalculator() {
     { label: '+', handler: () => handleOperator('+'), variant: 'secondary' as const },
     { label: '۰', handler: () => inputDigit('0'), className: 'col-span-2' },
     { label: '.', handler: inputDecimal },
-    { label: '=', handler: handleEquals, variant: 'primary' as const },
+    { label: '=', handler: handleEquals, variant: 'default' as const },
   ];
 
   return (
-    <Card className="h-full flex flex-col group/card transition-all duration-300 hover:border-primary/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <CalculatorIcon className="h-6 w-6 text-primary" />
-          ماشین حساب
-        </CardTitle>
-      </CardHeader>
       <CardContent className="flex-grow flex flex-col md:flex-row gap-4">
         <div className="flex-grow flex flex-col">
           <div className="bg-background/50 rounded-lg p-4 w-full text-left mb-4 shadow-inner min-h-[90px] flex flex-col justify-end">
@@ -168,6 +160,5 @@ export default function QuickCalculator() {
           </ScrollArea>
         </div>
       </CardContent>
-    </Card>
   );
 }
