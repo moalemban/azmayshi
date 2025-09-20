@@ -98,11 +98,11 @@ export default function Stopwatch() {
                   {laps.map((lapTime, index) => {
                       const { minutes, seconds, milliseconds } = formatTime(lapTime);
                       return (
-                          <li key={index} className="flex justify-between items-center text-sm p-2 rounded-md bg-background/50 font-mono text-muted-foreground" dir="ltr">
-                              <span className='text-foreground/80 font-sans'>
+                          <li key={index} className="flex justify-between items-center text-base p-2 rounded-md bg-background/50 font-display text-foreground" dir="ltr">
+                              <span className='font-sans'>
                                 دور {laps.length - index}
                               </span>
-                              <span>{minutes}:{seconds}.{milliseconds}</span>
+                              <span className="font-bold text-primary">{minutes}:{seconds}.{milliseconds}</span>
                           </li>
                       )
                   })}
