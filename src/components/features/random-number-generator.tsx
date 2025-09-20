@@ -11,18 +11,20 @@ import { Checkbox } from '../ui/checkbox';
 import { ScrollArea } from '../ui/scroll-area';
 
 const toPersianDigits = (str: string): string => {
+    if (str === null || str === undefined || str === '') return '';
     return String(str).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d)]);
 };
 
 const toEnglishDigits = (str: string): string => {
+    if (str === null || str === undefined) return '';
     return String(str).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d).toString());
 };
 
 
 export default function RandomNumberGenerator() {
-  const [min, setMin] = useState('1');
-  const [max, setMax] = useState('100');
-  const [count, setCount] = useState('1');
+  const [min, setMin] = useState('');
+  const [max, setMax] = useState('');
+  const [count, setCount] = useState('');
   const [unique, setUnique] = useState(true);
   const [results, setResults] = useState<number[]>([]);
   const [isInitial, setIsInitial] = useState(true);
@@ -35,9 +37,9 @@ export default function RandomNumberGenerator() {
 
   const generateNumbers = () => {
     setIsInitial(false);
-    const minValue = parseInt(min, 10);
-    const maxValue = parseInt(max, 10);
-    const numCount = parseInt(count, 10);
+    const minValue = parseInt(min, 10) || 1;
+    const maxValue = parseInt(max, 10) || 100;
+    const numCount = parseInt(count, 10) || 1;
 
     if (isNaN(minValue) || isNaN(maxValue) || isNaN(numCount)) {
       toast({ title: 'خطا', description: 'لطفا مقادیر معتبر عددی وارد کنید.', variant: 'destructive' });
@@ -55,7 +57,7 @@ export default function RandomNumberGenerator() {
     if (unique) {
       const rangeSize = maxValue - minValue + 1;
       if (numCount > rangeSize) {
-        toast({ title: 'خطا', description: `امکان تولید ${toPersianDigits(count)} عدد منحصر به فرد در بازه ${toPersianDigits(min)} تا ${toPersianDigits(max)} وجود ندارد.`, variant: 'destructive' });
+        toast({ title: 'خطا', description: `امکان تولید ${toPersianDigits(String(numCount))} عدد منحصر به فرد در بازه ${toPersianDigits(String(minValue))} تا ${toPersianDigits(String(maxValue))} وجود ندارد.`, variant: 'destructive' });
         return;
       }
       const numbers = new Set<number>();
@@ -102,7 +104,7 @@ export default function RandomNumberGenerator() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="count" className="text-muted-foreground">تعداد</Label>
-          <Input id="count" type="text" value={toPersianDigits(count)} onChange={(e) => handleInputChange(setCount, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۵"/>
+          <Input id="count" type="text" value={toPersianDigits(count)} onChange={(e) => handleInputChange(setCount, e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۱"/>
         </div>
       </div>
       

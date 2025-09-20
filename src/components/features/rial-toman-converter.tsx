@@ -16,8 +16,8 @@ const unformatNumber = (value: string) => {
 };
 
 export default function RialTomanConverter() {
-    const [rial, setRial] = useState('10,000');
-    const [toman, setToman] = useState('1,000');
+    const [rial, setRial] = useState('');
+    const [toman, setToman] = useState('');
 
     const handleRialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const rawValue = unformatNumber(e.target.value);
