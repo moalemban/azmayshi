@@ -27,8 +27,8 @@ const binaryToText = (binary: string): string => {
 };
 
 export default function BinaryConverter() {
-  const [text, setText] = useState('سلام دنیا');
-  const [binary, setBinary] = useState(textToBinary('سلام دنیا'));
+  const [text, setText] = useState('');
+  const [binary, setBinary] = useState('');
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
@@ -50,7 +50,7 @@ export default function BinaryConverter() {
           id="text-input"
           value={text}
           onChange={handleTextChange}
-          placeholder="متن خود را اینجا وارد کنید..."
+          placeholder="سلام دنیا"
           className="min-h-[100px] text-base"
         />
       </div>
@@ -65,7 +65,7 @@ export default function BinaryConverter() {
           id="binary-input"
           value={binary}
           onChange={handleBinaryChange}
-          placeholder="01010011 01100001 01101100"
+          placeholder="11010110 10100011 11010110 10111001 11010110 10100001 11010111 10000000 00100000 11010110 10111010 11010110 10011111 11010111 10001000 11010110 10100001"
           className="min-h-[100px] text-left font-mono"
           dir="ltr"
         />
