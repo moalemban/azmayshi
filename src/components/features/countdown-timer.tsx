@@ -239,18 +239,17 @@ export default function CountdownTimer() {
                 شروع شمارش
             </Button>
         ) : (
-          <div className="flex w-full items-center justify-around">
-            <Button onClick={handleReset} variant="outline" size="icon" className="h-16 w-16 rounded-full text-muted-foreground hover:text-destructive" disabled={isRunning}>
-              <Redo className="h-7 w-7" />
-              <span className="sr-only">ریست</span>
+          <div className="flex w-full items-center justify-around gap-2">
+            <Button onClick={handleReset} variant="outline" className="h-14 flex-1" disabled={isRunning}>
+              <Redo className="h-5 w-5 ml-2" />
+              ریست
             </Button>
-            <Button onClick={handleStartPause} size="lg" className={cn('h-20 w-20 rounded-full text-lg shadow-lg', 
+            <Button onClick={handleStartPause} size="lg" className={cn('h-14 flex-1 text-lg shadow-lg', 
                 isRunning ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-50 animate-pulse-slow' : 'bg-green-500 hover:bg-green-600 text-green-50'
             )} disabled={isFinished}>
-              {isRunning ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
-               <span className="sr-only">{isRunning ? 'توقف' : 'ادامه'}</span>
+              {isRunning ? <><Pause className="h-6 w-6 ml-2" /> توقف</> : <><Play className="h-6 w-6 ml-2" /> ادامه</>}
             </Button>
-             <Button onClick={openSettings} variant="outline" size="icon" className="h-16 w-16 rounded-full text-muted-foreground hover:text-primary">
+             <Button onClick={openSettings} variant="ghost" size="icon" className="h-14 w-14 text-muted-foreground hover:text-primary">
               <Settings className="h-7 w-7" />
                <span className="sr-only">تنظیمات</span>
             </Button>

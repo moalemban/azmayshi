@@ -278,6 +278,9 @@ export default function WorkoutTimer() {
               <span className="text-4xl font-bold w-20 text-center">{reps}</span>
               <Button size="icon" variant="outline" className="rounded-full w-12 h-12" onClick={() => setReps(r => r + 1)} disabled={isRunning}><Plus/></Button>
             </div>
+             <Button variant="secondary" onClick={() => setReps(reps + 1)} className="mt-2" disabled={isRunning}>
+                <Plus className="w-4 h-4 ml-2"/> ثبت حرکت
+            </Button>
           </div>
         )}
 

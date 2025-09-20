@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart } from 'lucide-react';
+import { ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, Gem, CircleDollarSign, BarChart3, Banknote } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -74,12 +74,12 @@ const PriceCardSkeleton = () => (
 );
 
 const priceConfig: { [key in keyof Omit<PriceData, 'cryptos'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bullion-5645229-4702199.png' },
-    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-coin-stack-5645228-4702198.png' },
-    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bar-9734349-7815330.png' },
-    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/persian-coin-11232824-9019919.png' },
-    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/dollar-5346064-4468696.png' },
-    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/tether-8929969-7242987.png' },
+    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: <Gem /> },
+    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: <BarChart3 /> },
+    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: <Gem /> },
+    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: <CircleDollarSign /> },
+    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: <Banknote /> },
+    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: <CircleDollarSign /> },
 };
 
 export default function AdvancedLivePrices() {

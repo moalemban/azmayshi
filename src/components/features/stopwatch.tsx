@@ -63,8 +63,8 @@ export default function Stopwatch() {
 
   return (
     <CardContent className="flex flex-col gap-4">
-      <div className="text-center bg-muted/50 p-4 rounded-lg shadow-inner" dir="ltr">
-          <p className="text-6xl font-display font-bold text-primary tracking-wider text-glow-strong">
+      <div className="text-center bg-muted/50 p-4 rounded-lg shadow-inner font-display" dir="ltr">
+          <p className="text-6xl font-bold text-primary tracking-wider text-glow-strong">
             {minutes}:{seconds}
             <span className="text-3xl text-primary/70 align-baseline">.{milliseconds}</span>
           </p>
