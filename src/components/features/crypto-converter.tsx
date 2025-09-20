@@ -150,7 +150,7 @@ export default function CryptoConverter() {
                                         </div>
                                     </div>
                                 </TableCell>
-                                <TableCell className="text-center font-mono font-semibold text-lg">{formatNumber(crypto.price_irr / 10)}</TableCell>
+                                <TableCell className="text-center font-display font-bold text-xl text-primary text-glow">{formatNumber(crypto.price_irr / 10)}</TableCell>
                                 <TableCell className="text-center font-mono">{formatNumber(crypto.price_usdt, 2)} $</TableCell>
                             </TableRow>
                         ))
