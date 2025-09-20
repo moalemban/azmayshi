@@ -24,7 +24,7 @@ const CircularProgress = ({
   percentage: number;
   timeLeftFormatted: string;
 }) => {
-  const radius = 100;
+  const radius = 110;
   const stroke = 12;
   const normalizedRadius = radius - stroke * 2;
   const circumference = normalizedRadius * 2 * Math.PI;
@@ -36,9 +36,9 @@ const CircularProgress = ({
    if (percentage <= 10) colorClass = 'text-red-500';
   
   return (
-    <div className="relative flex items-center justify-center w-72 h-72">
+    <div className="relative flex items-center justify-center w-80 h-80">
       {/* Background Glow */}
-      <div className={cn("absolute w-64 h-64 rounded-full blur-2xl animate-pulse-slow", colorClass)} style={{ opacity: 0.3 }}/>
+      <div className={cn("absolute w-72 h-72 rounded-full blur-2xl animate-pulse-slow", colorClass)} style={{ opacity: 0.3 }}/>
 
       <svg
         height={radius * 2}
