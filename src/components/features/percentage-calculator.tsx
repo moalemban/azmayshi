@@ -8,8 +8,8 @@ import { Percent } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 export default function PercentageCalculator() {
-  const [val1, setVal1] = useState<string>('');
-  const [val2, setVal2] = useState<string>('');
+  const [val1, setVal1] = useState<string>('20');
+  const [val2, setVal2] = useState<string>('150');
 
   const num1 = parseFloat(val1);
   const num2 = parseFloat(val2);
@@ -32,11 +32,11 @@ export default function PercentageCalculator() {
       <div className="flex gap-4 items-end">
         <div className="space-y-2 flex-1">
           <Label htmlFor="val1" className="text-muted-foreground">مقدار اول</Label>
-          <Input id="val1" type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="h-12 text-lg text-center" placeholder="20"/>
+          <Input id="val1" type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۲۰"/>
         </div>
         <div className="space-y-2 flex-1">
           <Label htmlFor="val2" className="text-muted-foreground">مقدار دوم</Label>
-          <Input id="val2" type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="h-12 text-lg text-center" placeholder="150"/>
+          <Input id="val2" type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="h-12 text-lg text-center font-display" placeholder="۱۵۰"/>
         </div>
       </div>
 
@@ -46,15 +46,15 @@ export default function PercentageCalculator() {
           <div className="space-y-3">
               <div className="p-3 bg-muted/50 rounded-lg shadow-inner text-center">
                     <p className='text-sm text-muted-foreground'>
-                        <span className="font-mono text-primary">{val1 || '۰'}</span> درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> برابر است با:
+                        <span className="font-display text-primary">{val1 ? parseFloat(val1).toLocaleString('fa-IR') : '۰'}</span> درصد از <span className="font-display text-primary">{val2 ? parseFloat(val2).toLocaleString('fa-IR') : '۰'}</span> برابر است با:
                     </p>
-                    <p className="text-2xl font-bold text-foreground mt-1">{result1}</p>
+                    <p className="text-2xl font-bold text-foreground mt-1 font-display">{result1}</p>
               </div>
                 <div className="p-3 bg-muted/50 rounded-lg shadow-inner text-center">
                     <p className='text-sm text-muted-foreground'>
-                      <span className="font-mono text-primary">{val1 || '۰'}</span> چند درصد از <span className="font-mono text-primary">{val2 || '۰'}</span> است؟
+                      <span className="font-display text-primary">{val1 ? parseFloat(val1).toLocaleString('fa-IR') : '۰'}</span> چند درصد از <span className="font-display text-primary">{val2 ? parseFloat(val2).toLocaleString('fa-IR') : '۰'}</span> است؟
                     </p>
-                    <p className="text-2xl font-bold text-foreground mt-1">
+                    <p className="text-2xl font-bold text-foreground mt-1 font-display">
                       {result2}
                       <span className="text-lg font-normal">%</span>
                     </p>

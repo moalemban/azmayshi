@@ -10,9 +10,9 @@ import { Button } from '../ui/button';
 type InterestType = 'compound' | 'simple';
 
 export default function DepositCalculator() {
-  const [principal, setPrincipal] = useState<string>('');
-  const [interestRate, setInterestRate] = useState<string>('');
-  const [duration, setDuration] = useState<string>(''); // in months
+  const [principal, setPrincipal] = useState<string>('10,000,000');
+  const [interestRate, setInterestRate] = useState<string>('20');
+  const [duration, setDuration] = useState<string>('12'); // in months
   const [interestType, setInterestType] = useState<InterestType>('compound');
 
 
@@ -67,15 +67,15 @@ export default function DepositCalculator() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="principalAmount" className="text-muted-foreground">مبلغ سپرده (تومان)</Label>
-          <Input id="principalAmount" type="text" value={principal} onChange={handlePrincipalChange} placeholder="۱۰,۰۰۰,۰۰۰" className="h-12 text-lg text-center" dir="ltr"/>
+          <Input id="principalAmount" type="text" value={principal} onChange={handlePrincipalChange} placeholder="۱۰,۰۰۰,۰۰۰" className="h-12 text-lg text-center font-display" dir="ltr"/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="depositInterestRate" className="text-muted-foreground">نرخ سود سالانه (%)</Label>
-          <Input id="depositInterestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="۲۰" className="h-12 text-lg" />
+          <Input id="depositInterestRate" type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="۲۰" className="h-12 text-lg text-center font-display" />
         </div>
           <div className="space-y-2">
           <Label htmlFor="depositDuration" className="text-muted-foreground">مدت (ماه)</Label>
-          <Input id="depositDuration" type="number" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="۱۲" className="h-12 text-lg" />
+          <Input id="depositDuration" type="number" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="۱۲" className="h-12 text-lg text-center font-display" />
         </div>
       </div>
       
@@ -96,17 +96,17 @@ export default function DepositCalculator() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
               <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
                   <p className="text-sm text-muted-foreground">سود ماهانه</p>
-                  <p className="text-2xl font-bold text-primary mt-1">{formatNumber(monthlyInterest)}</p>
+                  <p className="text-2xl font-bold text-primary mt-1 font-display">{formatNumber(monthlyInterest)}</p>
                   <p className="text-xs text-muted-foreground">تومان</p>
               </div>
               <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
                   <p className="text-sm text-muted-foreground">سود کل</p>
-                  <p className="text-2xl font-bold text-primary mt-1">{formatNumber(totalInterest)}</p>
+                  <p className="text-2xl font-bold text-primary mt-1 font-display">{formatNumber(totalInterest)}</p>
                   <p className="text-xs text-muted-foreground">تومان</p>
               </div>
               <div className="p-4 bg-muted/50 rounded-lg shadow-inner">
                   <p className="text-sm text-muted-foreground">مبلغ نهایی (اصل + سود)</p>
-                  <p className="text-2xl font-bold text-foreground mt-1">{formatNumber(totalValue)}</p>
+                  <p className="text-2xl font-bold text-foreground mt-1 font-display">{formatNumber(totalValue)}</p>
                   <p className="text-xs text-muted-foreground">تومان</p>
               </div>
           </div>
