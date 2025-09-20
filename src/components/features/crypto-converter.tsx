@@ -136,8 +136,8 @@ export default function CryptoConverter() {
                             </TableRow>
                         ))
                     ) : (
-                        prices.map((crypto) => (
-                            <TableRow key={crypto.symbol}>
+                        prices.map((crypto, index) => (
+                            <TableRow key={`${crypto.symbol}-${index}`}>
                                 <TableCell className="font-medium">
                                     <div className="flex items-center gap-3">
                                         <Image src={crypto.icon} alt={crypto.name_en} width={28} height={28} className="rounded-full" />
