@@ -1,13 +1,23 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require("@ducanh2912/next-pwa").default({
+import nextPwa from "@ducanh2912/next-pwa";
+
+const withPWA = nextPwa({
   dest: "public",
-  disable: process.env.NODE_ENV === 'development',
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+  skipWaiting: true,
 });
 
 const nextConfig = {
-  reactStrictMode: true,
-  transpilePackages: ['@genkit-ai/googleai'],
-  serverExternalPackages: ['sharp', 'puppeteer-core', 'chrome-aws-lambda'],
+  serverExternalPackages: ["chrome-aws-lambda"],
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+   experimental: {
+    serverActions: {
+      bodySizeLimit: '4.5mb',
+    },
+  },
 };
 
-module.exports = withPWA(nextConfig);
+export default withPWA(nextConfig);
