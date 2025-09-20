@@ -10,8 +10,10 @@ import { Clock } from 'lucide-react';
 
 const LiveClock = () => {
     const [time, setTime] = useState(new Date());
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         const timerId = setInterval(() => {
             setTime(new Date());
         }, 1000);
@@ -20,6 +22,10 @@ const LiveClock = () => {
             clearInterval(timerId);
         };
     }, []);
+
+    if (!isClient) {
+        return null;
+    }
 
     const formattedTime = time.toLocaleTimeString('fa-IR', {
         hour: '2-digit',
