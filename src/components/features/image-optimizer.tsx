@@ -128,6 +128,16 @@ export default function ImageOptimizer() {
     }
   };
 
+  const handleDownload = () => {
+    if (!optimizedImage) return;
+    const link = document.createElement('a');
+    link.href = optimizedImage.url;
+    link.download = optimizedImage.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const reductionPercentage = originalImage && optimizedImage
     ? Math.round(((originalImage.size - optimizedImage.size) / originalImage.size) * 100)
     : 0;
@@ -226,12 +236,10 @@ export default function ImageOptimizer() {
                       )}
                   </Button>
               ) : (
-                  <a href={optimizedImage.url} download={optimizedImage.name} className="w-full">
-                      <Button className="w-full h-12 text-base">
-                        <Download className="ml-2 h-5 w-5" />
-                        دانلود نسخه بهینه
-                      </Button>
-                  </a>
+                  <Button onClick={handleDownload} className="w-full h-12 text-base">
+                    <Download className="ml-2 h-5 w-5" />
+                    دانلود نسخه بهینه
+                  </Button>
               )}
             </div>
           </>
