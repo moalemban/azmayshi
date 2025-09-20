@@ -126,14 +126,14 @@ export default function QuickCalculator() {
             </p>
           </div>
           <div className="grid grid-cols-4 gap-2 flex-grow">
-            {buttons.map(({ label, handler, variant, className }) => (
+            {buttons.map((button) => (
               <Button
-                key={label}
-                onClick={handler}
-                className={cn('text-xl h-full w-full shadow-sm hover:shadow-lg transition-shadow aspect-square', className)}
-                variant={variant || 'outline'}
+                key={button.label}
+                onClick={button.handler}
+                className={cn('text-xl h-full w-full shadow-sm hover:shadow-lg transition-shadow aspect-square', button.className)}
+                variant={button.variant || 'outline'}
               >
-                {label}
+                {button.label}
               </Button>
             ))}
           </div>
