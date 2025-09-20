@@ -49,32 +49,37 @@ const fetchCryptoPricesFlow = ai.defineFlow(
         try {
             const cryptoPage = await axios.get(CRYPTO_URL, { headers: HEADERS, timeout: 15000 });
             
-            const $crypto = cheerio.load(cryptoPage.data);
+            const $ = cheerio.load(cryptoPage.data);
             const cryptos: CryptoPrice[] = [];
-            const cryptoRows = $crypto('table tbody tr').slice(0, 10); // Limit to top 10
+            const cryptoRows = $('tbody tr[data-market-nameslug]').slice(0, 10); // Limit to top 10
 
             cryptoRows.each((i, row) => {
-                const tds = $crypto(row).find('td');
-                if (tds.length < 8) return;
-
-                const nameFa = $crypto(tds[0]).find('span.name-fa').text().trim();
-                const nameEn = $crypto(tds[0]).find('span.name-en').text().trim();
-                const symbol = nameEn.split(' ')[0].toUpperCase();
-                const iconSrc = $crypto(tds[0]).find('img').attr('data-src') || $crypto(tds[0]).find('img').attr('src');
+                const $row = $(row);
                 
-                const parseNumber = (selector: cheerio.Cheerio) => parseFloat(selector.text().trim().replace(/,/g, '')) || 0;
+                const parseNumber = (text: string) => parseFloat(text.replace(/[^۰-۹0-9.-]/g, '').replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))) || 0;
+                
+                const nameFa = $row.find('td:nth-of-type(2) .tgcss-font-semibold').first().text().trim();
+                const nameEn = $row.find('.original-title-en').text().trim();
+                const symbol = $row.find('td:nth-of-type(3)').text().trim();
+                const iconSrc = $row.find('td:nth-of-type(2) img').attr('data-src') || $row.find('td:nth-of-type(2) img').attr('src');
+                const price_usdt = parseNumber($row.find("[data-market-name='p']").text().trim());
+                const price_irr = parseNumber($row.find("[data-market-p]").text().trim());
+                const change_percent = parseNumber($row.find("[data-market-name='dp']").text().trim());
+                const volume_24h = parseNumber($row.find("[data-label*='معاملات 24']").text().trim());
+                const market_cap = parseNumber($row.find("[data-label*='ارزش بازار']").text().trim());
+                const last_update = $row.find("td[data-label='زمان بروزرسانی']").text().trim();
 
                 cryptos.push({
                     name_fa: nameFa,
                     name_en: nameEn,
                     symbol: symbol,
                     icon: iconSrc || null,
-                    price_usdt: parseNumber($crypto(tds[1])),
-                    price_irr: parseNumber($crypto(tds[2])),
-                    change_percent: parseFloat($crypto(tds[3]).text().trim()) || 0,
-                    volume_24h: parseNumber($crypto(tds[5])),
-                    market_cap: parseNumber($crypto(tds[6])),
-                    last_update: $crypto(tds[7]).text().trim(),
+                    price_usdt: price_usdt,
+                    price_irr: price_irr,
+                    change_percent: change_percent,
+                    volume_24h: volume_24h,
+                    market_cap: market_cap,
+                    last_update: last_update,
                 });
             });
 
