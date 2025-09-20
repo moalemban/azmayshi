@@ -74,12 +74,12 @@ const PriceCardSkeleton = () => (
 );
 
 const priceConfig: { [key in keyof Omit<PriceData, 'Bourse' | 'BrentOil'>]: Omit<LivePrice, 'price' | 'change'> | null } = {
-    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-ingot-6848135-5612487.png' },
-    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-coin-5645226-4702196.png' },
-    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bar-4060920-3363673.png' },
-    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/iranian-rial-coin-11232822-9019917.png' },
-    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/dollar-coin-5346065-4468697.png' },
-    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/tether-usdt-5334659-4468691.png' },
+    GoldOunce: { id: 'GoldOunce', name: 'انس طلا', symbol: 'USD', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bullion-5645229-4702199.png' },
+    MesghalGold: { id: 'MesghalGold', name: 'مثقال طلا', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-coin-stack-5645228-4702198.png' },
+    Gold18K: { id: 'Gold18K', name: 'طلا ۱۸ عیار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/gold-bar-9734349-7815330.png' },
+    EmamiCoin: { id: 'EmamiCoin', name: 'سکه امامی', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/persian-coin-11232824-9019919.png' },
+    Dollar: { id: 'Dollar', name: 'دلار', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/dollar-5346064-4468696.png' },
+    USDT: { id: 'USDT', name: 'تتر', symbol: 'IRT', icon: 'https://cdn3d.iconscout.com/3d/premium/thumb/tether-8929969-7242987.png' },
 };
 
 export default function AdvancedLivePrices() {
