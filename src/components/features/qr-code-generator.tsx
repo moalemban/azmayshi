@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Link, Palette, Settings, Type, Image as ImageIcon, Upload } from 'lucide-react';
+import { Download, Link, Palette, Settings, Type, Image as ImageIcon, Upload, Text } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
@@ -117,24 +117,33 @@ export default function QrCodeGenerator() {
   )
 
   return (
-    <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-        {/* === Left Side: Options === */}
-        <div className="md:col-span-2 space-y-4">
+    <CardContent className="grid grid-cols-1 gap-8 items-start">
+        {/* === Preview Section === */}
+        <div className="flex flex-col items-center justify-start gap-4">
+            <div className="p-4 rounded-lg shadow-md border bg-white">
+                <div ref={ref} />
+            </div>
+            <p className="text-sm text-muted-foreground">پیش‌نمایش زنده</p>
+            <div className="grid grid-cols-3 gap-2 w-full max-w-sm">
+                <Button onClick={() => onDownloadClick('png')} className="h-12 text-base"><Download className="w-5 h-5 ml-2"/> PNG</Button>
+                <Button onClick={() => onDownloadClick('svg')} variant="secondary" className="h-12 text-base"><Download className="w-5 h-5 ml-2"/> SVG</Button>
+                <Button onClick={() => onDownloadClick('webp')} variant="secondary" className="h-12 text-base"><Download className="w-5 h-5 ml-2"/> WebP</Button>
+            </div>
+        </div>
+
+        {/* === Options Section === */}
+        <div className="space-y-4">
             <Tabs defaultValue="content">
                 <TabsList className="grid w-full grid-cols-2 h-12">
-                    <TabsTrigger value="content" className="h-10 text-base"><Type className="w-5 h-5 ml-2"/>محتوا</TabsTrigger>
+                    <TabsTrigger value="content" className="h-10 text-base"><Text className="w-5 h-5 ml-2"/>محتوا</TabsTrigger>
                     <TabsTrigger value="design" className="h-10 text-base"><Palette className="w-5 h-5 ml-2"/>طراحی</TabsTrigger>
                 </TabsList>
                 
                 {/* Content Tab */}
                 <TabsContent value="content" className="space-y-4 pt-4">
                      <div className="space-y-2">
-                        <Label htmlFor="qr-data-url" className="text-muted-foreground">آدرس اینترنتی (URL)</Label>
-                        <Input id="qr-data-url" dir="ltr" value={options.data?.startsWith('http') ? options.data : 'https://'} onChange={(e) => handleUpdate({ data: e.target.value })} placeholder="https://example.com"/>
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="qr-data-text" className="text-muted-foreground">یا متن دلخواه</Label>
-                        <Textarea id="qr-data-text" value={options.data} onChange={(e) => handleUpdate({ data: e.target.value })} placeholder="متن یا اطلاعات خود را وارد کنید..."/>
+                        <Label htmlFor="qr-data-text" className="text-muted-foreground">متن یا آدرس اینترنتی (URL)</Label>
+                        <Textarea id="qr-data-text" value={options.data} onChange={(e) => handleUpdate({ data: e.target.value })} placeholder="متن یا آدرس https://example.com را وارد کنید..." className="min-h-[120px] text-lg text-center" dir="ltr"/>
                     </div>
                 </TabsContent>
 
@@ -181,7 +190,7 @@ export default function QrCodeGenerator() {
                                 <div className="space-y-2">
                                     <Label htmlFor="logo-url">یا آدرس URL لوگو</Label>
                                     <Input id="logo-url" value={options.image} onChange={(e) => handleUpdate({ image: e.target.value })} placeholder="http://.../logo.png" dir="ltr"/>
-                                    <p className='text-xs text-muted-foreground'>برای حذف لوگو، آدرس را پاک کنید و فایل انتخاب نکنید.</p>
+                                    <p className='text-xs text-muted-foreground'>برای حذف لوگو، آدرس را پاک کنید.</p>
                                 </div>
                                 <div className='space-y-2'>
                                     <div className="flex items-center justify-between">
@@ -202,19 +211,6 @@ export default function QrCodeGenerator() {
                     </Accordion>
                 </TabsContent>
             </Tabs>
-        </div>
-
-        {/* === Right Side: Preview === */}
-        <div className="space-y-4 md:col-span-1 flex flex-col items-center">
-            <div className="p-4 rounded-lg shadow-md border bg-white">
-                <div ref={ref} />
-            </div>
-            <p className="text-sm text-muted-foreground">پیش‌نمایش زنده</p>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 w-full">
-                <Button onClick={() => onDownloadClick('png')} className="h-12 text-base col-span-1 lg:col-span-1"><Download className="w-5 h-5 ml-2"/> PNG</Button>
-                <Button onClick={() => onDownloadClick('svg')} variant="secondary" className="h-12 text-base"><Download className="w-5 h-5 ml-2"/> SVG</Button>
-                <Button onClick={() => onDownloadClick('webp')} variant="secondary" className="h-12 text-base"><Download className="w-5 h-5 ml-2"/> WebP</Button>
-            </div>
         </div>
     </CardContent>
   );
