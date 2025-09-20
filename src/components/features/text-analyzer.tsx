@@ -40,12 +40,12 @@ export default function TextAnalyzer() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="متن خود را اینجا وارد کنید یا بچسبانید..."
-          className="min-h-[150px] text-base p-4 pr-12"
+          className="min-h-[150px] text-base p-4 pl-12"
         />
         <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute top-2 right-2 text-muted-foreground hover:text-destructive"
+            className="absolute top-2 left-2 text-muted-foreground hover:text-destructive"
             onClick={() => setText('')}
             disabled={!text}
         >
