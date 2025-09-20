@@ -184,11 +184,11 @@ export default function QrCodeGenerator() {
   useEffect(() => {
     let data = '';
     switch (qrType) {
-      case 'link': data = link; break;
-      case 'text': data = text; break;
-      case 'wifi': data = `WIFI:T:${wifi.encryption};S:${wifi.ssid};P:${wifi.password};;`; break;
-      case 'email': data = `mailto:${email.to}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}`; break;
-      case 'phone': data = `tel:${phone}`; break;
+        case 'link': data = link; break;
+        case 'text': data = text; break;
+        case 'wifi': data = `WIFI:T:${wifi.encryption};S:${wifi.ssid};P:${wifi.password};;`; break;
+        case 'email': data = `mailto:${email.to}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}`; break;
+        case 'phone': data = `tel:${phone}`; break;
     }
     handleUpdate({ data });
   // eslint-disable-next-line react-hooks/exhaustive-deps
