@@ -183,28 +183,30 @@ export default function WorkoutTimer() {
     if (phase === 'configuring') {
       return (
         <div className="space-y-6 text-center w-full max-w-md">
-            <div className='flex items-center gap-2'>
-                <Settings className='w-6 h-6 text-muted-foreground'/>
-                <h3 className="text-lg font-semibold text-muted-foreground">تنظیمات تمرین</h3>
+          <div className="flex items-center gap-2">
+            <Settings className="w-6 h-6 text-muted-foreground" />
+            <h3 className="text-lg font-semibold text-muted-foreground">تنظیمات تمرین</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <Label htmlFor="sets">تعداد ست</Label>
+              <Input id="sets" type="number" value={sets} onChange={(e) => setSets(Math.max(1, +e.target.value))} className="h-14 text-2xl text-center" />
             </div>
-            <div className="grid grid-cols-3 gap-3">
-                <div className="space-y-1">
-                    <Label htmlFor="sets">تعداد ست</Label>
-                    <Input id="sets" type="number" value={sets} onChange={e => setSets(Math.max(1, +e.target.value))} className="h-14 text-2xl text-center" />
-                </div>
-                <div className="space-y-1">
-                    <Label htmlFor="workout-time">زمان تمرین (ثانیه)</Label>
-                    <Input id="workout-time" type="number" value={workoutTime} onChange={e => setWorkoutTime(Math.max(1, +e.target.value))} className="h-14 text-2xl text-center" />
-                </div>
-                <div className="space-y-1">
-                    <Label htmlFor="rest-time">زمان استراحت (ثانیه)</Label>
-                    <Input id="rest-time" type="number" value={restTime} onChange={e => setRestTime(Math.max(0, +e.target.value))} className="h-14 text-2xl text-center" />
-                </div>
+            <div className="space-y-1">
+              <Label htmlFor="workout-time">زمان تمرین (ثانیه)</Label>
+              <Input id="workout-time" type="number" value={workoutTime} onChange={(e) => setWorkoutTime(Math.max(1, +e.target.value))} className="h-14 text-2xl text-center" />
             </div>
-             <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                <Label htmlFor="timer-mode" className="text-muted-foreground cursor-pointer">حالت خودکار (تمرین » استراحت » ست بعدی)</Label>
-                <Switch id="timer-mode" checked={timerMode === 'auto'} onCheckedChange={(checked) => setTimerMode(checked ? 'auto' : 'manual')} />
+          </div>
+          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+            <Label htmlFor="timer-mode" className="text-muted-foreground cursor-pointer">حالت خودکار (تمرین » استراحت » ست بعدی)</Label>
+            <Switch id="timer-mode" checked={timerMode === 'auto'} onCheckedChange={(checked) => setTimerMode(checked ? 'auto' : 'manual')} />
+          </div>
+          {timerMode === 'auto' && (
+             <div className="space-y-1">
+                <Label htmlFor="rest-time">زمان استراحت (ثانیه)</Label>
+                <Input id="rest-time" type="number" value={restTime} onChange={e => setRestTime(Math.max(0, +e.target.value))} className="h-14 text-2xl text-center" />
             </div>
+          )}
         </div>
       );
     }

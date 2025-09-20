@@ -8,6 +8,7 @@ import type { LivePrice, PriceData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { fetchPrices as fetchPricesFlow } from '@/ai/flows/fetch-prices-flow';
+import { CardContent } from '@/components/ui/card';
 
 const PriceChangeIndicator = ({ change }: { change: string | null }) => {
   if (!change || change === "0" || change === "۰") return <div className="h-5" />;
@@ -179,5 +180,3 @@ export default function LivePrices() {
     </CardContent>
   );
 }
-
-    
