@@ -14,16 +14,19 @@ const textToBinary = (text: string): string => {
 };
 
 const binaryToText = (binary: string): string => {
-    const cleanBinary = binary.replace(/[^01\s]/g, '').replace(/\s+/g, '');
-    if (cleanBinary.length % 8 !== 0) {
-        return 'کد باینری نامعتبر است (باید مضربی از ۸ بیت باشد)';
-    }
-    try {
-        const textChars = cleanBinary.match(/.{1,8}/g)?.map(byte => String.fromCharCode(parseInt(byte, 2))) || [];
-        return textChars.join('');
-    } catch (e) {
-        return 'خطا در تبدیل باینری به متن';
-    }
+  const cleanBinary = binary.trim().replace(/[^01\s]/g, '');
+  if (cleanBinary === '') return '';
+
+  try {
+    const bytes = cleanBinary.split(/\s+/);
+    const textChars = bytes.map(byte => {
+      if (byte.length !== 8) throw new Error('بایت نامعتبر');
+      return String.fromCharCode(parseInt(byte, 2));
+    });
+    return textChars.join('');
+  } catch (e) {
+    return 'خطا در تبدیل باینری به متن. فرمت ورودی را بررسی کنید.';
+  }
 };
 
 export default function BinaryConverter() {
@@ -39,7 +42,7 @@ export default function BinaryConverter() {
   const handleBinaryChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newBinary = e.target.value;
     setBinary(newBinary);
-    setText(newBinary.trim() === '' ? '' : binaryToText(newBinary));
+    setText(binaryToText(newBinary));
   };
 
   return (
