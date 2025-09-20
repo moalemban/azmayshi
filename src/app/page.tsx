@@ -29,6 +29,7 @@ import RialTomanConverter from '@/components/features/rial-toman-converter';
 import SavingsCalculator from '@/components/features/savings-calculator';
 import NationalIdValidator from '@/components/features/national-id-validator';
 import WorkoutTimer from '@/components/features/workout-timer';
+import ShebaConverter from '@/components/features/sheba-converter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ScrollToTop from '@/components/layout/scroll-to-top';
 import LivePrices from '@/components/features/live-prices';
@@ -75,7 +76,8 @@ import {
   Dumbbell,
   CandlestickChart,
   Clock,
-  Bitcoin
+  Bitcoin,
+  ShieldCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -132,6 +134,7 @@ const toolCategories = [
     title: 'ابزارهای کاربردی',
     icon: <User className="h-6 w-6 text-primary-foreground" />,
     tools: [
+      { id: 'sheba-converter', title: 'ابزار شبا', icon: <ShieldCheck className="h-8 w-8 text-green-500" />, component: <ShebaConverter /> },
       { id: 'live-prices', title: 'قیمت‌های لحظه‌ای', icon: <CandlestickChart className="h-8 w-8 text-yellow-400" />, component: <LivePrices /> },
       { id: 'national-id-validator', title: 'بررسی صحت و شهر شماره ملی', icon: <Fingerprint className="h-8 w-8 text-teal-400" />, component: <NationalIdValidator /> },
       { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
