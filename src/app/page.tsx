@@ -44,7 +44,7 @@ import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, AlignVerticalDistributeCenter, MessageSquareHeart, Pickaxe, Crown, Blocks, Rows3 } from 'lucide-react';
+import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, AlignVerticalDistributeCenter, MessageSquareHeart, Pickaxe, Crown, Blocks, Rows3, Link as LinkIcon } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import { Badge } from '@/components/ui/badge';
@@ -444,3 +444,5 @@ export default async function Home() {
     </div>
   );
 }
+
+    
