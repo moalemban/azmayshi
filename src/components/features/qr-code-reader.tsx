@@ -40,7 +40,7 @@ export default function QrCodeReader() {
   }, []);
 
   const scanQrCode = useCallback(() => {
-    if (!videoRef.current || !canvasRef.current) return;
+    if (!videoRef.current || !canvasRef.current || !isScanning) return;
 
     const video = videoRef.current;
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -50,8 +50,8 @@ export default function QrCodeReader() {
       if (context) {
         canvas.height = video.videoHeight;
         canvas.width = video.videoWidth;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
         try {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
             const code = jsQR(imageData.data, imageData.width, imageData.height, {
               inversionAttempts: "dontInvert",
@@ -68,8 +68,10 @@ export default function QrCodeReader() {
         }
       }
     }
-    animationFrameRef.current = requestAnimationFrame(scanQrCode);
-  }, [stopScan, toast]);
+    if (isScanning) {
+        animationFrameRef.current = requestAnimationFrame(scanQrCode);
+    }
+  }, [stopScan, toast, isScanning]);
   
    useEffect(() => {
     if (isScanning) {
@@ -92,7 +94,6 @@ export default function QrCodeReader() {
     stopScan(); 
     setResult(null);
     setError(null);
-    setIsScanning(true);
     
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setError("دوربین در این مرورگر پشتیبانی نمی‌شود.");
@@ -104,10 +105,20 @@ export default function QrCodeReader() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
         streamRef.current = stream;
+        
         if (videoRef.current) {
             videoRef.current.srcObject = stream;
+            // Wait for video to load metadata before trying to scan
+            await new Promise((resolve) => {
+                if (videoRef.current) {
+                    videoRef.current.onloadedmetadata = () => {
+                        resolve(true);
+                    };
+                }
+            });
+            setIsScanning(true); // Start scanning only after video is ready
+            setHasCameraPermission(true);
         }
-        setHasCameraPermission(true);
     } catch (err) {
         console.error("Camera access error:", err);
         setError("امکان دسترسی به دوربین وجود ندارد. لطفاً دسترسی لازم را بدهید.");
