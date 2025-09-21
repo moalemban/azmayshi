@@ -8,7 +8,15 @@ import { Label } from '@/components/ui/label';
 import { Redo, HelpCircle, ArrowUp, ArrowDown, Check, Trophy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+type Difficulty = 'easy' | 'medium' | 'hard';
+const difficultyRanges: Record<Difficulty, { min: number, max: number }> = {
+  easy: { min: 1, max: 100 },
+  medium: { min: 1, max: 500 },
+  hard: { min: 1, max: 1000 },
+};
+
 export default function GuessTheNumber() {
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [secretNumber, setSecretNumber] = useState(0);
   const [guess, setGuess] = useState('');
   const [guesses, setGuesses] = useState<number[]>([]);
@@ -18,8 +26,10 @@ export default function GuessTheNumber() {
 
   const { toast } = useToast();
 
-  const startNewGame = () => {
-    const newSecret = Math.floor(Math.random() * 100) + 1;
+  const startNewGame = (newDifficulty: Difficulty) => {
+    const { min, max } = difficultyRanges[newDifficulty];
+    const newSecret = Math.floor(Math.random() * (max - min + 1)) + min;
+    setDifficulty(newDifficulty);
     setSecretNumber(newSecret);
     setGuess('');
     setGuesses([]);
@@ -29,15 +39,18 @@ export default function GuessTheNumber() {
   };
   
   useEffect(() => {
-    startNewGame();
+    // Game doesn't start until difficulty is chosen
   }, []);
 
   const handleGuess = () => {
+    if (!difficulty) return;
+    const { min, max } = difficultyRanges[difficulty];
     const numGuess = parseInt(guess, 10);
-    if (isNaN(numGuess) || numGuess < 1 || numGuess > 100) {
+
+    if (isNaN(numGuess) || numGuess < min || numGuess > max) {
       toast({
         title: 'خطا!',
-        description: 'لطفاً یک عدد معتبر بین ۱ تا ۱۰۰ وارد کنید.',
+        description: `لطفاً یک عدد معتبر بین ${min} تا ${max} وارد کنید.`,
         variant: 'destructive',
       });
       return;
@@ -75,9 +88,24 @@ export default function GuessTheNumber() {
     return <HelpCircle className="w-6 h-6 text-muted-foreground"/>;
   }
 
+  if (!difficulty) {
+    return (
+        <CardContent className="flex flex-col items-center gap-4 pt-6">
+            <h3 className="text-lg font-semibold text-foreground">درجه سختی را انتخاب کنید:</h3>
+            <div className="flex gap-4">
+               <Button onClick={() => startNewGame('easy')} className="h-12">آسان (۱-۱۰۰)</Button>
+               <Button onClick={() => startNewGame('medium')} className="h-12">متوسط (۱-۵۰۰)</Button>
+               <Button onClick={() => startNewGame('hard')} className="h-12">سخت (۱-۱۰۰۰)</Button>
+            </div>
+        </CardContent>
+    )
+  }
+
   return (
     <CardContent className="flex flex-col items-center gap-6">
-      <p className="text-muted-foreground text-center">من یک عدد بین ۱ تا ۱۰۰ انتخاب کرده‌ام. می‌توانی حدس بزنی؟</p>
+      <p className="text-muted-foreground text-center">
+        سیستم یک عدد بین {difficultyRanges[difficulty].min.toLocaleString('fa-IR')} تا {difficultyRanges[difficulty].max.toLocaleString('fa-IR')} انتخاب کرده. می‌توانی حدس بزنی؟
+      </p>
       
       <div className="flex flex-col items-center gap-4 w-full max-w-sm">
         <div className="w-full space-y-2">
@@ -88,7 +116,7 @@ export default function GuessTheNumber() {
              value={guess}
              onChange={(e) => setGuess(e.target.value)}
              onKeyDown={handleKeyDown}
-             placeholder="عددی بین ۱ تا ۱۰۰"
+             placeholder={`عددی بین ${difficultyRanges[difficulty].min.toLocaleString('fa-IR')} تا ${difficultyRanges[difficulty].max.toLocaleString('fa-IR')}`}
              className="h-14 text-2xl text-center font-display"
              disabled={gameOver}
            />
@@ -111,10 +139,15 @@ export default function GuessTheNumber() {
             )}
        </div>
        
-      <Button onClick={startNewGame} variant="outline">
-        <Redo className="ml-2 h-4 w-4" />
-        بازی جدید
-      </Button>
+      <div className='flex gap-2'>
+        <Button onClick={() => startNewGame(difficulty)} variant="outline">
+          <Redo className="ml-2 h-4 w-4" />
+          بازی جدید
+        </Button>
+        <Button onClick={() => setDifficulty(null)} variant="ghost" className="text-muted-foreground">
+          تغییر درجه سختی
+        </Button>
+      </div>
     </CardContent>
   );
 }

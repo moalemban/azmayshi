@@ -10,6 +10,7 @@ import { Badge } from '../ui/badge';
 type Player = 'X' | 'O';
 type SquareValue = Player | null;
 type GameMode = 'two-player' | 'vs-computer';
+type Difficulty = 'easy' | 'medium' | 'hard';
 
 const Square = ({ value, onSquareClick }: { value: SquareValue, onSquareClick: () => void }) => {
   return (
@@ -42,36 +43,47 @@ export default function TicTacToe() {
   const [squares, setSquares] = useState<Array<SquareValue>>(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
   const [gameMode, setGameMode] = useState<GameMode | null>(null);
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   
   const winner = calculateWinner(squares);
   const isDraw = !winner && squares.every(Boolean);
 
   const makeComputerMove = (currentSquares: Array<SquareValue>) => {
-    // 1. Check if computer can win
+    if (difficulty === 'easy') {
+      const emptySquares = currentSquares.map((sq, i) => sq === null ? i : null).filter(i => i !== null);
+      if(emptySquares.length > 0) return emptySquares[Math.floor(Math.random() * emptySquares.length)] as number;
+      return null;
+    }
+
+    // Check if computer can win
     for (let i = 0; i < 9; i++) {
         if (!currentSquares[i]) {
             const tempSquares = currentSquares.slice();
             tempSquares[i] = 'O';
-            if (calculateWinner(tempSquares) === 'O') {
-                return i;
-            }
+            if (calculateWinner(tempSquares) === 'O') return i;
         }
     }
-    // 2. Check if player can win and block
+    // Check if player can win and block
     for (let i = 0; i < 9; i++) {
         if (!currentSquares[i]) {
             const tempSquares = currentSquares.slice();
             tempSquares[i] = 'X';
-            if (calculateWinner(tempSquares) === 'X') {
-                return i;
-            }
+            if (calculateWinner(tempSquares) === 'X') return i;
         }
     }
-    // 3. Pick a random empty square
-    const emptySquares = currentSquares.map((sq, i) => sq === null ? i : null).filter(i => i !== null);
-    if(emptySquares.length > 0) {
-        return emptySquares[Math.floor(Math.random() * emptySquares.length)] as number;
+    
+    // Hard difficulty: try to take strategic spots
+    if (difficulty === 'hard') {
+        const strategicMoves = [4, 0, 2, 6, 8]; // center, corners
+        for (const move of strategicMoves) {
+            if (!currentSquares[move]) return move;
+        }
     }
+    
+    // Fallback to random move
+    const emptySquares = currentSquares.map((sq, i) => sq === null ? i : null).filter(i => i !== null);
+    if(emptySquares.length > 0) return emptySquares[Math.floor(Math.random() * emptySquares.length)] as number;
+
     return null;
   }
 
@@ -85,11 +97,11 @@ export default function TicTacToe() {
         }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [xIsNext, gameMode, squares, winner, isDraw]);
+  }, [xIsNext, gameMode, squares, winner, isDraw, difficulty]);
 
   const handleClick = (i: number, isComputerMove = false) => {
     if (squares[i] || winner) return;
-    if (gameMode === 'vs-computer' && !xIsNext && !isComputerMove) return; // Prevent user from clicking during computer's turn
+    if (gameMode === 'vs-computer' && !xIsNext && !isComputerMove) return;
 
     const nextSquares = squares.slice();
     nextSquares[i] = xIsNext ? 'X' : 'O';
@@ -102,6 +114,7 @@ export default function TicTacToe() {
     setXIsNext(true);
     if(fullReset) {
         setGameMode(null);
+        setDifficulty(null);
     }
   };
 
@@ -109,7 +122,7 @@ export default function TicTacToe() {
     if (winner) return `برنده: بازیکن ${winner}`;
     if (isDraw) return 'بازی مساوی شد!';
     if(gameMode === 'vs-computer') {
-        return xIsNext ? "نوبت شما (X)" : "نوبت کامپیوتر (O)...";
+        return xIsNext ? "نوبت شما (X)" : "نوبت ربات (O)...";
     }
     return `نوبت بازیکن: ${xIsNext ? 'X' : 'O'}`;
   }
@@ -132,11 +145,25 @@ export default function TicTacToe() {
                   </Button>
                   <Button onClick={() => setGameMode('vs-computer')} variant="secondary" className="h-12 text-base">
                        <BotIcon className="ml-2 w-5 h-5"/>
-                      بازی با کامپیوتر
+                      بازی با ربات
                   </Button>
               </div>
           </CardContent>
       )
+  }
+
+  if (gameMode === 'vs-computer' && !difficulty) {
+    return (
+        <CardContent className="flex flex-col items-center gap-4 pt-6">
+            <h3 className="text-lg font-semibold text-foreground">درجه سختی ربات را انتخاب کنید:</h3>
+            <div className="flex gap-4">
+               <Button onClick={() => setDifficulty('easy')} className="h-12">آسان</Button>
+               <Button onClick={() => setDifficulty('medium')} className="h-12">متوسط</Button>
+               <Button onClick={() => setDifficulty('hard')} className="h-12">سخت</Button>
+            </div>
+             <Button onClick={() => handleReset(true)} variant="link" className="text-muted-foreground">بازگشت</Button>
+        </CardContent>
+    )
   }
 
   return (

@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Hand, Scissors, Gem, Redo, Bot, Users, BrainCircuit } from 'lucide-react';
+import { Hand, Scissors, Gem, Redo, Bot as BotIcon, Users, BrainCircuit } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
+import { Label } from '../ui/label';
 
 type Choice = 'rock' | 'paper' | 'scissors';
 type GameMode = 'vs-computer' | 'two-player';
@@ -36,7 +37,7 @@ const getComputerChoice = (difficulty: Difficulty, playerHistory: Choice[]): Cho
 
 export default function RockPaperScissors() {
   const [gameMode, setGameMode] = useState<GameMode | null>(null);
-  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [player1Choice, setPlayer1Choice] = useState<Choice | null>(null);
   const [player2Choice, setPlayer2Choice] = useState<Choice | null>(null);
   const [result, setResult] = useState<'win' | 'lose' | 'draw' | null>(null);
@@ -59,7 +60,7 @@ export default function RockPaperScissors() {
              else setScores(s => ({ ...s, draws: s.draws + 1 }));
         }
     } else { // vs-computer
-        const computerRandomChoice = getComputerChoice(difficulty, playerHistory);
+        const computerRandomChoice = getComputerChoice(difficulty!, playerHistory);
         const gameResult = getResult(choice, computerRandomChoice);
         setPlayerHistory(prev => [...prev, choice]);
 
@@ -84,6 +85,7 @@ export default function RockPaperScissors() {
     handleReset();
     if(modeChange) {
         setGameMode(null);
+        setDifficulty(null);
     }
     setScores({ player1: 0, computer: 0, player2: 0, draws: 0 });
     setPlayerHistory([]);
@@ -91,7 +93,7 @@ export default function RockPaperScissors() {
   
   const resultText: Record<string, string> = {
     win: gameMode === 'two-player' ? 'بازیکن ۱ برنده شد!' : 'شما بردید!',
-    lose: gameMode === 'two-player' ? 'بازیکن ۲ برنده شد!' : 'کامپیوتر برد!',
+    lose: gameMode === 'two-player' ? 'بازیکن ۲ برنده شد!' : 'ربات برد!',
     draw: 'مساوی شد!',
   };
   
@@ -120,11 +122,11 @@ export default function RockPaperScissors() {
               <div className="flex gap-4">
                  <Button onClick={() => setGameMode('two-player')} className="h-12 text-base">
                       <Users className="ml-2 w-5 h-5"/>
-                      بازی دونفره
+                      بازی با دوست
                   </Button>
                   <Button onClick={() => setGameMode('vs-computer')} variant="secondary" className="h-12 text-base">
-                       <Bot className="ml-2 w-5 h-5"/>
-                      بازی با کامپیوتر
+                       <BotIcon className="ml-2 w-5 h-5"/>
+                      بازی با ربات
                   </Button>
               </div>
           </CardContent>
@@ -134,12 +136,13 @@ export default function RockPaperScissors() {
   if(gameMode === 'vs-computer' && !difficulty) {
       return (
           <CardContent className="flex flex-col items-center gap-4 pt-6">
-              <h3 className="text-lg font-semibold text-foreground">درجه سختی را انتخاب کنید:</h3>
+              <h3 className="text-lg font-semibold text-foreground">درجه سختی ربات را انتخاب کنید:</h3>
               <div className="flex gap-4">
                  <Button onClick={() => setDifficulty('easy')} className="h-12">آسان</Button>
                  <Button onClick={() => setDifficulty('medium')} className="h-12">متوسط</Button>
                  <Button onClick={() => setDifficulty('hard')} className="h-12">سخت</Button>
               </div>
+               <Button onClick={() => handleFullReset(true)} variant="link" className="text-muted-foreground">بازگشت</Button>
           </CardContent>
       )
   }
@@ -162,7 +165,7 @@ export default function RockPaperScissors() {
                 <p className="text-4xl font-display">{scores.draws.toLocaleString('fa-IR')}</p>
             </div>
             <div className="font-bold text-lg">
-                <p>{gameMode === 'two-player' ? 'امتیاز بازیکن ۲' : 'امتیاز کامپیوتر'}</p>
+                <p>{gameMode === 'two-player' ? 'امتیاز بازیکن ۲' : 'امتیاز ربات'}</p>
                 <p className="text-4xl text-foreground font-display">{(gameMode === 'two-player' ? scores.player2 : scores.computer).toLocaleString('fa-IR')}</p>
             </div>
       </div>
@@ -210,7 +213,7 @@ export default function RockPaperScissors() {
             <div className="flex items-center justify-around gap-4 w-full">
                 <ChoiceDisplay choice={player1Choice} label={gameMode === 'two-player' ? "بازیکن ۱" : "شما"}/>
                  {renderTurnStatus()}
-                <ChoiceDisplay choice={player2Choice} label={gameMode === 'two-player' ? "بازیکن ۲" : "کامپیوتر"}/>
+                <ChoiceDisplay choice={player2Choice} label={gameMode === 'two-player' ? "بازیکن ۲" : "ربات"}/>
             </div>
           <Button onClick={handleReset} variant="default" size="lg" className="w-full">
             بازی بعد
@@ -220,7 +223,7 @@ export default function RockPaperScissors() {
       
        <Button onClick={() => handleFullReset(true)} variant="ghost" className="text-muted-foreground">
             <Redo className="ml-2 h-4 w-4" />
-            شروع مجدد
+            تغییر حالت بازی
         </Button>
     </CardContent>
   );
