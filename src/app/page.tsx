@@ -44,7 +44,7 @@ import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Puzzle, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, Link as LinkIcon, Users, Ghost, CircleDot, Castle, Rocket, Target, Ship, ArrowDownRight, Square, Search, Shield, MessageSquareHeart, Bomb, Crown, Blocks, Rows3 } from 'lucide-react';
+import { Sword, Brain, ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Puzzle, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, Link as LinkIcon, Users, Ghost, CircleDot, Castle, Rocket, Target, Ship, ArrowDownRight, Square, Search, Shield, MessageSquareHeart, Bomb, Crown, Blocks, Rows3, AlignVerticalDistributeCenter } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import { Badge } from '@/components/ui/badge';
@@ -67,6 +67,24 @@ const SnakeIcon = () => (
         <path d="M10.5 14c0-2 2-3 4.5-3s4.5 1 4.5 3-2 3-4.5 3-4.5-1-4.5-3z"/>
     </svg>
 );
+
+const ModeBadge = ({ mode }: { mode?: string }) => {
+  if (!mode) return null;
+  const badgeInfo = {
+    'دو نفره': { icon: <Users className="w-3 h-3" />, class: 'bg-blue-500/20 text-blue-700 dark:text-blue-400' },
+    'مقابل سیستم': { icon: <Bot className="w-3 h-3" />, class: 'bg-purple-500/20 text-purple-700 dark:text-purple-400' },
+    'تک نفره': { icon: <User className="w-3 h-3" />, class: 'bg-green-500/20 text-green-700 dark:text-green-400' },
+    'دو حالته': { icon: <Users className="w-3 h-3" />, class: 'bg-orange-500/20 text-orange-700 dark:text-orange-400' },
+  };
+  const info = badgeInfo[mode as keyof typeof badgeInfo];
+  if (!info) return null;
+
+  return (
+    <Badge variant="secondary" className={cn("absolute top-2 left-2 border-none text-xs px-1.5 py-0.5 h-auto", info.class)}>
+      {info.icon}
+    </Badge>
+  );
+};
 
 
 const toolCategories = [
@@ -118,7 +136,7 @@ const toolCategories = [
     icon: <HeartPulse className="h-6 w-6 text-primary-foreground" />,
     tools: [
       { id: 'workout-timer', title: 'زمان‌سنج تمرین', icon: <Dumbbell className="h-8 w-8 text-orange-400" />, component: <WorkoutTimer /> },
-      { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulseIcon className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
+      { id: 'bmi-calculator', title: 'محاسبه BMI', icon: <HeartPulse className="h-8 w-8 text-red-400" />, component: <BmiCalculator /> },
     ]
   },
   {
@@ -155,7 +173,7 @@ const toolCategories = [
     title: 'ابزارهای کاربردی',
     icon: <User className="h-6 w-6 text-primary-foreground" />,
     tools: [
-      { id: 'sheba-converter', title: 'ابزار شبا/حساب', icon: <ShieldCheck className="h-8 w-8 text-green-500" />, isWip: true },
+      { id: 'sheba-converter', title: 'ابزار شبا/حساب', icon: <ShieldCheck className="h-8 w-8 text-green-500" />, component: <ShebaConverter /> },
       { id: 'national-id-validator', title: 'بررسی صحت و شهر شماره ملی', icon: <Fingerprint className="h-8 w-8 text-teal-400" />, component: <NationalIdValidator /> },
       { id: 'link-shortener', title: 'کوتاه کننده لینک', icon: <LinkIcon className="h-8 w-8 text-sky-400" />, component: <LinkShortener /> },
       { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
@@ -172,21 +190,6 @@ const toolCategories = [
     ]
   }
 ];
-
-const getModeBadgeClass = (mode?: string) => {
-  switch (mode) {
-    case 'دو نفره':
-      return 'bg-blue-500/20 text-blue-700 dark:text-blue-400';
-    case 'مقابل سیستم':
-      return 'bg-purple-500/20 text-purple-700 dark:text-purple-400';
-    case 'تک نفره':
-      return 'bg-green-500/20 text-green-700 dark:text-green-400';
-    case 'دو حالته':
-        return 'bg-orange-500/20 text-orange-700 dark:text-orange-400';
-    default:
-      return 'bg-muted text-muted-foreground';
-  }
-};
 
 
 export default async function Home() {
@@ -224,7 +227,7 @@ export default async function Home() {
                       const content = (
                         <div className="glass-effect rounded-2xl p-4 w-full h-full flex flex-col items-center justify-center text-center gap-3 relative overflow-hidden">
                           {typedTool.isWip && <Badge variant="secondary" className="absolute top-2 right-2 bg-yellow-400/20 text-yellow-600 border-none">بزودی</Badge>}
-                           {typedTool.mode && <Badge variant="secondary" className={cn("absolute top-2 left-2 border-none text-xs", getModeBadgeClass(typedTool.mode))}>{typedTool.mode}</Badge>}
+                           <ModeBadge mode={typedTool.mode} />
                           {tool.icon}
                           <span className="font-semibold text-sm text-foreground">{tool.title}</span>
                         </div>
@@ -302,7 +305,7 @@ export default async function Home() {
                                 {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
                                 {tool.title}
                               </div>
-                               {typedTool.mode && <Badge variant="secondary" className={cn("text-sm", getModeBadgeClass(typedTool.mode))}>{typedTool.mode}</Badge>}
+                               <ModeBadge mode={typedTool.mode} />
                             </CardTitle>
                           </CardHeader>
                           {typedTool.component}
@@ -456,4 +459,6 @@ export default async function Home() {
 }
 
     
+
+
 
