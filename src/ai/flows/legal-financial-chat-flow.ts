@@ -7,33 +7,27 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { streamFlow } from '@genkit-ai/flow/experimental';
 
 const HistoryItemSchema = z.object({
   role: z.enum(['user', 'bot']),
   content: z.string(),
 });
 
-const LegalFinancialChatInputSchema = z.object({
+export const LegalFinancialChatInputSchema = z.object({
   history: z.array(HistoryItemSchema).optional(),
   prompt: z.string(),
 });
 
 export type LegalFinancialChatInput = z.infer<typeof LegalFinancialChatInputSchema>;
 
-export const legalFinancialChat = streamFlow(
-  {
-    name: 'legalFinancialChat',
-    inputSchema: LegalFinancialChatInputSchema,
-    outputSchema: z.string(),
-  },
-  async (input) => {
+
+export async function legalFinancialChat(input: LegalFinancialChatInput): Promise<ReadableStream<string>> {
     const history = (input.history || []).map(item => ({
-        role: item.role,
+        role: item.role as 'user' | 'model',
         content: [{text: item.content}]
     }));
 
-    const { stream, response } = ai.generateStream({
+    const { stream } = ai.generateStream({
         model: 'googleai/gemini-1.5-flash-latest',
         system: `You are an expert AI assistant specializing in Iranian legal and financial matters. 
         Your name is "Tabdila Bot". You must answer in Persian.
@@ -43,11 +37,15 @@ export const legalFinancialChat = streamFlow(
         prompt: input.prompt,
     });
     
-    let fullText = '';
-    for await (const chunk of stream) {
-        fullText += chunk.text;
-    }
-    await response;
-    return fullText;
-  }
-);
+    const encoder = new TextEncoder();
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          controller.enqueue(encoder.encode(chunk.text));
+        }
+        controller.close();
+      },
+    });
+
+    return readableStream;
+}
