@@ -105,6 +105,7 @@ export default function QrCodeReader() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
         streamRef.current = stream;
+        setHasCameraPermission(true);
         
         if (videoRef.current) {
             videoRef.current.srcObject = stream;
@@ -117,7 +118,6 @@ export default function QrCodeReader() {
                 }
             });
             setIsScanning(true); // Start scanning only after video is ready
-            setHasCameraPermission(true);
         }
     } catch (err) {
         console.error("Camera access error:", err);
@@ -207,7 +207,7 @@ export default function QrCodeReader() {
                       {hasCameraPermission === true && !isScanning && (
                          <>
                            <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
-                           <p className="mt-2">دوربین آماده است. برای اسکن مجدد دکمه را بزنید.</p>
+                           <p className="mt-2">برای اسکن مجدد، دکمه را بزنید.</p>
                         </>
                      )}
                 </div>
