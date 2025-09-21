@@ -115,7 +115,7 @@ const toolCategories = [
     title: 'سرگرمی و بازی',
     icon: <Gamepad2 className="h-6 w-6 text-primary-foreground" />,
     tools: [
-      { id: 'tic-tac-toe', title: 'بازی دوز', icon: <Puzzle className="h-8 w-8 text-red-400" />, component: <TicTacToe />, mode: 'دو نفره' },
+      { id: 'tic-tac-toe', title: 'بازی دوز', icon: <Puzzle className="h-8 w-8 text-red-400" />, component: <TicTacToe />, mode: 'دو حالته' },
       { id: 'rock-paper-scissors', title: 'سنگ کاغذ قیچی', icon: <Sword className="h-8 w-8 text-yellow-400" />, component: <RockPaperScissors />, mode: 'مقابل سیستم' },
       { id: 'hangman', title: 'حدس کلمه', icon: <Brain className="h-8 w-8 text-green-400" />, component: <Hangman />, mode: 'مقابل سیستم' },
       { id: 'memory-game', title: 'بازی حافظه', icon: <MemoryStick className="h-8 w-8 text-sky-400" />, component: <MemoryGame />, mode: 'تک نفره' },
@@ -154,6 +154,8 @@ const getModeBadgeClass = (mode?: string) => {
       return 'bg-purple-500/20 text-purple-700 dark:text-purple-400';
     case 'تک نفره':
       return 'bg-green-500/20 text-green-700 dark:text-green-400';
+    case 'دو حالته':
+        return 'bg-orange-500/20 text-orange-700 dark:text-orange-400';
     default:
       return 'bg-muted text-muted-foreground';
   }
