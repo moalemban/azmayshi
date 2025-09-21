@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Redo } from 'lucide-react';
+import { Redo, Trophy, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 
@@ -15,22 +15,22 @@ type Board = Cell[][];
 
 const createEmptyBoard = (): Board => Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 
-const GamePiece = ({ player, isLastMove }: { player: Player | null; isLastMove?: boolean }) => {
+const GamePiece = ({ player, isAnimated }: { player: Player | null; isAnimated?: boolean }) => {
   if (!player) return null;
 
   const playerClasses = {
     red: "from-red-500 to-red-700 shadow-red-900/50",
     yellow: "from-yellow-400 to-yellow-600 shadow-yellow-800/50",
   };
-  
+
   return (
-      <div 
-        className={cn(
-            "w-full h-full rounded-full bg-gradient-to-b shadow-inner transition-transform duration-300 ease-out", 
-            playerClasses[player],
-            isLastMove ? 'animate-drop' : ''
-        )} 
-      />
+    <div
+      className={cn(
+        "w-full h-full rounded-full bg-gradient-to-b shadow-inner",
+        playerClasses[player],
+        isAnimated && 'animate-drop'
+      )}
+    />
   );
 };
 
@@ -39,7 +39,7 @@ export default function ConnectFour() {
   const [currentPlayer, setCurrentPlayer] = useState<Player>('red');
   const [winner, setWinner] = useState<Player | null>(null);
   const [isDraw, setIsDraw] = useState(false);
-  const [lastMove, setLastMove] = useState<{ row: number; col: number } | null>(null);
+  const [animatedCells, setAnimatedCells] = useState<Set<string>>(new Set());
 
   const checkWinner = (currentBoard: Board): Player | null => {
     // Horizontal
@@ -80,14 +80,12 @@ export default function ConnectFour() {
   const handleColumnClick = (col: number) => {
     if (winner || board[0][col]) return;
 
-    setLastMove(null); // Reset last move for animation
-    
     const newBoard = board.map(row => [...row]);
     for (let r = ROWS - 1; r >= 0; r--) {
       if (!newBoard[r][col]) {
         newBoard[r][col] = currentPlayer;
         setBoard(newBoard);
-        setTimeout(() => setLastMove({ row: r, col }), 10);
+        setAnimatedCells(prev => new Set(prev).add(`${r}-${col}`));
         
         const newWinner = checkWinner(newBoard);
         if (newWinner) {
@@ -107,13 +105,13 @@ export default function ConnectFour() {
     setCurrentPlayer('red');
     setWinner(null);
     setIsDraw(false);
-    setLastMove(null);
+    setAnimatedCells(new Set());
   };
-  
+
   const getStatus = () => {
-    if (winner) return { text: `بازیکن ${winner === 'red' ? 'قرمز' : 'زرد'} برنده شد! 🎉`, color: winner === 'red' ? 'bg-red-500' : 'bg-yellow-500' };
-    if (isDraw) return { text: 'بازی مساوی شد!', color: 'bg-muted-foreground' };
-    return { text: `نوبت بازیکن: ${currentPlayer === 'red' ? 'قرمز' : 'زرد'}`, color: currentPlayer === 'red' ? 'bg-red-500/20 text-red-600' : 'bg-yellow-500/20 text-yellow-600' };
+    if (winner) return { text: `بازیکن ${winner === 'red' ? 'قرمز' : 'زرد'} برنده شد!`, icon: <Trophy className="w-5 h-5"/>, color: winner === 'red' ? 'bg-red-500/20 text-red-600' : 'bg-yellow-500/20 text-yellow-600' };
+    if (isDraw) return { text: 'بازی مساوی شد!', icon: <Users className="w-5 h-5"/>, color: 'bg-muted-foreground/20 text-muted-foreground' };
+    return { text: `نوبت بازیکن: ${currentPlayer === 'red' ? 'قرمز' : 'زرد'}`, icon: <div className={cn("w-3 h-3 rounded-full", currentPlayer === 'red' ? 'bg-red-500' : 'bg-yellow-400')} />, color: 'bg-background' };
   }
   
   const status = getStatus();
@@ -122,16 +120,17 @@ export default function ConnectFour() {
     <CardContent className="flex flex-col items-center gap-6">
       <style>
         {`@keyframes drop {
-          from { transform: translateY(-300px); }
-          to { transform: translateY(0); }
+          from { transform: translateY(-300px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
         }
         .animate-drop {
-          animation: drop 0.4s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+          animation: drop 0.5s cubic-bezier(0.5, 0, 0.25, 1.5) forwards;
         }`}
       </style>
       
-      <Badge className={cn("text-lg font-semibold px-4 py-2", status.color)}>
-        {status.text}
+      <Badge variant="outline" className={cn("text-lg font-semibold px-4 py-2 h-10 flex items-center gap-2", status.color)}>
+        {status.icon}
+        <span>{status.text}</span>
       </Badge>
 
       <div className="p-2 sm:p-4 bg-blue-800 rounded-2xl shadow-2xl inline-block">
@@ -139,15 +138,15 @@ export default function ConnectFour() {
           {Array.from({ length: COLS }).map((_, c) => (
             <div
               key={`col-${c}`}
-              className="flex flex-col-reverse gap-1 sm:gap-2 cursor-pointer"
+              className="flex flex-col-reverse gap-1 sm:gap-2 cursor-pointer group"
               onClick={() => handleColumnClick(c)}
             >
               {Array.from({ length: ROWS }).map((_, r) => (
                 <div
                   key={`${r}-${c}`}
-                  className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-900/70 rounded-full flex items-center justify-center"
+                  className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-900/70 rounded-full flex items-center justify-center p-1 transition-colors duration-200 group-hover:bg-blue-700/70"
                 >
-                  <GamePiece player={board[r][c]} isLastMove={lastMove?.row === r && lastMove?.col === c} />
+                  <GamePiece player={board[r][c]} isAnimated={animatedCells.has(`${r}-${c}`)} />
                 </div>
               ))}
             </div>
@@ -156,7 +155,7 @@ export default function ConnectFour() {
       </div>
       
       {(winner || isDraw) && (
-        <Button onClick={resetGame} size="lg" variant="secondary">
+        <Button onClick={resetGame} size="lg" variant="secondary" className='h-12 text-base'>
           <Redo className="ml-2 h-5 w-5" />
           بازی جدید
         </Button>
