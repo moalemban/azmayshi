@@ -1,33 +1,14 @@
-import withPWA from '@ducanh2912/next-pwa';
+/** @type {import('next').NextConfig} */
 
-const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'uploadkon.ir',
-      },
-      {
-        protocol: 'https',
-        hostname: 'static.idpay.ir',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.pixabay.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.tgju.org',
-      },
-    ],
-  },
-};
+import withPWAInit from "@ducanh2912/next-pwa";
 
-const pwaConfig = withPWA({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
+const withPWA = withPWAInit({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  // add your own strategies
 });
 
-export default pwaConfig(nextConfig);
+
+const nextConfig = {};
+
+export default withPWA(nextConfig);

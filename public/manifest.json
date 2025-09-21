@@ -1,23 +1,21 @@
 {
-  "name": "تبدیلا | دستیار هوشمند",
+  "name": "تبدیلا | دستیار هوشمند شما",
   "short_name": "تبدیلا",
   "description": "دستیار هوشمند شما برای انواع محاسبات و تبدیل واحدها",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2a0e5c",
+  "background_color": "#F2F0F4",
+  "theme_color": "#6750A4",
   "icons": [
     {
-      "src": "https://uploadkon.ir/uploads/cf7220_252fb04e3a-9e9c-44da-8d7e-7a0345be973aa4-copy.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "https://uploadkon.ir/uploads/cf7220_252fb04e3a-9e9c-44da-8d7e-7a0345be973aa4-copy.png",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }

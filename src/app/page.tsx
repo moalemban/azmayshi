@@ -44,11 +44,13 @@ import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, AlignVerticalDistributeCenter, MessageSquareHeart, Pickaxe } from 'lucide-react';
+import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, AlignVerticalDistributeCenter, MessageSquareHeart, Pickaxe, Crown, Blocks, Rows3 } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import PWAInstallPrompt from '@/components/layout/pwa-install-prompt';
+import LinkShortener from '@/components/features/link-shortener';
 
 const OthelloIcon = () => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 w-8">
@@ -56,6 +58,14 @@ const OthelloIcon = () => (
     <path d="M16 2C23.732 2 30 8.26801 30 16C30 18.2523 29.3995 20.3753 28.3751 22.2474C25.7533 16.5971 20.597 8.24354 16 2Z" fill="white"/>
     <path d="M16 30C8.26801 30 2 23.732 2 16C2 13.7477 2.60051 11.6247 3.62489 9.75259C6.24669 15.4029 11.403 23.7565 16 30Z" fill="black"/>
   </svg>
+);
+
+const SnakeIcon = () => (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-lime-400">
+        <path d="M7.5 7.5c0-2 2-3 4.5-3s4.5 1 4.5 3-2 3-4.5 3-4.5-1-4.5-3z"/>
+        <path d="M4 10.5c0-2 2-3 4.5-3s4.5 1 4.5 3-2 3-4.5 3-4.5-1-4.5-3z"/>
+        <path d="M10.5 14c0-2 2-3 4.5-3s4.5 1 4.5 3-2 3-4.5 3-4.5-1-4.5-3z"/>
+    </svg>
 );
 
 
@@ -124,6 +134,11 @@ const toolCategories = [
       { id: 'simon-says', title: 'بازی سایمون', icon: <BrainCircuit className="h-8 w-8 text-purple-500" />, component: <SimonSays />, mode: 'تک نفره' },
       { id: 'othello-game', title: 'بازی اتللو', icon: <OthelloIcon />, component: <OthelloGame />, mode: 'دو نفره' },
       { id: 'archaeology-game', title: 'بازی زیرخاکی', icon: <Pickaxe className="h-8 w-8 text-amber-600" />, isWip: true },
+      { id: '2048', title: 'بازی 2048', icon: <Hash className="h-8 w-8 text-indigo-400" />, isWip: true },
+      { id: 'snake', title: 'مار نئونی', icon: <SnakeIcon />, isWip: true },
+      { id: 'chess', title: 'شطرنج', icon: <Crown className="h-8 w-8 text-yellow-500" />, isWip: true },
+      { id: 'tetris', title: 'خانه سازی (Tetris)', icon: <Blocks className="h-8 w-8 text-cyan-400" />, isWip: true },
+      { id: 'breakout', title: 'آجر شکن نئونی', icon: <Rows3 className="h-8 w-8 text-rose-400" />, isWip: true },
     ]
   },
   {
@@ -132,6 +147,7 @@ const toolCategories = [
     tools: [
       { id: 'sheba-converter', title: 'ابزار شبا/حساب', icon: <ShieldCheck className="h-8 w-8 text-green-500" />, component: <ShebaConverter /> },
       { id: 'national-id-validator', title: 'بررسی صحت و شهر شماره ملی', icon: <Fingerprint className="h-8 w-8 text-teal-400" />, component: <NationalIdValidator /> },
+      { id: 'link-shortener', title: 'کوتاه کننده لینک', icon: <LinkIcon className="h-8 w-8 text-sky-400" />, component: <LinkShortener /> },
       { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
       { id: 'random-number', title: 'عدد تصادفی', icon: <Dices className="h-8 w-8 text-orange-400" />, component: <RandomNumberGenerator /> },
       { id: 'password-generator', title: 'تولید رمز عبور', icon: <KeyRound className="h-8 w-8 text-violet-400" />, component: <PasswordGenerator /> },
@@ -424,6 +440,7 @@ export default async function Home() {
         </div>
       </footer>
       <ScrollToTop />
+      <PWAInstallPrompt />
     </div>
   );
 }
