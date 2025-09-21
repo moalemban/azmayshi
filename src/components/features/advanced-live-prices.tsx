@@ -73,13 +73,17 @@ type AdvancedLivePricesProps = {
 export default function AdvancedLivePrices({ initialData }: AdvancedLivePricesProps) {
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(new Date());
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   
   const [isCooldown, setIsCooldown] = useState(false);
   const [cooldownTime, setCooldownTime] = useState(0);
   const cooldownIntervalRef = useRef<NodeJS.Timeout | null>(null);
   
   const COOLDOWN_SECONDS = 30;
+
+  useEffect(() => {
+    setLastUpdated(new Date());
+  }, [initialData]);
 
   const prices: LivePrice[] = useMemo(() => {
     return Object.entries(data)

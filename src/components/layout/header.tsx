@@ -67,7 +67,9 @@ export default function Header() {
           </div>
         </Link>
         <div className="flex items-center gap-2">
-            <LiveClock />
+            <div className="sm:flex">
+              <LiveClock />
+            </div>
             <ThemeToggle />
         </div>
       </div>
