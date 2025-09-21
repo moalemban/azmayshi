@@ -35,13 +35,15 @@ import LegalFinancialChatbot from '@/components/features/legal-financial-chatbot
 import SignatureGenerator from '@/components/features/signature-generator';
 import MemoryGame from '@/components/features/memory-game';
 import GuessTheNumber from '@/components/features/guess-the-number';
+import ConnectFour from '@/components/features/connect-four';
+import SimonSays from '@/components/features/simon-says';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ScrollToTop from '@/components/layout/scroll-to-top';
 import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash } from 'lucide-react';
+import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, AlignVerticalDistributeCenter } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import { Badge } from '@/components/ui/badge';
@@ -108,6 +110,8 @@ const toolCategories = [
       { id: 'hangman', title: 'حدس کلمه', icon: <Brain className="h-8 w-8 text-green-400" />, component: <Hangman /> },
       { id: 'memory-game', title: 'بازی حافظه', icon: <MemoryStick className="h-8 w-8 text-sky-400" />, component: <MemoryGame /> },
       { id: 'guess-the-number', title: 'حدس عدد', icon: <Hash className="h-8 w-8 text-fuchsia-400" />, component: <GuessTheNumber /> },
+      { id: 'connect-four', title: 'چهار در یک ردیف', icon: <AlignVerticalDistributeCenter className="h-8 w-8 text-blue-500" />, component: <ConnectFour /> },
+      { id: 'simon-says', title: 'بازی سایمون', icon: <BrainCircuit className="h-8 w-8 text-purple-500" />, component: <SimonSays /> },
     ]
   },
   {
