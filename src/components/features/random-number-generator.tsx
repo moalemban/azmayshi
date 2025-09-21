@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,7 +34,7 @@ export default function RandomNumberGenerator() {
     setter(toEnglishDigits(value));
     setIsInitial(false);
   };
-
+  
   const generateNumbers = () => {
     setIsInitial(false);
     const minValue = parseInt(min, 10) || 1;
@@ -80,6 +80,11 @@ export default function RandomNumberGenerator() {
       setResults(newResults);
     }
   };
+
+  useEffect(() => {
+    // This useEffect ensures crypto is only called on the client side after mount.
+    // We don't generate numbers initially to avoid hydration mismatch.
+  }, []);
   
   const copyResults = () => {
     if (results.length === 0) return;
