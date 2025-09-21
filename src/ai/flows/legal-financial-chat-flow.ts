@@ -26,7 +26,7 @@ export async function legalFinancialChat(input: LegalFinancialChatInput): Promis
         content: [{text: item.content}]
     }));
 
-    const { stream } = await ai.generate({
+    const { stream } = ai.generate({
         model: 'googleai/gemini-1.5-flash-latest',
         system: `You are an expert AI assistant specializing in Iranian legal and financial matters. 
         Your name is "Tabdila Bot". You must answer in Persian.
@@ -41,7 +41,7 @@ export async function legalFinancialChat(input: LegalFinancialChatInput): Promis
     const readableStream = new ReadableStream({
       async start(controller) {
         for await (const chunk of stream) {
-          const text = chunk.text();
+          const text = chunk.text;
           if (text) {
              controller.enqueue(encoder.encode(text));
           }
