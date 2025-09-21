@@ -35,6 +35,26 @@ export default function MemoryGame() {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
 
+  useEffect(() => {
+    // Add some required CSS for the 3D flip effect
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .transform-rotate-y-180 {
+        transform: rotateY(180deg);
+      }
+      .backface-hidden {
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Cleanup the style element on component unmount
+    return () => {
+        document.head.removeChild(style);
+    };
+  }, []);
+
   const startNewGame = useCallback(() => {
     const gameIcons = shuffleArray([...availableIcons, ...availableIcons]);
     setCards(
@@ -193,16 +213,3 @@ export default function MemoryGame() {
     </CardContent>
   );
 }
-
-// Add some required CSS for the 3D flip effect
-const style = document.createElement('style');
-style.innerHTML = `
-  .transform-rotate-y-180 {
-    transform: rotateY(180deg);
-  }
-  .backface-hidden {
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-  }
-`;
-document.head.appendChild(style);
