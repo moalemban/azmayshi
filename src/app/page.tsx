@@ -44,7 +44,7 @@ import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, AlignVerticalDistributeCenter, MessageSquareHeart, Pickaxe, Crown, Blocks, Rows3, Link as LinkIcon } from 'lucide-react';
+import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, AlignVerticalDistributeCenter, MessageSquareHeart, Pickaxe, Crown, Blocks, Rows3, Link as LinkIcon, Users } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import { Badge } from '@/components/ui/badge';
@@ -126,13 +126,13 @@ const toolCategories = [
     icon: <Gamepad2 className="h-6 w-6 text-primary-foreground" />,
     tools: [
       { id: 'tic-tac-toe', title: 'بازی دوز', icon: <Puzzle className="h-8 w-8 text-red-400" />, component: <TicTacToe />, mode: 'دو حالته' },
-      { id: 'rock-paper-scissors', title: 'سنگ کاغذ قیچی', icon: <Sword className="h-8 w-8 text-yellow-400" />, component: <RockPaperScissors />, mode: 'مقابل سیستم' },
-      { id: 'hangman', title: 'حدس کلمه', icon: <Brain className="h-8 w-8 text-green-400" />, component: <Hangman />, mode: 'مقابل سیستم' },
-      { id: 'memory-game', title: 'بازی حافظه', icon: <MemoryStick className="h-8 w-8 text-sky-400" />, component: <MemoryGame />, mode: 'تک نفره' },
-      { id: 'guess-the-number', title: 'حدس عدد', icon: <Hash className="h-8 w-8 text-fuchsia-400" />, component: <GuessTheNumber />, mode: 'مقابل سیستم' },
-      { id: 'connect-four', title: 'چهار در یک ردیف', icon: <AlignVerticalDistributeCenter className="h-8 w-8 text-blue-500" />, component: <ConnectFour />, mode: 'دو نفره' },
-      { id: 'simon-says', title: 'بازی سایمون', icon: <BrainCircuit className="h-8 w-8 text-purple-500" />, component: <SimonSays />, mode: 'تک نفره' },
-      { id: 'othello-game', title: 'بازی اتللو', icon: <OthelloIcon />, component: <OthelloGame />, mode: 'دو نفره' },
+      { id: 'rock-paper-scissors', title: 'سنگ کاغذ قیچی', icon: <User className="h-8 w-8 text-yellow-400" />, component: <RockPaperScissors />, mode: 'مقابل سیستم' },
+      { id: 'hangman', title: 'حدس کلمه', icon: <User className="h-8 w-8 text-green-400" />, component: <Hangman />, mode: 'مقابل سیستم' },
+      { id: 'memory-game', title: 'بازی حافظه', icon: <User className="h-8 w-8 text-sky-400" />, component: <MemoryGame />, mode: 'تک نفره' },
+      { id: 'guess-the-number', title: 'حدس عدد', icon: <User className="h-8 w-8 text-fuchsia-400" />, component: <GuessTheNumber />, mode: 'مقابل سیستم' },
+      { id: 'connect-four', title: 'چهار در یک ردیف', icon: <Users className="h-8 w-8 text-blue-500" />, component: <ConnectFour />, mode: 'دو نفره' },
+      { id: 'simon-says', title: 'بازی سایمون', icon: <User className="h-8 w-8 text-purple-500" />, component: <SimonSays />, mode: 'تک نفره' },
+      { id: 'othello-game', title: 'بازی اتللو', icon: <Users className="h-8 w-8 text-emerald-500" />, component: <OthelloGame />, mode: 'دو نفره' },
       { id: 'archaeology-game', title: 'بازی زیرخاکی', icon: <Pickaxe className="h-8 w-8 text-amber-600" />, isWip: true },
       { id: '2048', title: 'بازی 2048', icon: <Hash className="h-8 w-8 text-indigo-400" />, isWip: true },
       { id: 'snake', title: 'مار نئونی', icon: <SnakeIcon />, isWip: true },
