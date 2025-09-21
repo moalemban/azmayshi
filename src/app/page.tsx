@@ -44,7 +44,7 @@ import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, AlignVerticalDistributeCenter, MessageSquareHeart, Pickaxe, Crown, Blocks, Rows3, Link as LinkIcon, Users, Bomb } from 'lucide-react';
+import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Puzzle, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, Link as LinkIcon, Users, Ghost, CircleDot, Castle, Rocket, Target, Ship, ArrowDownRight, Square, Search } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import { Badge } from '@/components/ui/badge';
@@ -133,13 +133,22 @@ const toolCategories = [
       { id: 'connect-four', title: 'چهار در یک ردیف', icon: <Users className="h-8 w-8 text-blue-500" />, component: <ConnectFour />, mode: 'دو نفره' },
       { id: 'simon-says', title: 'بازی سایمون', icon: <User className="h-8 w-8 text-purple-500" />, component: <SimonSays />, mode: 'تک نفره' },
       { id: 'othello-game', title: 'بازی اتللو', icon: <Users className="h-8 w-8 text-emerald-500" />, component: <OthelloGame />, mode: 'دو نفره' },
-      { id: 'archaeology-game', title: 'بازی زیرخاکی', icon: <Pickaxe className="h-8 w-8 text-amber-600" />, isWip: true },
+      { id: 'archaeology-game', title: 'بازی زیرخاکی', icon: <Ghost className="h-8 w-8 text-yellow-400" />, isWip: true },
+      { id: 'pac-man', title: 'Pac-Man Glow', icon: <Ghost className="h-8 w-8 text-yellow-400" />, isWip: true },
+      { id: 'air-hockey', title: 'Air Hockey Neon', icon: <CircleDot className="h-8 w-8 text-cyan-400" />, isWip: true },
+      { id: 'tower-defense', title: 'Tower Defense Lite', icon: <Castle className="h-8 w-8 text-gray-500" />, isWip: true },
+      { id: 'space-invaders', title: 'Space Invaders 2025', icon: <Rocket className="h-8 w-8 text-slate-400" />, isWip: true },
+      { id: 'carrom-board', title: 'Carrom Board 2D', icon: <Target className="h-8 w-8 text-red-500" />, isWip: true },
+      { id: 'battleship', title: 'BattleShip Grid War', icon: <Ship className="h-8 w-8 text-blue-600" />, isWip: true },
+      { id: 'pinball', title: 'Pinball Retro-Fusion', icon: <ArrowDownRight className="h-8 w-8 text-pink-500" />, isWip: true },
+      { id: 'checkers', title: 'Checkers Royal', icon: <Square className="h-8 w-8 text-black" />, isWip: true },
+      { id: 'word-hunt', title: 'Word Hunt Blitz', icon: <Search className="h-8 w-8 text-orange-500" />, isWip: true },
       { id: '2048', title: 'بازی 2048', icon: <Hash className="h-8 w-8 text-indigo-400" />, isWip: true },
       { id: 'snake', title: 'مار نئونی', icon: <SnakeIcon />, isWip: true },
-      { id: 'chess', title: 'شطرنج', icon: <Crown className="h-8 w-8 text-yellow-500" />, isWip: true },
-      { id: 'tetris', title: 'خانه سازی (Tetris)', icon: <Blocks className="h-8 w-8 text-cyan-400" />, isWip: true },
-      { id: 'breakout', title: 'آجر شکن نئونی', icon: <Rows3 className="h-8 w-8 text-rose-400" />, isWip: true },
-      { id: 'minesweeper-3d', title: 'Minesweeper Extreme 3D', icon: <Bomb className="h-8 w-8 text-gray-400" />, isWip: true },
+      { id: 'chess', title: 'شطرنج', icon: <Users className="h-8 w-8 text-yellow-500" />, isWip: true },
+      { id: 'tetris', title: 'خانه سازی (Tetris)', icon: <User className="h-8 w-8 text-cyan-400" />, isWip: true },
+      { id: 'breakout', title: 'آجر شکن نئونی', icon: <User className="h-8 w-8 text-rose-400" />, isWip: true },
+      { id: 'minesweeper-3d', title: 'Minesweeper Extreme 3D', icon: <User className="h-8 w-8 text-gray-400" />, isWip: true },
     ]
   },
   {
@@ -361,7 +370,7 @@ export default async function Home() {
             <Dialog>
                 <DialogTrigger asChild>
                     <div className="inline-flex items-center justify-center gap-2 cursor-pointer hover:text-foreground">
-                        <FileTextIcon className="w-5 h-5" />
+                        <FileText className="w-5 h-5" />
                         <span>قوانین و مقررات</span>
                     </div>
                 </DialogTrigger>
