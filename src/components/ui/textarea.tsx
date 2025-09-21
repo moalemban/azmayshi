@@ -17,6 +17,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           className
         )}
         ref={ref}
+        minRows={props.minRows || 3}
         {...props}
       />
     )
