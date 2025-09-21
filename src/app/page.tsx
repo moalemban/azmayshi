@@ -37,7 +37,7 @@ import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon } from 'lucide-react';
+import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, HeartPulse as HeartPulseIcon, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Sword, Puzzle, Brain, FileText as FileTextIcon, Shield } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import { Badge } from '@/components/ui/badge';
@@ -324,6 +324,41 @@ export default async function Home() {
                             <div>
                                 <h4 className="font-semibold text-foreground">تغییرات قوانین</h4>
                                 <p>«تبدیلا» حق به‌روزرسانی یا اصلاح این قوانین را بدون اطلاع قبلی برای خود محفوظ می‌دارد. نسخه جدید قوانین بلافاصله پس از انتشار معتبر خواهد بود.</p>
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog>
+                <DialogTrigger asChild>
+                    <div className="inline-flex items-center justify-center gap-2 cursor-pointer hover:text-foreground">
+                        <Shield className="w-5 h-5" />
+                        <span>سیاست حفظ حریم خصوصی</span>
+                    </div>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[600px] glass-effect">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-display">🔒 سیاست حفظ حریم خصوصی</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 text-right leading-relaxed max-h-[70vh] overflow-y-auto p-1 pr-3">
+                        <p>حفظ حریم خصوصی شما برای ما در «تبدیلا» اهمیت بالایی دارد. این سند نحوه جمع‌آوری و استفاده از اطلاعات شما را توضیح می‌دهد:</p>
+                        <div className="space-y-3">
+                            <div>
+                                <h4 className="font-semibold text-foreground">اطلاعات جمع‌آوری شده</h4>
+                                <p>ما هیچ‌گونه اطلاعات شخصی شناسایی‌پذیر (مانند نام، ایمیل و...) را بدون اجازه مستقیم شما جمع‌آوری نمی‌کنیم. برای ابزارهایی مانند خلاصه‌ساز متن، فقط آدرس IP شما به صورت موقت برای جلوگیری از سوءاستفاده (Rate Limiting) ذخیره می‌شود.</p>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold text-foreground">استفاده از کوکی‌ها</h4>
+                                <p>«تبدیلا» از کوکی‌ها فقط برای ذخیره تنظیمات ظاهری شما (مانند تم روشن/تاریک) استفاده می‌کند و هیچ اطلاعات شخصی در آن‌ها ذخیره نمی‌شود.</p>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold text-foreground">امنیت داده‌ها</h4>
+                                <p>ارتباط شما با سرورهای «تبدیلا» از طریق پروتکل امن SSL انجام می‌شود. ما متعهد به حفاظت از داده‌های شما در برابر دسترسی غیرمجاز هستیم.</p>
+                            </div>
+                             <div>
+                                <h4 className="font-semibold text-foreground">سرویس‌های شخص ثالث</h4>
+                                <p>برخی از قابلیت‌های سایت مانند مدل‌های هوش مصنوعی توسط سرویس‌دهندگان معتبر (مانند گوگل) ارائه می‌شوند. داده‌های ارسالی به این سرویس‌ها تابع قوانین حریم خصوصی آن‌ها خواهد بود.</p>
                             </div>
                         </div>
                     </div>
