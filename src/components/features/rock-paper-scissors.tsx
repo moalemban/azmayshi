@@ -216,7 +216,7 @@ export default function RockPaperScissors() {
                 <ChoiceDisplay choice={player2Choice} label={gameMode === 'two-player' ? "بازیکن ۲" : "ربات"}/>
             </div>
           <Button onClick={handleReset} variant="default" size="lg" className="w-full">
-            بازی بعد
+            دست بعدی
           </Button>
         </div>
       )}
