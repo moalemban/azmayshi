@@ -48,6 +48,7 @@ import { ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, Calen
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 const OthelloIcon = () => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 w-8">
@@ -114,14 +115,14 @@ const toolCategories = [
     title: 'سرگرمی و بازی',
     icon: <Gamepad2 className="h-6 w-6 text-primary-foreground" />,
     tools: [
-      { id: 'tic-tac-toe', title: 'بازی دوز', icon: <Puzzle className="h-8 w-8 text-red-400" />, component: <TicTacToe /> },
-      { id: 'rock-paper-scissors', title: 'سنگ کاغذ قیچی', icon: <Sword className="h-8 w-8 text-yellow-400" />, component: <RockPaperScissors /> },
-      { id: 'hangman', title: 'حدس کلمه', icon: <Brain className="h-8 w-8 text-green-400" />, component: <Hangman /> },
-      { id: 'memory-game', title: 'بازی حافظه', icon: <MemoryStick className="h-8 w-8 text-sky-400" />, component: <MemoryGame /> },
-      { id: 'guess-the-number', title: 'حدس عدد', icon: <Hash className="h-8 w-8 text-fuchsia-400" />, component: <GuessTheNumber /> },
-      { id: 'connect-four', title: 'چهار در یک ردیف', icon: <AlignVerticalDistributeCenter className="h-8 w-8 text-blue-500" />, component: <ConnectFour /> },
-      { id: 'simon-says', title: 'بازی سایمون', icon: <BrainCircuit className="h-8 w-8 text-purple-500" />, component: <SimonSays /> },
-      { id: 'othello-game', title: 'بازی اتللو', icon: <OthelloIcon />, component: <OthelloGame /> },
+      { id: 'tic-tac-toe', title: 'بازی دوز', icon: <Puzzle className="h-8 w-8 text-red-400" />, component: <TicTacToe />, mode: 'دو نفره' },
+      { id: 'rock-paper-scissors', title: 'سنگ کاغذ قیچی', icon: <Sword className="h-8 w-8 text-yellow-400" />, component: <RockPaperScissors />, mode: 'مقابل سیستم' },
+      { id: 'hangman', title: 'حدس کلمه', icon: <Brain className="h-8 w-8 text-green-400" />, component: <Hangman />, mode: 'مقابل سیستم' },
+      { id: 'memory-game', title: 'بازی حافظه', icon: <MemoryStick className="h-8 w-8 text-sky-400" />, component: <MemoryGame />, mode: 'تک نفره' },
+      { id: 'guess-the-number', title: 'حدس عدد', icon: <Hash className="h-8 w-8 text-fuchsia-400" />, component: <GuessTheNumber />, mode: 'مقابل سیستم' },
+      { id: 'connect-four', title: 'چهار در یک ردیف', icon: <AlignVerticalDistributeCenter className="h-8 w-8 text-blue-500" />, component: <ConnectFour />, mode: 'دو نفره' },
+      { id: 'simon-says', title: 'بازی سایمون', icon: <BrainCircuit className="h-8 w-8 text-purple-500" />, component: <SimonSays />, mode: 'تک نفره' },
+      { id: 'othello-game', title: 'بازی اتللو', icon: <OthelloIcon />, component: <OthelloGame />, mode: 'دو نفره' },
     ]
   },
   {
@@ -144,6 +145,19 @@ const toolCategories = [
     ]
   }
 ];
+
+const getModeBadgeClass = (mode?: string) => {
+  switch (mode) {
+    case 'دو نفره':
+      return 'bg-blue-500/20 text-blue-700 dark:text-blue-400';
+    case 'مقابل سیستم':
+      return 'bg-purple-500/20 text-purple-700 dark:text-purple-400';
+    case 'تک نفره':
+      return 'bg-green-500/20 text-green-700 dark:text-green-400';
+    default:
+      return 'bg-muted text-muted-foreground';
+  }
+};
 
 
 export default async function Home() {
@@ -181,6 +195,7 @@ export default async function Home() {
                       const content = (
                         <div className="glass-effect rounded-2xl p-4 w-full h-full flex flex-col items-center justify-center text-center gap-3 relative overflow-hidden">
                           {typedTool.isWip && <Badge variant="secondary" className="absolute top-2 right-2 bg-yellow-400/20 text-yellow-600 border-none">بزودی</Badge>}
+                           {typedTool.mode && <Badge variant="secondary" className={cn("absolute top-2 left-2 border-none text-xs", getModeBadgeClass(typedTool.mode))}>{typedTool.mode}</Badge>}
                           {tool.icon}
                           <span className="font-semibold text-sm text-foreground">{tool.title}</span>
                         </div>
@@ -253,9 +268,12 @@ export default async function Home() {
                     return (
                         <Card key={tool.id} id={tool.id} className="glass-effect scroll-mt-24">
                           <CardHeader>
-                            <CardTitle className='flex items-center gap-3 text-xl font-display'>
-                              {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
-                              {tool.title}
+                            <CardTitle className='flex items-center justify-between text-xl font-display'>
+                               <div className='flex items-center gap-3'>
+                                {React.cloneElement(tool.icon, { className: "h-7 w-7" })}
+                                {tool.title}
+                              </div>
+                               {typedTool.mode && <Badge variant="secondary" className={cn("text-sm", getModeBadgeClass(typedTool.mode))}>{typedTool.mode}</Badge>}
                             </CardTitle>
                           </CardHeader>
                           {typedTool.component}
