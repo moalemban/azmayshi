@@ -1,0 +1,154 @@
+"use client";
+
+import { useState } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { legalFinancialChat } from '@/ai/flows/legal-financial-chat-flow';
+import { Loader2, User, Bot, Sparkles, Send } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+
+const FormSchema = z.object({
+  prompt: z.string().min(5, { message: 'سوال شما باید حداقل ۵ کاراکتر باشد.' }),
+});
+
+type FormValues = z.infer<typeof FormSchema>;
+type Message = {
+  role: 'user' | 'bot';
+  content: string;
+};
+
+export default function LegalFinancialChatbot() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+  const logo = PlaceHolderImages.find(p => p.id === 'logo');
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
+  });
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    setLoading(true);
+    const userMessage: Message = { role: 'user', content: data.prompt };
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
+    reset();
+
+    const botMessagePlaceholder: Message = { role: 'bot', content: '' };
+    setMessages(prev => [...prev, botMessagePlaceholder]);
+    
+    try {
+      const stream = await legalFinancialChat({
+          history: newMessages.slice(0, -1).map(m => ({ role: m.role, content: m.content })),
+          prompt: data.prompt,
+      });
+
+      for await (const chunk of stream) {
+        setMessages(prev => {
+            const updatedMessages = [...prev];
+            updatedMessages[updatedMessages.length - 1].content = chunk;
+            return updatedMessages;
+        });
+      }
+
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        title: 'خطا در ارتباط با چت‌بات',
+        description: error.message || 'مشکلی در ارتباط با سرور هوش مصنوعی به وجود آمد.',
+        variant: 'destructive',
+      });
+       setMessages(prev => prev.slice(0, -1)); // Remove bot placeholder on error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <CardContent className="flex flex-col h-[600px]">
+      <ScrollArea className="flex-1 p-4 mb-4 border rounded-lg bg-muted/30">
+        <div className="space-y-6">
+            {messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground p-8">
+                     <Avatar className="w-20 h-20 mb-4">
+                        {logo && <AvatarImage src={logo.imageUrl} alt="Tabdila Bot" />}
+                        <AvatarFallback><Bot/></AvatarFallback>
+                    </Avatar>
+                    <h3 className="text-lg font-semibold text-foreground">دستیار حقوقی و مالی تبدیلا</h3>
+                    <p className="text-sm">سوالات خود را در مورد قوانین، مالیات، محاسبات حقوقی و مسائل مالی ایران بپرسید.</p>
+                </div>
+            ) : (
+                messages.map((message, index) => (
+                <div
+                    key={index}
+                    className={cn(
+                    'flex items-start gap-3',
+                    message.role === 'user' ? 'justify-end' : 'justify-start'
+                    )}
+                >
+                    {message.role === 'bot' && (
+                    <Avatar className="w-8 h-8">
+                        {logo && <AvatarImage src={logo.imageUrl} alt="Tabdila Bot" />}
+                        <AvatarFallback><Bot/></AvatarFallback>
+                    </Avatar>
+                    )}
+                    <div
+                    className={cn(
+                        'max-w-md rounded-2xl p-3 text-base whitespace-pre-wrap',
+                        message.role === 'user'
+                        ? 'bg-primary text-primary-foreground rounded-br-none'
+                        : 'bg-background border rounded-bl-none'
+                    )}
+                    >
+                    {message.content}
+                     {loading && index === messages.length -1 && <Loader2 className="inline-block w-4 h-4 ml-2 animate-spin"/>}
+                    </div>
+                    {message.role === 'user' && (
+                    <Avatar className="w-8 h-8">
+                        <AvatarFallback><User/></AvatarFallback>
+                    </Avatar>
+                    )}
+                </div>
+                ))
+            )}
+        </div>
+      </ScrollArea>
+      <form onSubmit={handleSubmit(onSubmit)} className="relative">
+        <Textarea
+          {...register('prompt')}
+          placeholder="سوال خود را بپرسید..."
+          className="min-h-[50px] pr-12 text-base resize-none"
+          disabled={loading}
+          onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(onSubmit)();
+              }
+          }}
+        />
+        <Button
+          type="submit"
+          size="icon"
+          className="absolute top-1/2 right-2 -translate-y-1/2 w-10 h-10"
+          disabled={loading}
+        >
+          {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+        </Button>
+      </form>
+      {errors.prompt && <p className="text-sm text-destructive mt-2">{errors.prompt.message}</p>}
+    </CardContent>
+  );
+}
