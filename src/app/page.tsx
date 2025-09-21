@@ -44,7 +44,7 @@ import { fetchPrices } from '@/ai/flows/fetch-prices-flow';
 import type { LivePrice, PriceData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Sword, Brain, ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Puzzle, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, Link as LinkIcon, Users, Ghost, CircleDot, Castle, Rocket, Target, Ship, ArrowDownRight, Square, Search, Shield, MessageSquareHeart, Bomb, Crown, Blocks, Rows3, AlignVerticalDistributeCenter } from 'lucide-react';
+import { Sword, Brain, ArrowLeft, BrainCircuit, BookText, FlaskConical, Scale, Landmark, CalendarDays, Repeat, SpellCheck, Binary, CalendarClock, Gift, Clock, Hourglass, Wallet, Bitcoin, Banknote, PiggyBank, TrendingUp, Percent, HeartPulse, Dumbbell, User, ShieldCheck, Fingerprint, RectangleEllipsis, Dices, KeyRound, QrCode, ScanLine, LocateFixed, Image, Monitor, FileText, Map, Info, HeartHandshake, Globe, Wrench, ArrowUp, ArrowDown, RefreshCw, Timer, CandlestickChart, ExternalLink, Construction, Calculator, Gamepad2, Puzzle, Bot, Mailbox, ReceiptText, CalendarCheck, PenLine, MemoryStick, Hash, Link as LinkIcon, Users, Ghost, CircleDot, Castle, Rocket, Target, Ship, ArrowDownRight, Square, Search, Shield, MessageSquareHeart, Bomb, Crown, Blocks, Rows3, AlignVerticalDistributeCenter, Hand } from 'lucide-react';
 import ImageNext from 'next/image';
 import AdvancedLivePrices from '@/components/features/advanced-live-prices';
 import { Badge } from '@/components/ui/badge';
@@ -144,13 +144,13 @@ const toolCategories = [
     icon: <Gamepad2 className="h-6 w-6 text-primary-foreground" />,
     tools: [
       { id: 'tic-tac-toe', title: 'بازی دوز', icon: <Puzzle className="h-8 w-8 text-red-400" />, component: <TicTacToe />, mode: 'دو حالته' },
-      { id: 'rock-paper-scissors', title: 'سنگ کاغذ قیچی', icon: <User className="h-8 w-8 text-yellow-400" />, component: <RockPaperScissors />, mode: 'مقابل سیستم' },
-      { id: 'hangman', title: 'حدس کلمه', icon: <User className="h-8 w-8 text-green-400" />, component: <Hangman />, mode: 'مقابل سیستم' },
-      { id: 'memory-game', title: 'بازی حافظه', icon: <User className="h-8 w-8 text-sky-400" />, component: <MemoryGame />, mode: 'تک نفره' },
-      { id: 'guess-the-number', title: 'حدس عدد', icon: <User className="h-8 w-8 text-fuchsia-400" />, component: <GuessTheNumber />, mode: 'مقابل سیستم' },
-      { id: 'connect-four', title: 'چهار در یک ردیف', icon: <Users className="h-8 w-8 text-blue-500" />, component: <ConnectFour />, mode: 'دو نفره' },
-      { id: 'simon-says', title: 'بازی سایمون', icon: <User className="h-8 w-8 text-purple-500" />, component: <SimonSays />, mode: 'تک نفره' },
-      { id: 'othello-game', title: 'بازی اتللو', icon: <Users className="h-8 w-8 text-emerald-500" />, component: <OthelloGame />, mode: 'دو نفره' },
+      { id: 'rock-paper-scissors', title: 'سنگ کاغذ قیچی', icon: <Hand className="h-8 w-8 text-yellow-400" />, component: <RockPaperScissors />, mode: 'مقابل سیستم' },
+      { id: 'hangman', title: 'حدس کلمه', icon: <Brain className="h-8 w-8 text-green-400" />, component: <Hangman />, mode: 'مقابل سیستم' },
+      { id: 'memory-game', title: 'بازی حافظه', icon: <MemoryStick className="h-8 w-8 text-sky-400" />, component: <MemoryGame />, mode: 'تک نفره' },
+      { id: 'guess-the-number', title: 'حدس عدد', icon: <Hash className="h-8 w-8 text-fuchsia-400" />, component: <GuessTheNumber />, mode: 'مقابل سیستم' },
+      { id: 'connect-four', title: 'چهار در یک ردیف', icon: <AlignVerticalDistributeCenter className="h-8 w-8 text-blue-500" />, component: <ConnectFour />, mode: 'دو نفره' },
+      { id: 'simon-says', title: 'بازی سایمون', icon: <BrainCircuit className="h-8 w-8 text-purple-500" />, component: <SimonSays />, mode: 'تک نفره' },
+      { id: 'othello-game', title: 'بازی اتللو', icon: <OthelloIcon />, component: <OthelloGame />, mode: 'دو نفره' },
       { id: 'archaeology-game', title: 'بازی زیرخاکی', icon: <Ghost className="h-8 w-8 text-yellow-400" />, isWip: true },
       { id: 'pac-man', title: 'Pac-Man Glow', icon: <Ghost className="h-8 w-8 text-yellow-400" />, isWip: true },
       { id: 'air-hockey', title: 'Air Hockey Neon', icon: <CircleDot className="h-8 w-8 text-cyan-400" />, isWip: true },
@@ -161,19 +161,19 @@ const toolCategories = [
       { id: 'pinball', title: 'Pinball Retro-Fusion', icon: <ArrowDownRight className="h-8 w-8 text-pink-500" />, isWip: true },
       { id: 'checkers', title: 'Checkers Royal', icon: <Square className="h-8 w-8 text-black" />, isWip: true },
       { id: 'word-hunt', title: 'Word Hunt Blitz', icon: <Search className="h-8 w-8 text-orange-500" />, isWip: true },
+      { id: 'minesweeper-3d', title: 'Minesweeper Extreme 3D', icon: <Bomb className="h-8 w-8 text-gray-400" />, isWip: true },
       { id: '2048', title: 'بازی 2048', icon: <Hash className="h-8 w-8 text-indigo-400" />, isWip: true },
       { id: 'snake', title: 'مار نئونی', icon: <SnakeIcon />, isWip: true },
       { id: 'chess', title: 'شطرنج', icon: <Crown className="h-8 w-8 text-yellow-500" />, isWip: true },
       { id: 'tetris', title: 'خانه سازی (Tetris)', icon: <Blocks className="h-8 w-8 text-cyan-400" />, isWip: true },
       { id: 'breakout', title: 'آجر شکن نئونی', icon: <Rows3 className="h-8 w-8 text-rose-400" />, isWip: true },
-      { id: 'minesweeper-3d', title: 'Minesweeper Extreme 3D', icon: <Bomb className="h-8 w-8 text-gray-400" />, isWip: true },
     ]
   },
   {
     title: 'ابزارهای کاربردی',
     icon: <User className="h-6 w-6 text-primary-foreground" />,
     tools: [
-      { id: 'sheba-converter', title: 'ابزار شبا/حساب', icon: <ShieldCheck className="h-8 w-8 text-green-500" />, component: <ShebaConverter /> },
+      { id: 'sheba-converter', title: 'ابزار شبا/حساب', icon: <ShieldCheck className="h-8 w-8 text-green-500" />, component: <ShebaConverter />, isWip: true },
       { id: 'national-id-validator', title: 'بررسی صحت و شهر شماره ملی', icon: <Fingerprint className="h-8 w-8 text-teal-400" />, component: <NationalIdValidator /> },
       { id: 'link-shortener', title: 'کوتاه کننده لینک', icon: <LinkIcon className="h-8 w-8 text-sky-400" />, component: <LinkShortener /> },
       { id: 'vehicle-plate-identifier', title: 'هوشمند پلاک', icon: <RectangleEllipsis className="h-8 w-8 text-indigo-400" />, component: <VehiclePlateIdentifier /> },
@@ -440,7 +440,7 @@ export default async function Home() {
                 </DialogContent>
             </Dialog>
 
-            <a href="mailto:feedback@tabdila.com?subject=انتقادات و پیشنهادات درباره تبدیلا" className="inline-flex items-center justify-center gap-2 cursor-pointer hover:text-foreground">
+             <a href="mailto:feedback@tabdila.com?subject=انتقادات و پیشنهادات درباره تبدیلا" className="inline-flex items-center justify-center gap-2 cursor-pointer hover:text-foreground">
                 <MessageSquareHeart className="w-5 h-5" />
                 <span>انتقادات و پیشنهادات</span>
             </a>
@@ -459,6 +459,7 @@ export default async function Home() {
 }
 
     
+
 
 
 
