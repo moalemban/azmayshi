@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Redo, Trophy } from 'lucide-react';
+import { Redo, Trophy, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 
@@ -182,6 +182,13 @@ export default function OthelloGame() {
                 <div className="w-5 h-5 rounded-full bg-white border-2 border-black"/>
                 <span>{scores.white.toLocaleString('fa-IR')}</span>
             </div>
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-muted-foreground p-2 rounded-lg bg-muted/30 max-w-sm text-center">
+          <Info className="w-5 h-5 shrink-0" />
+          <span>
+             مهره‌های حریف را بین مهره‌های خود محاصره کنید تا به رنگ شما درآیند. بازیکنی که در پایان بیشترین مهره را داشته باشد، برنده است.
+          </span>
         </div>
 
       <div className="p-2 bg-green-800 rounded-lg shadow-xl">
