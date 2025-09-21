@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -25,11 +25,25 @@ type Message = {
   content: string;
 };
 
+const HistoryItemSchema = z.object({
+  role: z.enum(['user', 'bot']),
+  content: z.string(),
+});
+
+const LegalFinancialChatInputSchema = z.object({
+  history: z.array(HistoryItemSchema).optional(),
+  prompt: z.string(),
+});
+
+type LegalFinancialChatInput = z.infer<typeof LegalFinancialChatInputSchema>;
+
+
 export default function LegalFinancialChatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const logo = PlaceHolderImages.find(p => p.id === 'logo');
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const {
     register,
@@ -39,12 +53,21 @@ export default function LegalFinancialChatbot() {
   } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
   });
+  
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+        const viewport = scrollAreaRef.current.querySelector('div[data-radix-scroll-area-viewport]');
+        if (viewport) {
+             viewport.scrollTop = viewport.scrollHeight;
+        }
+    }
+  }, [messages]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setLoading(true);
     const userMessage: Message = { role: 'user', content: data.prompt };
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
+    const currentMessages = [...messages, userMessage];
+    setMessages(currentMessages);
     reset();
 
     const botMessagePlaceholder: Message = { role: 'bot', content: '' };
@@ -52,14 +75,26 @@ export default function LegalFinancialChatbot() {
     
     try {
       const stream = await legalFinancialChat({
-          history: newMessages.slice(0, -1).map(m => ({ role: m.role, content: m.content })),
+          history: currentMessages.map(m => ({ role: m.role, content: m.content })),
           prompt: data.prompt,
       });
+      
+      const reader = stream.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedResponse = "";
 
-      for await (const chunk of stream) {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        accumulatedResponse += decoder.decode(value, { stream: true });
+        
         setMessages(prev => {
             const updatedMessages = [...prev];
-            updatedMessages[updatedMessages.length - 1].content = chunk;
+            const lastMessage = updatedMessages[updatedMessages.length - 1];
+            if (lastMessage && lastMessage.role === 'bot') {
+                 lastMessage.content = accumulatedResponse;
+            }
             return updatedMessages;
         });
       }
@@ -79,7 +114,7 @@ export default function LegalFinancialChatbot() {
 
   return (
     <CardContent className="flex flex-col h-[600px]">
-      <ScrollArea className="flex-1 p-4 mb-4 border rounded-lg bg-muted/30">
+      <ScrollArea className="flex-1 p-4 mb-4 border rounded-lg bg-muted/30" ref={scrollAreaRef}>
         <div className="space-y-6">
             {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground p-8">
@@ -114,7 +149,7 @@ export default function LegalFinancialChatbot() {
                     )}
                     >
                     {message.content}
-                     {loading && index === messages.length -1 && <Loader2 className="inline-block w-4 h-4 ml-2 animate-spin"/>}
+                     {loading && index === messages.length -1 && message.content === '' && <Loader2 className="inline-block w-4 h-4 ml-2 animate-spin"/>}
                     </div>
                     {message.role === 'user' && (
                     <Avatar className="w-8 h-8">
