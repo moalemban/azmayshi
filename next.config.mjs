@@ -1,14 +1,21 @@
 /** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'uploadkon.ir',
+        port: '',
+        pathname: '/uploads/**',
+      },
+       {
+        protocol: 'https',
+        hostname: 'static.idpay.ir',
+        port: '',
+        pathname: '/banks/**',
+      },
+    ],
+  },
+};
 
-import withPWAInit from "@ducanh2912/next-pwa";
-
-const withPWA = withPWAInit({
-  dest: "public",
-  disable: process.env.NODE_ENV === "development",
-  // add your own strategies
-});
-
-
-const nextConfig = {};
-
-export default withPWA(nextConfig);
+export default nextConfig;
