@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Lightbulb, Redo, BrainCircuit, XCircle, CheckCircle } from 'lucide-react';
+import { Lightbulb, Redo, BrainCircuit, XCircle, CheckCircle, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -43,7 +43,7 @@ export default function SimonSays() {
         return new (window.AudioContext || (window as any).webkitAudioContext)();
      }
      return null;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks-exhaustive-deps
   }, [isClient]);
 
   const playSound = useCallback((frequency: number) => {
@@ -154,6 +154,11 @@ export default function SimonSays() {
         </div>
       </div>
       
+       <div className="flex items-center gap-2 text-sm text-muted-foreground p-2 rounded-lg bg-muted/30">
+          <Info className="w-5 h-5" />
+          <span>الگوی رنگ‌ها را به خاطر بسپارید و آن را تکرار کنید.</span>
+      </div>
+
       <div className="relative">
         <div className="grid grid-cols-2 gap-2 w-64 h-64 sm:w-80 sm:h-80">
           {colors.map(color => (

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Redo, Trophy, Users } from 'lucide-react';
+import { Redo, Trophy, Users, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 
@@ -81,22 +81,26 @@ export default function ConnectFour() {
     if (winner || board[0][col]) return;
 
     const newBoard = board.map(row => [...row]);
+    let placed = false;
     for (let r = ROWS - 1; r >= 0; r--) {
       if (!newBoard[r][col]) {
         newBoard[r][col] = currentPlayer;
         setBoard(newBoard);
         setAnimatedCells(prev => new Set(prev).add(`${r}-${col}`));
-        
-        const newWinner = checkWinner(newBoard);
-        if (newWinner) {
-          setWinner(newWinner);
-        } else if (newBoard.flat().every(cell => cell !== null)) {
-          setIsDraw(true);
-        } else {
-          setCurrentPlayer(currentPlayer === 'red' ? 'yellow' : 'red');
-        }
-        return;
+        placed = true;
+        break;
       }
+    }
+
+    if (!placed) return;
+
+    const newWinner = checkWinner(newBoard);
+    if (newWinner) {
+      setWinner(newWinner);
+    } else if (newBoard.flat().every(cell => cell !== null)) {
+      setIsDraw(true);
+    } else {
+      setCurrentPlayer(currentPlayer === 'red' ? 'yellow' : 'red');
     }
   };
 
@@ -132,6 +136,11 @@ export default function ConnectFour() {
         {status.icon}
         <span>{status.text}</span>
       </Badge>
+
+      <div className="flex items-center gap-2 text-sm text-muted-foreground p-2 rounded-lg bg-muted/30">
+          <Info className="w-5 h-5" />
+          <span>اولین کسی باشید که ۴ مهره هم‌رنگ را در یک ردیف (افقی، عمودی یا مورب) قرار می‌دهد.</span>
+      </div>
 
       <div className="p-2 sm:p-4 bg-blue-800 rounded-2xl shadow-2xl inline-block">
         <div className="grid grid-cols-7 gap-1 sm:gap-2">
