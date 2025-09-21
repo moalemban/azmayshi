@@ -26,7 +26,7 @@ export async function legalFinancialChat(input: LegalFinancialChatInput): Promis
         content: [{text: item.content}]
     }));
 
-    const { stream } = ai.generate({
+    const { stream } = ai.generateStream({
         model: 'googleai/gemini-1.5-flash-latest',
         system: `You are an expert AI assistant specializing in Iranian legal and financial matters. 
         Your name is "Tabdila Bot". You must answer in Persian.
@@ -34,7 +34,6 @@ export async function legalFinancialChat(input: LegalFinancialChatInput): Promis
         You are a helpful assistant, not a replacement for a professional lawyer or financial advisor. Always clarify that your advice is for informational purposes only.`,
         history: history,
         prompt: input.prompt,
-        stream: true,
     });
     
     const encoder = new TextEncoder();
