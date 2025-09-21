@@ -9,11 +9,12 @@ import { Clock } from 'lucide-react';
 
 
 const LiveClock = () => {
-    const [time, setTime] = useState(new Date());
+    const [time, setTime] = useState<Date | null>(null);
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
+        setTime(new Date()); // Set initial time on client
         const timerId = setInterval(() => {
             setTime(new Date());
         }, 1000);
@@ -23,8 +24,13 @@ const LiveClock = () => {
         };
     }, []);
 
-    if (!isClient) {
-        return null;
+    if (!isClient || !time) {
+        // Render a placeholder on the server and during initial client render
+        return (
+             <div className="flex items-center space-x-2 space-x-reverse bg-background/50 rounded-full px-4 py-2 h-9 w-28">
+                <Clock className="w-5 h-5 text-primary" />
+            </div>
+        );
     }
 
     const formattedTime = time.toLocaleTimeString('fa-IR', {
