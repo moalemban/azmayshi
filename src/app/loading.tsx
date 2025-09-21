@@ -24,7 +24,6 @@ export default function Loading() {
         </div>
         <div className="text-sm text-muted-foreground mt-4 space-y-1">
             <p>نسخه 1.0.0</p>
-            <p>توسعه داده شده توسط حسین طاهری</p>
         </div>
       </div>
     </div>
