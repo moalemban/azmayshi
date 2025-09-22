@@ -68,7 +68,7 @@ export default function MemoryGame() {
     setFlippedCards([]);
     setMoves(0);
     setGameOver(false);
-    setStartTime(new Date());
+    setStartTime(null);
     setElapsedTime(0);
   }, []);
 
