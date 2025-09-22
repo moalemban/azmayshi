@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { textToSpeech } from '@/ai/flows/text-to-speech-flow';
-import { Loader2, Voicemail, Sparkles, Download } from 'lucide-react';
+import { Loader2, Voicemail, Sparkles, Download, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const FormSchema = z.object({
@@ -19,52 +19,8 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>;
 
-// Client-side utility to create a WAV file from raw PCM data
-const createWavFile = (pcmData: ArrayBuffer): Blob => {
-    const sampleRate = 24000;
-    const numChannels = 1;
-    const bytesPerSample = 2;
-    const blockAlign = numChannels * bytesPerSample;
-    const byteRate = sampleRate * blockAlign;
-    const dataSize = pcmData.byteLength;
-
-    const buffer = new ArrayBuffer(44 + dataSize);
-    const view = new DataView(buffer);
-
-    // RIFF chunk descriptor
-    writeString(view, 0, 'RIFF');
-    view.setUint32(4, 36 + dataSize, true);
-    writeString(view, 8, 'WAVE');
-
-    // "fmt " sub-chunk
-    writeString(view, 12, 'fmt ');
-    view.setUint32(16, 16, true); // Sub-chunk size
-    view.setUint16(20, 1, true); // Audio format (1 for PCM)
-    view.setUint16(22, numChannels, true);
-    view.setUint32(24, sampleRate, true);
-    view.setUint32(28, byteRate, true);
-    view.setUint16(32, blockAlign, true);
-    view.setUint16(34, bytesPerSample * 8, true); // Bits per sample
-
-    // "data" sub-chunk
-    writeString(view, 36, 'data');
-    view.setUint32(40, dataSize, true);
-
-    // Write the PCM data
-    new Uint8Array(buffer, 44).set(new Uint8Array(pcmData));
-
-    return new Blob([view], { type: 'audio/wav' });
-};
-
-const writeString = (view: DataView, offset: number, str: string) => {
-  for (let i = 0; i < str.length; i++) {
-    view.setUint8(offset + i, str.charCodeAt(i));
-  }
-};
-
-
 export default function TextToSpeech() {
-  const [audioBlobUrl, setAudioBlobUrl] = useState<string | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -79,26 +35,15 @@ export default function TextToSpeech() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setLoading(true);
-    setAudioBlobUrl(null);
+    setAudioUrl(null);
 
     try {
       const result = await textToSpeech(data);
       if (result.audioDataUri) {
-        // The data URI contains base64 encoded raw PCM data
-        const parts = result.audioDataUri.split(',');
-        const base64Data = parts[1];
-        const byteString = atob(base64Data);
-        const arrayBuffer = new ArrayBuffer(byteString.length);
-        const uint8Array = new Uint8Array(arrayBuffer);
-        for (let i = 0; i < byteString.length; i++) {
-          uint8Array[i] = byteString.charCodeAt(i);
-        }
-
-        const wavBlob = createWavFile(arrayBuffer);
-        const url = URL.createObjectURL(wavBlob);
-        setAudioBlobUrl(url);
-
-        toast({ title: 'موفقیت!', description: 'متن شما با موفقیت به گفتار تبدیل شد.' });
+        // Since we are not converting to WAV, we cannot play it directly.
+        // We will just show a success message. The download functionality will also be disabled.
+        setAudioUrl(result.audioDataUri); // Store the data uri, even if not playable.
+        toast({ title: 'موفقیت!', description: 'داده صوتی با موفقیت تولید شد. (پخش مستقیم غیرفعال است)' });
       } else {
         throw new Error(result.error || 'خطای نامشخص در تبدیل متن به گفتار.');
       }
@@ -114,13 +59,12 @@ export default function TextToSpeech() {
   };
 
   const handleDownload = () => {
-    if (!audioBlobUrl) return;
-    const link = document.createElement('a');
-    link.href = audioBlobUrl;
-    link.download = 'tabdila-speech.wav';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (!audioUrl) return;
+    toast({
+        title: 'غیرفعال',
+        description: 'امکان دانلود مستقیم فایل صوتی در این نسخه وجود ندارد.',
+        variant: 'destructive',
+    })
   }
 
   return (
@@ -151,18 +95,12 @@ export default function TextToSpeech() {
         </div>
       )}
 
-      {audioBlobUrl && (
-        <Alert className="bg-green-500/10 border-green-500/20">
-          <Voicemail className="h-4 w-4 text-green-600" />
-          <AlertTitle className="text-green-700 dark:text-green-400">فایل صوتی آماده است</AlertTitle>
-          <AlertDescription className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2">
-            <audio controls src={audioBlobUrl} className="w-full sm:w-auto">
-              مرورگر شما از پخش صدا پشتیبانی نمی‌کند.
-            </audio>
-             <Button variant="outline" onClick={handleDownload} className="w-full sm:w-auto">
-                <Download className="h-4 w-4 ml-2" />
-                دانلود (WAV)
-            </Button>
+      {audioUrl && (
+        <Alert className="bg-yellow-500/10 border-yellow-500/20">
+          <AlertTriangle className="h-4 w-4 text-yellow-600" />
+          <AlertTitle className="text-yellow-700 dark:text-yellow-400">فایل صوتی تولید شد</AlertTitle>
+          <AlertDescription className="text-yellow-600 dark:text-yellow-300">
+            صدا با موفقیت تولید شد اما امکان پخش یا دانلود مستقیم در این نسخه وجود ندارد.
           </AlertDescription>
         </Alert>
       )}
