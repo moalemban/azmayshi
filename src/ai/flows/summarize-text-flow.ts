@@ -1,9 +1,8 @@
 'use server';
 /**
  * @fileOverview A flow to summarize long texts using an AI model.
- * - summarizeText - A function that takes a long text and returns a summary.
+ * - summarizeText - A function that takes a long text and returns a stream of the summary.
  * - SummarizeTextInput - The input type for the summarizeText function.
- * - SummarizeTextOutput - The return type for the summarizeText function.
  */
 
 import { ai } from '@/ai/genkit';
@@ -15,42 +14,19 @@ const SummarizeTextInputSchema = z.object({
 });
 export type SummarizeTextInput = z.infer<typeof SummarizeTextInputSchema>;
 
-const SummarizeTextOutputSchema = z.object({
-  summary: z.string().describe('The generated summary.'),
-});
-export type SummarizeTextOutput = z.infer<typeof SummarizeTextOutputSchema>;
-
 // In-memory store for rate limiting
 const requestTracker = new Map<string, number[]>();
-const RATE_LIMIT_COUNT = 3; // Max requests
+const RATE_LIMIT_COUNT = 5; // Max requests
 const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutes in milliseconds
 
-export async function summarizeText(input: SummarizeTextInput): Promise<SummarizeTextOutput> {
-  return summarizeTextFlow(input);
-}
 
-const prompt = ai.definePrompt({
-  name: 'summarizeTextPrompt',
-  input: { schema: SummarizeTextInputSchema },
-  output: { schema: SummarizeTextOutputSchema },
-  model: 'googleai/gemini-1.5-flash-latest',
-  prompt: `You are an expert text summarizer. Your task is to provide a concise and clear summary of the given text in Persian. Focus on the main points and key information.
-
-The user has provided the following text:
----
-{{{text}}}
----
-
-Please provide the summary in the 'summary' field of the output.`,
-});
-
-const summarizeTextFlow = ai.defineFlow(
-  {
-    name: 'summarizeTextFlow',
-    inputSchema: SummarizeTextInputSchema,
-    outputSchema: SummarizeTextOutputSchema,
-  },
-  async (input) => {
+export async function summarizeText(input: SummarizeTextInput): Promise<ReadableStream<string>> {
+    // Validate input on the server side as well
+    const validation = SummarizeTextInputSchema.safeParse(input);
+    if (!validation.success) {
+      throw new Error(validation.error.errors[0].message);
+    }
+    
     // Rate limiting logic
     const headersList = await headers();
     const ip = headersList.get('x-forwarded-for') || '127.0.0.1';
@@ -61,18 +37,37 @@ const summarizeTextFlow = ai.defineFlow(
     );
 
     if (userRequests.length >= RATE_LIMIT_COUNT) {
-      throw new Error('شما به حداکثر تعداد درخواست مجاز (۳ بار در ۱۰ دقیقه) رسیده‌اید. لطفاً کمی صبر کنید.');
+      throw new Error(`شما به حداکثر تعداد درخواست مجاز (${RATE_LIMIT_COUNT} بار در ۱۰ دقیقه) رسیده‌اید. لطفاً کمی صبر کنید.`);
     }
 
     // Add current request timestamp
     userRequests.push(now);
     requestTracker.set(ip, userRequests);
+
+    const { stream } = ai.generateStream({
+        model: 'googleai/gemini-1.5-flash-latest',
+        prompt: `You are an expert text summarizer. Your task is to provide a concise and clear summary of the given text in Persian. Focus on the main points and key information.
+
+The user has provided the following text:
+---
+${input.text}
+---
+
+Provide a concise summary of the above text.`,
+    });
     
-    // Proceed with summarization
-    const { output } = await prompt(input);
-    if (!output) {
-      throw new Error('Failed to generate summary.');
-    }
-    return output;
-  }
-);
+    const encoder = new TextEncoder();
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          const text = chunk.text;
+          if (text) {
+             controller.enqueue(encoder.encode(text));
+          }
+        }
+        controller.close();
+      },
+    });
+
+    return readableStream;
+}

@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { summarizeText } from '@/ai/flows/summarize-text-flow';
-import { Loader2, Wand2, Trash2, Copy } from 'lucide-react';
+import { Loader2, Wand2, Trash2, Copy, Sparkles, FileText, FileCheck } from 'lucide-react';
 import { ZodError } from 'zod';
+import { Progress } from '../ui/progress';
+
+const MIN_CHARS = 100;
 
 export default function TextSummarizer() {
   const [originalText, setOriginalText] = useState('');
@@ -16,13 +19,32 @@ export default function TextSummarizer() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  const charCount = originalText.length;
+  const progress = Math.min((charCount / MIN_CHARS) * 100, 100);
+
   const handleSummarize = async () => {
     setLoading(true);
     setSummary('');
 
     try {
-      const result = await summarizeText({ text: originalText });
-      setSummary(result.summary);
+      if(originalText.length < MIN_CHARS) {
+          throw new Error(`متن برای خلاصه‌سازی باید حداقل ${MIN_CHARS} کاراکتر باشد.`);
+      }
+
+      const stream = await summarizeText({ text: originalText });
+      
+      const reader = stream.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedResponse = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        accumulatedResponse += decoder.decode(value, { stream: true });
+        setSummary(accumulatedResponse);
+      }
+
     } catch (error: any) {
       console.error(error);
       let description = 'مشکلی در ارتباط با سرور هوش مصنوعی به وجود آمد.';
@@ -56,17 +78,18 @@ export default function TextSummarizer() {
   };
 
   return (
-    <CardContent className="space-y-4">
-      <div className="space-y-2">
+    <CardContent className="space-y-6">
+      <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <Label htmlFor="original-text" className="text-muted-foreground">
+          <Label htmlFor="original-text" className="flex items-center gap-2 text-muted-foreground">
+             <FileText className="w-5 h-5" />
             متن اصلی
           </Label>
           <Button
             variant="ghost"
             size="icon"
             onClick={handleClear}
-            disabled={!originalText}
+            disabled={!originalText && !summary}
             className="text-muted-foreground hover:text-destructive"
           >
             <Trash2 className="h-5 w-5" />
@@ -76,16 +99,20 @@ export default function TextSummarizer() {
           id="original-text"
           value={originalText}
           onChange={(e) => setOriginalText(e.target.value)}
-          placeholder="متن طولانی خود را اینجا وارد یا پیست کنید (حداقل ۱۰۰ کاراکتر)..."
+          placeholder="متن طولانی خود را اینجا وارد یا پیست کنید..."
           className="min-h-[200px] text-base"
+          maxLength={10000}
         />
-        <p className="text-xs text-muted-foreground text-left pr-1" dir='ltr'>
-            {originalText.length.toLocaleString('fa-IR')} / 10,000
-        </p>
+        <div className="flex items-center gap-4">
+            <Progress value={progress} className="h-2 w-full"/>
+            <p className="text-xs text-muted-foreground text-left" dir='ltr'>
+                {charCount.toLocaleString('fa-IR')} / {MIN_CHARS.toLocaleString('fa-IR')}
+            </p>
+        </div>
       </div>
       
       <div className="flex justify-center">
-        <Button onClick={handleSummarize} disabled={loading || originalText.length < 100} className="w-full max-w-sm h-12 text-base">
+        <Button onClick={handleSummarize} disabled={loading || charCount < MIN_CHARS} className="w-full max-w-sm h-12 text-base">
           {loading ? (
             <>
               <Loader2 className="ml-2 h-5 w-5 animate-spin" />
@@ -93,7 +120,7 @@ export default function TextSummarizer() {
             </>
           ) : (
             <>
-              <Wand2 className="ml-2 h-5 w-5" />
+              <Sparkles className="ml-2 h-5 w-5" />
               خلاصه‌سازی کن
             </>
           )}
@@ -102,7 +129,8 @@ export default function TextSummarizer() {
 
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <Label htmlFor="summary-text" className="text-muted-foreground">
+          <Label htmlFor="summary-text" className="flex items-center gap-2 text-muted-foreground">
+            <FileCheck className="w-5 h-5"/>
             متن خلاصه‌شده
           </Label>
           <Button
@@ -115,17 +143,16 @@ export default function TextSummarizer() {
             <Copy className="h-5 w-5" />
           </Button>
         </div>
-        <div className="relative">
-             <Textarea
-                id="summary-text"
-                readOnly
-                value={summary}
-                placeholder="خلاصه متن اینجا نمایش داده می‌شود..."
-                className="min-h-[150px] text-base bg-muted/50"
-             />
-            {loading && (
+        <div className="relative min-h-[150px] p-4 bg-muted/50 rounded-lg border">
+             <p className="text-base whitespace-pre-wrap leading-relaxed">{summary}</p>
+            {loading && !summary && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+            )}
+             {!loading && !summary && (
+                 <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+                    <p>خلاصه متن اینجا نمایش داده می‌شود...</p>
                 </div>
             )}
         </div>
