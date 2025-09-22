@@ -23,8 +23,12 @@ const TextToSpeechOutputSchema = z.object({
 
 export type TextToSpeechOutput = z.infer<typeof TextToSpeechOutputSchema>;
 
-
-async function toWav(pcmData: Buffer, channels = 1, rate = 24000, sampleWidth = 2): Promise<string> {
+async function toWav(
+  pcmData: Buffer,
+  channels = 1,
+  rate = 24000,
+  sampleWidth = 2
+): Promise<string> {
   return new Promise((resolve, reject) => {
     const writer = new wav.Writer({
       channels,
@@ -32,10 +36,14 @@ async function toWav(pcmData: Buffer, channels = 1, rate = 24000, sampleWidth = 
       bitDepth: sampleWidth * 8,
     });
 
-    let bufs: Buffer[] = [];
+    let bufs: any[] = [];
     writer.on('error', reject);
-    writer.on('data', (d) => bufs.push(d));
-    writer.on('end', () => resolve(Buffer.concat(bufs).toString('base64')));
+    writer.on('data', function (d) {
+      bufs.push(d);
+    });
+    writer.on('end', function () {
+      resolve(Buffer.concat(bufs).toString('base64'));
+    });
 
     writer.write(pcmData);
     writer.end();
@@ -45,7 +53,6 @@ async function toWav(pcmData: Buffer, channels = 1, rate = 24000, sampleWidth = 
 export async function textToSpeech(input: TextToSpeechInput): Promise<TextToSpeechOutput> {
   return textToSpeechFlow(input);
 }
-
 
 const textToSpeechFlow = ai.defineFlow(
   {
@@ -68,17 +75,17 @@ const textToSpeechFlow = ai.defineFlow(
             prompt: text,
         });
 
-        if (!media) {
+        if (!media || !media.url) {
             throw new Error('پاسخی از مدل دریافت نشد.');
         }
 
         const audioBuffer = Buffer.from(
-            media.url.substring(media.url.indexOf(',') + 1),
-            'base64'
+          media.url.substring(media.url.indexOf(',') + 1),
+          'base64'
         );
-        
+
         const wavBase64 = await toWav(audioBuffer);
-        
+
         return {
             audioDataUri: 'data:audio/wav;base64,' + wavBase64,
         };
