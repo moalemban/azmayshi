@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import jsQR from 'jsqr';
+import Script from 'next/script';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,12 +12,19 @@ import { Camera, Upload, Copy, AlertCircle, Video, X, CheckCircle } from 'lucide
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 
+declare global {
+  interface Window {
+    jsQR: any;
+  }
+}
 
 export default function QrCodeReader() {
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +48,7 @@ export default function QrCodeReader() {
   }, []);
 
   const scanQrCode = useCallback(() => {
-    if (!videoRef.current || !canvasRef.current || !isScanning) return;
+    if (!videoRef.current || !canvasRef.current || !isScanning || !isScriptLoaded) return;
 
     const video = videoRef.current;
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -53,7 +61,7 @@ export default function QrCodeReader() {
         try {
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
               inversionAttempts: "dontInvert",
             });
     
@@ -71,10 +79,10 @@ export default function QrCodeReader() {
     if (isScanning) {
         animationFrameRef.current = requestAnimationFrame(scanQrCode);
     }
-  }, [stopScan, toast, isScanning]);
+  }, [stopScan, toast, isScanning, isScriptLoaded]);
   
    useEffect(() => {
-    if (isScanning) {
+    if (isScanning && isScriptLoaded) {
       animationFrameRef.current = requestAnimationFrame(scanQrCode);
     } else {
         if(animationFrameRef.current) {
@@ -87,10 +95,14 @@ export default function QrCodeReader() {
       }
       stopScan();
     };
-  }, [isScanning, scanQrCode, stopScan]);
+  }, [isScanning, scanQrCode, stopScan, isScriptLoaded]);
 
 
   const startCamera = async () => {
+    if (!isScriptLoaded) {
+        toast({ title: "لطفاً صبر کنید", description: "کتابخانه اسکنر در حال بارگذاری است.", variant: "destructive"});
+        return;
+    }
     stopScan(); 
     setResult(null);
     setError(null);
@@ -128,6 +140,10 @@ export default function QrCodeReader() {
   };
   
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isScriptLoaded) {
+        toast({ title: "لطفاً صبر کنید", description: "کتابخانه اسکنر در حال بارگذاری است.", variant: "destructive"});
+        return;
+    }
     stopScan();
     setResult(null);
     setError(null);
@@ -146,7 +162,7 @@ export default function QrCodeReader() {
               canvas.height = img.height;
               context.drawImage(img, 0, 0, img.width, img.height);
               const imageData = context.getImageData(0, 0, img.width, img.height);
-              const code = jsQR(imageData.data, imageData.width, imageData.height);
+              const code = window.jsQR(imageData.data, imageData.width, imageData.height);
               if (code) {
                 setResult(code.data);
                 toast({ title: 'موفق!', description: 'کد QR از فایل خوانده شد.'});
@@ -171,6 +187,11 @@ export default function QrCodeReader() {
 
   return (
     <CardContent className="space-y-4">
+      <Script 
+        src="/jsQR.js" 
+        strategy="afterInteractive"
+        onLoad={() => setIsScriptLoaded(true)}
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Button onClick={startCamera} className="h-12 text-base">
           <Camera className="ml-2 h-5 w-5" />
