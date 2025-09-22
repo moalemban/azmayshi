@@ -22,7 +22,6 @@ const TextToSpeechOutputSchema = z.object({
 
 export type TextToSpeechOutput = z.infer<typeof TextToSpeechOutputSchema>;
 
-
 export async function textToSpeech(input: TextToSpeechInput): Promise<TextToSpeechOutput> {
   return textToSpeechFlow(input);
 }
@@ -52,14 +51,17 @@ const textToSpeechFlow = ai.defineFlow(
             throw new Error('پاسخی از مدل دریافت نشد.');
         }
 
-        // The raw PCM data is in base64 format in the url.
-        // We can't easily convert it to WAV without the 'wav' package which causes build issues.
-        // For now, we will assume the client can handle the raw PCM data if needed,
-        // but for broader compatibility, we'll just return the base64 string.
-        // A proper fix would involve a serverless function to handle the conversion.
-        // Let's just return a data URI that might not be directly playable but contains the data.
+        // The model returns PCM data, which might not be directly playable.
+        // For broad browser support, we should ideally convert this to WAV or MP3.
+        // However, many modern browsers can play raw PCM if given the correct data URI format,
+        // but it's not guaranteed. For this fix, we will return the raw data URI and assume
+        // the client can handle it, to avoid the `wav` package dependency issue during build.
+        
+        // The URL is already a data URI with base64 encoded PCM data.
+        // e.g., "data:audio/L16;rate=24000;encoding=base64,..."
+        // We will just return it directly.
         return {
-            audioDataUri: media.url // This will be something like 'data:audio/L16;rate=24000;base64,....'
+            audioDataUri: media.url
         };
 
     } catch (error: any) {

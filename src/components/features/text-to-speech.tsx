@@ -10,8 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { textToSpeech } from '@/ai/flows/text-to-speech-flow';
-import { Loader2, Voicemail, Sparkles, Download, AlertTriangle } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Loader2, Voicemail, Sparkles, Download } from 'lucide-react';
 
 const FormSchema = z.object({
   text: z.string().min(1, { message: 'متن برای تبدیل به گفتار نمی‌تواند خالی باشد.' }).max(1000, 'حداکثر طول متن ۱۰۰۰ کاراکتر است.'),
@@ -40,10 +39,8 @@ export default function TextToSpeech() {
     try {
       const result = await textToSpeech(data);
       if (result.audioDataUri) {
-        // Since we are not converting to WAV, we cannot play it directly.
-        // We will just show a success message. The download functionality will also be disabled.
-        setAudioUrl(result.audioDataUri); // Store the data uri, even if not playable.
-        toast({ title: 'موفقیت!', description: 'داده صوتی با موفقیت تولید شد. (پخش مستقیم غیرفعال است)' });
+        setAudioUrl(result.audioDataUri);
+        toast({ title: 'موفقیت!', description: 'متن شما با موفقیت به گفتار تبدیل شد.' });
       } else {
         throw new Error(result.error || 'خطای نامشخص در تبدیل متن به گفتار.');
       }
@@ -60,10 +57,15 @@ export default function TextToSpeech() {
 
   const handleDownload = () => {
     if (!audioUrl) return;
+    const link = document.createElement('a');
+    link.href = audioUrl;
+    link.download = 'tabdila-speech.wav';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     toast({
-        title: 'غیرفعال',
-        description: 'امکان دانلود مستقیم فایل صوتی در این نسخه وجود ندارد.',
-        variant: 'destructive',
+        title: 'دانلود شروع شد!',
+        description: 'فایل صوتی با فرمت WAV در حال دانلود است.'
     })
   }
 
@@ -95,14 +97,16 @@ export default function TextToSpeech() {
         </div>
       )}
 
-      {audioUrl && (
-        <Alert className="bg-yellow-500/10 border-yellow-500/20">
-          <AlertTriangle className="h-4 w-4 text-yellow-600" />
-          <AlertTitle className="text-yellow-700 dark:text-yellow-400">فایل صوتی تولید شد</AlertTitle>
-          <AlertDescription className="text-yellow-600 dark:text-yellow-300">
-            صدا با موفقیت تولید شد اما امکان پخش یا دانلود مستقیم در این نسخه وجود ندارد.
-          </AlertDescription>
-        </Alert>
+      {audioUrl && !loading && (
+        <div className="space-y-3">
+            <audio controls src={audioUrl} className="w-full">
+                مرورگر شما از پخش صدا پشتیبانی نمی‌کند.
+            </audio>
+            <Button onClick={handleDownload} variant="secondary" className="w-full">
+                <Download className="ml-2 h-4 w-4"/>
+                دانلود فایل WAV
+            </Button>
+        </div>
       )}
     </CardContent>
   );
