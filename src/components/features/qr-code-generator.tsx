@@ -1,7 +1,9 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import QRCodeStyling, { type Options as QRCodeOptions, type FileExtension, type DotType, type CornerSquareType } from 'qr-code-styling';
+import type QRCodeStyling from 'qr-code-styling';
+import type { Options as QRCodeOptions, FileExtension, DotType, CornerSquareType } from 'qr-code-styling';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Download, Palette, Upload, Link as LinkIcon, Text, Wifi, Mail, Phone, Droplet } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Slider } from '@/components/ui/slider';
+import dynamic from 'next/dynamic';
 
 const defaultOptions: QRCodeOptions = {
   width: 180,
@@ -208,15 +211,20 @@ export default function QrCodeGenerator() {
   }, [size]);
 
   useEffect(() => {
-    if (!qrCode) {
-        const qr = new QRCodeStyling(options)
-        setQrCode(qr);
-        if (ref.current) {
-            ref.current.innerHTML = "";
-            qr.append(ref.current);
-        }
-    } else {
-        qrCode.update(options);
+    if (typeof window !== 'undefined') {
+        import('qr-code-styling').then(module => {
+            const QRCodeStyling = module.default;
+            if (!qrCode) {
+                const qr = new QRCodeStyling(options);
+                setQrCode(qr);
+                if (ref.current) {
+                    ref.current.innerHTML = "";
+                    qr.append(ref.current);
+                }
+            } else {
+                qrCode.update(options);
+            }
+        });
     }
   }, [options, qrCode]);
   
@@ -318,3 +326,5 @@ export default function QrCodeGenerator() {
     </CardContent>
   );
 }
+
+    
